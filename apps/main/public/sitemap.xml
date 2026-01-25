@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://tryatlabs.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url><loc>https://tryatlabs.com/labs</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tryatlabs.com/studio</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tryatlabs.com/partnerships</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://tryatlabs.com/talent</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://tryatlabs.com/contact</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://tryatlabs.com/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://tryatlabs.com/terms</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+</urlset>
