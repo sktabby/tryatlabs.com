@@ -1,0 +1,246 @@
+/* =========================
+   Base / Resets
+========================= */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg);
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* =========================
+   Layout
+========================= */
+.container {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.pagePad {
+  padding: 20px 0 28px;
+}
+
+.mainWrap {
+  padding-bottom: 26px;
+}
+
+/* =========================
+   Typography / Helpers
+========================= */
+.kicker {
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* =========================
+   Buttons
+========================= */
+.btn {
+  border: 0;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btnPrimary {
+  background: linear-gradient(135deg, var(--p2), var(--p4));
+  color: white;
+  box-shadow: 0 12px 30px rgba(80, 61, 92, 0.25);
+}
+
+.btnPrimary:hover {
+  opacity: 0.95;
+}
+
+.btnGhost {
+  background: color-mix(in srgb, var(--card) 86%, transparent);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.btnGhost:hover {
+  background: color-mix(in srgb, var(--card) 94%, transparent);
+}
+
+/* =========================
+   Inputs
+========================= */
+.input,
+.textarea,
+.select {
+  width: 100%;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 12px;
+  color: var(--text);
+  outline: none;
+}
+
+.textarea {
+  min-height: 180px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.textarea.tall {
+  min-height: 320px;
+}
+
+.select {
+  padding: 10px 12px;
+}
+
+/* =========================
+   Chips
+========================= */
+.chipRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--muted);
+}
+
+/* =========================
+   Cards / Panels
+========================= */
+.contentCard,
+.toolPanel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 60px rgba(80, 61, 92, 0.12);
+}
+
+.contentCard {
+  padding: 16px;
+}
+
+.contentTitle {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 950;
+}
+
+.contentList {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.contentList li {
+  margin: 6px 0;
+}
+
+/* =========================
+   SVG Icons (Shared)
+========================= */
+.toolSvg {
+  width: 33px;
+  height: 33px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.toolSvg * {
+  vector-effect: non-scaling-stroke;
+}
+
+/* =========================
+   Wide Inline Ad Slot
+   (used as: className="adWide")
+========================= */
+.adWide {
+  width: 100%;
+  min-height: 90px; /* standard horizontal ad */
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 86%, transparent);
+  box-shadow: 0 18px 60px rgba(80, 61, 92, 0.12);
+  padding: 10px;
+  overflow: hidden;
+}
+
+
+
+/* =========================
+   Utilities
+========================= */
+.hidden {
+  display: none !important;
+}
+
+/* =========================
+   Responsive (Global only)
+========================= */
+@media (max-width: 760px) {
+  .container {
+    width: min(1120px, calc(100% - 22px));
+  }
+
+  .pagePad {
+    padding: 16px 0 22px;
+  }
+
+  .adBox {
+    min-height: 200px;
+  }
+
+   .adWide {
+    min-height: 70px;
+    border-radius: 18px;
+  }
+}

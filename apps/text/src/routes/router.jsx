@@ -1,11 +1,17 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import Home from "../pages/Home";
-import ToolPage from "../pages/ToolPage";
-import NotFound from "../pages/NotFound";
+import SiteLayout from "../components/layout/SiteLayout.jsx";
+import Home from "../pages/Home/Home.jsx";
+import ToolPage from "../pages/Tool/ToolPage.jsx";
+import NotFound from "../pages/NotFound.jsx";
 
 export const router = createBrowserRouter([
-  { path: "/", element: <Home /> },
-  { path: "/:slug", element: <ToolPage /> },
-  { path: "*", element: <NotFound /> },
+  {
+    element: <SiteLayout />,
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/tools/:slug", element: <ToolPage /> },
+      { path: "*", element: <NotFound /> }
+    ]
+  }
 ]);

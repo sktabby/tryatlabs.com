@@ -1,0 +1,110 @@
+
+<div className="container" style={{ marginTop: 34 }}>
+  <h2 className="section__title">Top Picks — Most Used Tools</h2>
+
+  <div className="hero__cards topPicks">
+    
+    {/* PDF */}
+    <a href="/pdf/image-to-pdf" className="card topPickCard topPickLink">
+      <div className="topPickIcon">
+        {/* PDF icon */}
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke="currentColor" strokeWidth="1.8"/>
+          <path d="M14 3v6h6" stroke="currentColor" strokeWidth="1.8"/>
+        </svg>
+      </div>
+      <div className="topPickText">
+        <span className="topPickTag">PDF</span>
+        <div className="card__title">Image to PDF</div>
+      </div>
+    </a>
+
+    {/* IMAGE */}
+    <a href="/image/compress" className="card topPickCard topPickLink">
+      <div className="topPickIcon">
+        {/* Image icon */}
+        <svg viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.8"/>
+          <circle cx="9" cy="10" r="1.5" fill="currentColor"/>
+          <path d="M21 16l-5-5-4 4-2-2-5 5" stroke="currentColor" strokeWidth="1.8"/>
+        </svg>
+      </div>
+      <div className="topPickText">
+        <span className="topPickTag">IMG</span>
+        <div className="card__title">Compress Image</div>
+      </div>
+    </a>
+
+    {/* TEXT */}
+    <a href="/text/case-converter" className="card topPickCard topPickLink">
+      <div className="topPickIcon">
+        {/* Text icon */}
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M4 6h16M8 6v12M16 6v12" stroke="currentColor" strokeWidth="1.8"/>
+        </svg>
+      </div>
+      <div className="topPickText">
+        <span className="topPickTag">TXT</span>
+        <div className="card__title">Case Converter</div>
+      </div>
+    </a>
+
+    {/* DEV */}
+    <a href="/dev/base64" className="card topPickCard topPickLink">
+      <div className="topPickIcon">
+        {/* Code icon */}
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M8 6l-4 6 4 6M16 6l4 6-4 6" stroke="currentColor" strokeWidth="1.8"/>
+        </svg>
+      </div>
+      <div className="topPickText">
+        <span className="topPickTag">DEV</span>
+        <div className="card__title">Base64 Encode</div>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+
+C:\Users\Shaikh Tabish\Desktop\tryatlabs\apps\text\src\tools\case-converter\CaseConverter.jsx
+
+i want to connect with this site 
+
+
+
+
+
+
+
+
+
+
+
+image
+ <img
+              src="/assets/hero-tools.png"
+              alt="TryAtLabs tools preview"
+              style={{
+                width: "100%",
+                maxWidth: 520,
+                height: "auto",
+                borderRadius: "var(--radius)"
+              }}
+            />
+
+
+
+
+
+            header
+
+  <NavLink to="/studio" className={({ isActive }) => (isActive ? "nav__link active" : "nav__link")}>
+              Studio
+            </NavLink>
+            <NavLink to="/partnerships" className={({ isActive }) => (isActive ? "nav__link active" : "nav__link")}>
+              Partnerships
+            </NavLink>
+            <NavLink to="/talent" className={({ isActive }) => (isActive ? "nav__link active" : "nav__link")}>
+              Talent
+            </NavLink>

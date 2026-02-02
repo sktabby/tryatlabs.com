@@ -1,0 +1,473 @@
+/* =========================
+   Hero Title
+========================= */
+.heroTitleAccent {
+  line-height: 1.15;
+  font-weight: 1000;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.heroSmall {
+  font-size: 35px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.heroBrand {
+  font-size: 40px;
+  font-weight: 1100;
+  background: linear-gradient(135deg, var(--p1), var(--p2), var(--p1));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0 6px;
+}
+
+/* =========================
+   Search (Icon inside input)
+========================= */
+.searchRow {
+  width: 100%;
+}
+
+.searchInputWrap {
+  position: relative;
+  width: 100%;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px 48px 12px 12px; /* normal input padding + room for icon on right */
+}
+
+.searchIconBtn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--p1);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.searchIconBtn:hover {
+  color: var(--p2);
+}
+
+.searchIconBtn:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
+/* =========================
+   Section Head Card
+========================= */
+.sectionHeadCard {
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  text-align: center;
+  width: fit-content;
+  align-items: center;
+}
+
+.sectionHeadCard .sectionTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--muted);
+}
+
+/* =========================
+   Tool Icons – PURE SVG
+========================= */
+.toolIcon {
+  display: grid;
+  place-items: center;
+  line-height: 0;
+  color: var(--p1); /* force icon color */
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.toolSvg {
+  width: 33px;
+  height: 33px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.toolSvg * {
+  vector-effect: non-scaling-stroke;
+}
+
+.toolDesc {
+  color: var(--muted);
+  font-weight: 716;
+  line-height: 1.5;
+  min-height: 44px;
+}
+
+/* =========================
+   Tool Cards Grid
+========================= */
+.gridCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* =========================
+   Tool Card (Base)
+========================= */
+.toolCard {
+  position: relative;
+  border-radius: 22px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--card) 85%, transparent),
+    color-mix(in srgb, var(--card) 92%, transparent)
+  );
+  box-shadow: 0 18px 50px rgba(80, 61, 92, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+/* subtle per-card tint */
+.toolCard:nth-child(4n + 1) {
+  background: linear-gradient(180deg, rgba(175,146,181,0.14), var(--card));
+}
+.toolCard:nth-child(4n + 2) {
+  background: linear-gradient(180deg, rgba(139,121,145,0.14), var(--card));
+}
+.toolCard:nth-child(4n + 3) {
+  background: linear-gradient(180deg, rgba(111,89,122,0.14), var(--card));
+}
+.toolCard:nth-child(4n + 4) {
+  background: linear-gradient(180deg, rgba(98,75,110,0.14), var(--card));
+}
+
+/* Hover */
+.toolCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 28px 70px rgba(80, 61, 92, 0.22);
+  border-color: color-mix(in srgb, var(--p1) 40%, var(--border));
+}
+
+/* =========================
+   Card Top (Icon + Title)
+========================= */
+.toolCardTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toolName {
+  font-size: 15px;
+  font-weight: 950;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+/* =========================
+   Description (smaller, softer)
+========================= */
+.toolDesc {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--muted);
+  flex: 1;
+}
+
+/* =========================
+   CTA Row (Button-style)
+========================= */
+.toolCtaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.toolCta {
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 900;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--p2), var(--p4));
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(80, 61, 92, 0.25);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.toolCard:hover .toolCta {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+/* Arrow (bigger, subtle motion) */
+.toolArrow {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--muted);
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.toolCard:hover .toolArrow {
+  transform: translateX(4px);
+  color: var(--text);
+}
+
+/* Title + button row */
+.toolTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+/* Open tool button */
+.toolOpenBtn {
+  margin-left: auto;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 900;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  border: 1px solid var(--border);
+  color: var(--text);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.toolOpenBtn:hover {
+  background: color-mix(in srgb, var(--p1) 18%, transparent);
+  border-color: color-mix(in srgb, var(--p1) 45%, var(--border));
+}
+
+.toolOpenBtn:active {
+  transform: scale(0.96);
+}
+
+/* Remove arrow completely */
+.toolArrow {
+  display: none;
+}
+
+.toolTopBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toolBackBtn {
+  white-space: nowrap;
+}
+
+/* =========================
+   About Card
+========================= */
+/* --- About section fixes --- */
+.aboutCard {
+  margin-top: 18px;
+}
+
+/* paragraph ok (keeping your style) */
+.aboutText {
+  font-size: 13.5px;
+  font-weight: 750;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 8px 0 12px;
+}
+
+.aboutTextSecondary {
+  color: var(--muted);
+}
+
+/* ✅ force the button to actually look like a button */
+.aboutReadMore {
+  display: inline-flex;          /* important */
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px !important;  /* override any reset */
+  font-size: 12px;
+  font-weight: 900;
+  border-radius: 999px !important;
+  border: 1px solid var(--border) !important;
+  background: color-mix(in srgb, var(--card) 86%, transparent) !important;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+}
+
+.aboutReadMore:hover {
+  background: color-mix(in srgb, var(--card) 94%, transparent) !important;
+}
+
+.aboutReadMore:active {
+  transform: scale(0.98);
+}
+/* =========================
+   Home: 3 info sections (Premium)
+========================= */
+.homeInfo3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+/* Base card */
+.homeInfoCard {
+  position: relative;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--card) 88%, transparent),
+    color-mix(in srgb, var(--card) 96%, transparent)
+  );
+  box-shadow: 0 22px 60px rgba(80, 61, 92, 0.14);
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+/* soft glow layer */
+.homeInfoCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px 220px at 20% 0%,
+    rgba(79,195,247,0.12),
+    transparent 60%
+  );
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Individual card gradients */
+.homeInfoCard:nth-child(1) {
+  background:
+    linear-gradient(180deg, rgba(120,180,255,0.14), var(--card));
+}
+.homeInfoCard:nth-child(2) {
+  background:
+    linear-gradient(180deg, rgba(45, 37, 61, 0.14), var(--card));
+}
+.homeInfoCard:nth-child(3) {
+  background:
+    linear-gradient(180deg, rgba(16, 22, 61, 0.14), var(--card));
+}
+
+/* Hover polish */
+.homeInfoCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 80px rgba(80, 61, 92, 0.24);
+  border-color: color-mix(in srgb, var(--p1) 40%, var(--border));
+}
+
+/* Text */
+.homeInfoKicker {
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.homeInfoTitle {
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 950;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+.homeInfoText {
+  margin-top: 10px;
+  font-size: 13.5px;
+ 
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--text) 80%, var(--muted));
+}
+
+/* About – premium bullet style */
+.aboutList{
+  margin: 10px 0 12px;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  list-style: disc;
+}
+
+.aboutList li{
+  font-size: 13.5px;
+
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.aboutListSecondary li{
+  color: var(--muted);
+}
+
+
+/* Responsive */
+@media (max-width: 960px) {
+  .homeInfo3 {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .homeInfoCard {
+    padding: 16px;
+    border-radius: 18px;
+  }
+}
+
+/* =========================
+   Mobile Polish + Home Mobile
+========================= */
+@media (max-width: 760px) {
+  .heroBrand {
+    font-size: 30px;
+  }
+
+  .heroSmall {
+    font-size: 23px;
+  }
+
+  .searchInput {
+    padding-right: 56px; /* a bit more room for icon */
+    padding-left: 12px; /* keep left clean */
+  }
+
+  .toolName {
+    font-size: 14px;
+  }
+
+  .toolDesc {
+    font-size: 12.5px;
+  }
+}
+

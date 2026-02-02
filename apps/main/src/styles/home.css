@@ -1,0 +1,370 @@
+/* home.css — TryAtLabs Home (Labs Dark Glass, page-scoped)
+   Only home page layout + sections here.
+*/
+
+/* ====== HERO ====== */
+.hero{
+  position: relative;
+  padding: 40px 0 72px;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero::before{
+  background:
+    radial-gradient(circle at 12% 10%, rgba(124,92,255,.38), transparent 55%),
+    radial-gradient(circle at 88% 18%, rgba(46,233,166,.22), transparent 55%);
+  filter: blur(22px);
+  opacity: .55;
+}
+
+.hero::after{
+  background-image:
+    linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 42px 42px;
+  opacity: .18;
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 70%);
+}
+
+.hero .container{
+  position: relative;
+  z-index: 1;
+}
+
+/* you use inline styles for layout; this enhances spacing */
+.hero__inner{
+  align-items: stretch;
+}
+
+.hero__content{
+  padding: 10px 0;
+}
+
+.hero__title{
+  margin: 14px 0 8px;
+  font-size: clamp(30px, 4.2vw, 54px);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  font-weight: 950;
+}
+
+.hero__title span{
+  color: var(--labs-accent);
+}
+
+.section__title{
+  margin: 0 0 16px;
+  font-size: clamp(20px, 2.2vw, 30px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 900;
+}
+
+/* ====== SERVICES ====== */
+#services{
+  width: 100%;
+}
+
+.hero__cards{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+/* Service card polish */
+.serviceCard{
+  min-height: 172px;
+  padding: 18px;
+}
+
+.serviceCard__head{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.serviceCard__badge{
+  font-size: 12px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--labs-border);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.78);
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+/* ====== TRUST STRIP ====== *//* =========================
+   TRUST STRIP (Premium)
+   - rounded corners
+   - smooth fading ends
+   - continuous marquee
+========================= */
+
+.trust-strip{
+  border: 1px solid var(--labs-border);
+  background: rgba(255,255,255,.04);
+ 
+  overflow: hidden;
+
+  box-shadow: var(--labs-soft);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  position: relative;
+  isolation: isolate; /* clips pseudo layers correctly */
+}
+
+/* ✅ Smooth fade ends (best method) */
+.trust-strip{
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 12%,
+    #000 88%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 12%,
+    #000 88%,
+    transparent 100%
+  );
+}
+
+/* ✅ Fallback fade overlay (if mask isn’t supported) */
+.trust-strip::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+
+  background: linear-gradient(
+    90deg,
+    rgba(7,10,18,1) 0%,
+    rgba(7,10,18,0) 14%,
+    rgba(7,10,18,0) 86%,
+    rgba(7,10,18,1) 100%
+  );
+
+  opacity: .95;
+  
+}
+
+/* ✅ Marquee track (movement guaranteed) */
+.trust-strip__track{
+  position: relative;
+  z-index: 2;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  padding: 12px 16px;
+
+  white-space: nowrap;
+  width: max-content;
+  will-change: transform;
+
+  animation: trustMarquee 16s linear infinite;
+  transform: translate3d(0,0,0);
+}
+
+/* Item style */
+.trust-strip__track span{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  color: rgba(255,255,255,.78);
+  letter-spacing: .01em;
+  font-size: 13px;
+}
+
+.trust-strip__track span::before{
+  content: "";
+  width: 7px;
+  height: 7px;
+  
+  background: rgba(124,92,255,.7);
+  box-shadow: 0 0 0 5px rgba(124,92,255,.12);
+}
+
+/* ✅ Continuous scroll */
+@keyframes trustMarquee{
+  from{ transform: translate3d(0,0,0); }
+  to{ transform: translate3d(-50%,0,0); }
+}
+
+/* ✅ Keep motion preference support */
+@media (prefers-reduced-motion: reduce){
+  .trust-strip__track{ animation: none !important; }
+}
+
+/* ====== WHY GRID ====== */
+.why-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.why-grid h3{
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 950;
+  letter-spacing: -0.01em;
+}
+
+.why-grid p{
+  margin: 0;
+  color: var(--labs-muted);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* ====== HOW IT WORKS ====== */
+.steps{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.step{
+  border: 1px solid var(--labs-border);
+  background: rgba(255,255,255,.045);
+  border-radius: var(--labs-radius);
+  padding: 16px;
+  box-shadow: var(--labs-soft);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.step:hover{
+  transform: translateY(-2px);
+  border-color: var(--labs-border-2);
+  background: rgba(255,255,255,.06);
+}
+
+.step__num{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(124,92,255,.22);
+  background: linear-gradient(135deg, rgba(124,92,255,.12), rgba(46,233,166,.06));
+  color: rgba(255,255,255,.82);
+  font-weight: 950;
+  letter-spacing: .08em;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.step p{
+  margin: 0;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: rgba(255,255,255,.86);
+}
+
+/* ====== Audience chips ====== */
+.audience{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.audience span{
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--labs-border);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.78);
+  font-weight: 900;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.audience span:hover{
+  transform: translateY(-1px);
+  border-color: var(--labs-border-2);
+  background: rgba(255,255,255,.06);
+}
+
+/* Make your "Coming soon" card more special */
+.container > .card[style*="text-align: center"]{
+  border-color: rgba(124,92,255,.22);
+  background: linear-gradient(135deg, rgba(124,92,255,.10), rgba(46,233,166,.05));
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 1100px){
+  .hero{ padding: 48px 0 62px; }
+}
+
+@media (max-width: 980px){
+  /* Your inline flexWrap is "nowrap", so we force stacking */
+  .hero__inner{
+    flex-wrap: wrap !important;
+    gap: 18px !important;
+  }
+
+  .hero__content,
+  .hero__image{
+    flex: 0 0 100% !important;
+  }
+
+  .hero__image{
+    justify-content: flex-start !important;
+  }
+
+  .hero__cards{ grid-template-columns: 1fr; }
+  .why-grid{ grid-template-columns: 1fr; }
+  .steps{ grid-template-columns: 1fr; }
+}
+
+@media (max-width: 520px){
+  .hero{ padding: 44px 0 56px; }
+
+  .hero__title{
+    font-size: 32px;
+    line-height: 1.08;
+  }
+
+  .card,
+  .panel,
+  .step{
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .btn{
+    width: 100%;
+  }
+
+  .serviceCard__head{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .trust-strip__track{
+    padding: 12px 12px;
+  }
+}

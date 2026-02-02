@@ -1,9 +1,74 @@
-* { box-sizing: border-box; }
-html, body { height: 100%; }
+/* globals.css — base reset + typography + utilities (Labs Dark Glass) */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-a { color: inherit; text-decoration: none; }
-img { max-width: 100%; display: block; }
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Selection tuned for dark theme */
+::selection {
+  background: rgba(124, 92, 255, 0.28);
+}
+
+/* Focus (uses Labs token from main-theme.css) */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--labs-focus, rgba(124,92,255,.35));
+  border-radius: 12px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Utility */
+.muted { color: var(--labs-muted); }

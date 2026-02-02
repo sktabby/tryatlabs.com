@@ -3,6 +3,8 @@ import { BRAND } from "../app/constants/brand.js";
 import { URLS } from "../app/constants/urls.js";
 import { organizationJsonLd } from "../seo/JsonLd/organization.js";
 import { websiteJsonLd } from "../seo/JsonLd/website.js";
+import LabHeroAnimation from "../components/common/LabHeroAnimation.jsx";
+import "../styles/home.css"
 
 export default function Home() {
   const canonical = `${BRAND.baseUrl}/`;
@@ -37,165 +39,269 @@ export default function Home() {
   return (
     <>
       <SeoHead
-        title="TryAtLabs "
+        title="TryAtLabs"
         description="TryAtLabs is a privacy-first platform offering browser-based tools for PDF, image, and text tasks. Simple, fast, and secure."
         canonical={canonical}
         jsonLd={jsonLd}
       />
 
+      {/* HERO */}
       <section className="hero">
-        <div className="container hero__inner">
-          <div className="pill" style={{ alignSelf: "flex-start" }}>
-            Desi Tools. Zero Drama. 100% Kaam.
-          </div>
-
-          <h1 className="hero__title">
-            Tools kholo, <span style={{ color: "var(--brand)" }}>kaam bolo</span>. <br />
-            Baaki TryAtLabs pe chodo!
-          </h1>
-
-
-          <p className="hero__sub">
-            PDF, image, and text tools in one place. Privacy-first, thoughtfully designed,
-            and fast enough to keep your workflow moving.
-          </p>
-
-          <div className="hero__actions">
-            <a className="btn btn--primary" href={URLS.tools}>
-              Chalo Tools Pe 🚀
-            </a>
-            <a className="btn btn--ghost" href={URLS.pdf}>
-              PDF Ka Kaam 🧾
-            </a>
-          </div>
-
-          <div className="hero__cards">
-            <a className="card" href={URLS.pdf}>
-              <div className="card__title">PDF</div>
-              <div className="muted">
-                Merge, split, compress, reorder — matlab “boss, PDF sambhal lo” wala full solution.
-              </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
-                <span className="pill">Merge</span>
-                <span className="pill">Split</span>
-                <span className="pill">Compress</span>
-              </div>
-            </a>
-
-            <a className="card" href={URLS.image}>
-              <div className="card__title">Image</div>
-              <div className="muted">
-                Resize, compress, convert — “quality bhi rahe, size bhi kam” wala jugadu combo.
-              </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
-                <span className="pill">Resize</span>
-                <span className="pill">Compress</span>
-                <span className="pill">Convert</span>
-              </div>
-            </a>
-
-            <a className="card" href={URLS.text}>
-              <div className="card__title">Text</div>
-              <div className="muted">
-                Case convert, word count, clean-up — text ko “seedha-saadha” banane ka full department.
-              </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
-                <span className="pill">Case</span>
-                <span className="pill">Count</span>
-                <span className="pill">Clean</span>
-              </div>
-            </a>
-          </div>
-
+        <div
+          className="container hero__inner"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 48,
+            flexWrap: "nowrap"
+          }}
+        >
+          {/* LEFT CONTENT */}
           <div
-            className="panel"
+            className="hero__content"
             style={{
-              marginTop: 16,
+              flex: "0 0 55%",
               display: "flex",
               flexDirection: "column",
-              gap: 10
+              gap: 14,
+              textAlign: "left"
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-              <div>
-                <div style={{ fontWeight: 800 }}>No sign-up. No bakwaas.</div>
-                <div className="muted">Bas tool kholo, kaam niptao, nikal jao. 😄</div>
-              </div>
-              <a className="btn btn--ghost" href={URLS.text}>
-                “Mujhe abhi kaam hai” →
-              </a>
+            <div className="pill" style={{ width: "fit-content" }}>
+            FREE Tools Just For You!
             </div>
 
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <span className="pill">Privacy-first</span>
-              <span className="pill">Browser-based</span>
-              <span className="pill">Fast AF*</span>
-              <span className="muted" style={{ fontSize: 12 }}>
-                *AF = “Actually Fast”, samjhe? 😌
-              </span>
-            </div>
+            <h1 className="hero__title" style={{ margin: 0 }}>
+              Tools kholo, <span style={{ color: "var(--brand)" }}>kaam bolo</span>. <br />
+              Baaki TryAtLabs pe chodo!
+            </h1>
+
+           
+
+            
+          </div>
+
+          {/* RIGHT IMAGE */}
+          <div
+            className="hero__image"
+            style={{
+              flex: "0 0 45%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center"
+            }}
+          >
+           
+ <section id="services">
+        {/* SERVICES */}
+      <div className="container" style={{ marginTop: 40 }}>
+  <h2 className="section__title">Services we offer</h2>
+
+  <div className="hero__cards">
+    {/* PDF */}
+    <div className="card serviceCard">
+      <div className="serviceCard__head">
+        <span className="serviceCard__badge">PDF</span>
+        <div className="card__title">PDF Tools</div>
+      </div>
+
+      <div className="muted">
+        Merge, split, compress, reorder, and manage PDF files directly in your browser.
+      </div>
+
+      <div style={{ marginTop: 14 }}>
+        <a className="btn btn--ghost" href={URLS.pdf}>
+          Open PDF Tools →
+        </a>
+      </div>
+    </div>
+
+    {/* IMG */}
+    <div className="card serviceCard">
+      <div className="serviceCard__head">
+        <span className="serviceCard__badge">IMG</span>
+        <div className="card__title">Image Tools</div>
+      </div>
+
+      <div className="muted">
+        Resize, compress, convert, and optimize images without losing quality.
+      </div>
+
+      <div style={{ marginTop: 14 }}>
+        <a className="btn btn--ghost" href={URLS.image}>
+          Open Image Tools →
+        </a>
+      </div>
+    </div>
+
+    {/* TXT */}
+    <div className="card serviceCard">
+      <div className="serviceCard__head">
+        <span className="serviceCard__badge">TXT</span>
+        <div className="card__title">Text Utilities</div>
+      </div>
+
+      <div className="muted">
+        Format, clean, analyze, and transform text for writing and productivity tasks.
+      </div>
+
+      <div style={{ marginTop: 14 }}>
+        <a className="btn btn--ghost" href={URLS.text}>
+          Open Text Tools →
+        </a>
+      </div>
+    </div>
+
+    {/* DEV */}
+    <div className="card serviceCard">
+      <div className="serviceCard__head">
+        <span className="serviceCard__badge">DEV</span>
+        <div className="card__title">Developer Tools</div>
+      </div>
+
+      <div className="muted">
+        Handy utilities for developers to generate, encode, decode, and inspect data quickly.
+      </div>
+
+      <div style={{ marginTop: 14 }}>
+        <a className="btn btn--ghost" href={URLS.dev}>
+          Open Dev Tools →
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</section>
+
+
+
           </div>
         </div>
-      </section>
 
-      <section className="section">
-        <div className="container grid-2">
-          <div>
-            <h2>Built for speed + SEO (aur thoda swag)</h2>
-            <p className="muted">
-              Har subdomain ek focused tool hub hai. Result? Google ko samajh aata hai, users ko maza aata hai, aur aapko
-              long run me better rankings + higher ad RPM milta hai. Win-win… bas chai ready rakho. ☕
-            </p>
+        {/* TRUST STRIP */}
+     
+<div className="container" style={{ marginTop: 36 }}>
+  <div className="trust-strip">
+    <div className="trust-strip__track">
+      <span>Free to use everyday tools</span>
+      <span>PDF, Image, Text & Dev utilities</span>
+      <span>your data stays local</span>
 
-            <div style={{ display: "grid", gap: 10, marginTop: 14 }}>
-              <div className="panel" style={{ padding: 14 }}>
-                <div style={{ fontWeight: 800, marginBottom: 6 }}>“Kyu TryAtLabs?”</div>
-                <div className="muted">
-                  Kyunki random sites pe popups + slow loading ka time nahi. Yaha tools ka kaam tools jaisa hota hai —
-                  seedha, simple, solid.
-                </div>
-              </div>
+      {/* duplicate for seamless loop */}
+      <span>Free to use everyday tools</span>
+      <span>PDF, Image, Text & Dev utilities</span>
+      <span>your data stays local</span>
+    </div>
+  </div>
+</div>
 
-              <div className="panel" style={{ padding: 14 }}>
-                <div style={{ fontWeight: 800, marginBottom: 6 }}>Desi-coded promise 😌</div>
-                <div className="muted">
-                  Aap bole “bhai jaldi kar” — hum already fast. Aap bole “privacy?” — hum browser-first. Aap bole “clean
-                  UI?” — hum premium.
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div className="panel">
-            <div className="panel__row">
-              <span>Client-side tools</span>
-              <span className="pill">Fast</span>
-            </div>
-            <div className="panel__row">
-              <span>Subdomain strategy</span>
-              <span className="pill">SEO</span>
-            </div>
-            <div className="panel__row">
-              <span>AdSense-ready layout</span>
-              <span className="pill">RPM</span>
-            </div>
 
-            <div style={{ marginTop: 12 }} className="muted">
-              Pro tip: “Refresh pe 404” nahi aayega. Hostinger + .htaccess = sorted. ✅
-            </div>
 
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
-              <a className="btn btn--primary" href={URLS.tools}>
-                Start Now
-              </a>
-              <a className="btn btn--ghost" href={URLS.pdf}>
-                PDF First
-              </a>
-            </div>
-          </div>
-        </div>
+
+
+       {/* WHY TRYATLABS */}
+<div className="container" style={{ marginTop: 64 }}>
+  <h2 className="section__title">Why TryAtLabs</h2>
+
+  <div className="why-grid">
+    <div className="panel">
+      <h3>Built for speed</h3>
+      <p>
+        Our tools are optimized for fast load times and smooth performance —
+        even on low-end devices.
+      </p>
+    </div>
+
+    <div className="panel">
+      <h3>Privacy-first by design</h3>
+      <p>
+        Many tools run entirely in your browser, so your files and data stay
+        with you.
+      </p>
+    </div>
+
+    <div className="panel">
+      <h3>Simple, focused UI</h3>
+      <p>
+        No clutter. No distractions. Just tools that do one job well.
+      </p>
+    </div>
+
+    <div className="panel">
+      <h3>Growing ecosystem</h3>
+      <p>
+        We continuously add new tools and improve existing ones based on real usage.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+       {/* HOW IT WORKS */}
+<div className="container" style={{ marginTop: 64 }}>
+  <h2 className="section__title">How it works</h2>
+
+  <div className="steps">
+    <div className="step">
+      <span className="step__num">01</span>
+      <p>Choose a tool</p>
+    </div>
+
+    <div className="step">
+      <span className="step__num">02</span>
+      <p>Upload or paste your content</p>
+    </div>
+
+    <div className="step">
+      <span className="step__num">03</span>
+      <p>Get instant results — no account required</p>
+    </div>
+  </div>
+</div>
+
+
+{/* FOR WHOM */}
+<div className="container" style={{ marginTop: 64 }}>
+  <h2 className="section__title">Who is this for?</h2>
+
+  <div className="audience">
+    <span>Students & educators</span>
+    <span>Working professionals</span>
+    <span>Content creators</span>
+    <span>Developers & tech enthusiasts</span>
+    <span>Anyone who needs quick, reliable tools online</span>
+  </div>
+</div>
+
+
+{/* COMING SOON */}
+<div className="container" style={{ marginTop: 64 }}>
+  <div className="card" style={{ textAlign: "center" }}>
+    <h2 style={{ marginTop: 0 }}>Coming soon</h2>
+
+    <p className="muted" style={{ maxWidth: 620, margin: "0 auto 14px" }}>
+      We’re expanding TryAtLabs into a complete tool ecosystem with image processing,
+      developer utilities, smarter workflows, and performance-optimized experiences.
+    </p>
+
+    <div className="audience" style={{ justifyContent: "center" }}>
+      <span>Image tools</span>
+      <span>Developer utilities</span>
+      <span>Smarter workflows</span>
+      <span>Performance-focused UX</span>
+    </div>
+
+    <div className="muted" style={{ marginTop: 14 }}>
+      Stay tuned — we’re just getting started.
+    </div>
+  </div>
+</div>
+
       </section>
     </>
   );
-
 }

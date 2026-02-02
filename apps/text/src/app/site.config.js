@@ -1,7 +1,14 @@
 export const SITE = {
-  name: "TryAtLabs",
-  canonicalBase:
-    typeof window !== "undefined"
-      ? `${window.location.protocol}//${window.location.host}`
-      : "https://text.tryatlabs.com",
+  name: "TryAtLabs Text Tools",
+  shortName: "Text Tools",
+  url: import.meta.env.VITE_SITE_URL || "https://text.tryatlabs.com",
+  brand: "TryAtLabs",
+  description:
+    "",
+  ogImage: "/assets/og-default.png",
+  themeColor: "#624b6e"
+};
+
+export const ADSENSE = {
+  client: import.meta.env.VITE_ADSENSE_CLIENT || ""
 };

@@ -1,12 +1,12 @@
 import React from "react";
 import { RouterProvider } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
-import { router } from "../routes/router";
+import { router } from "../routes/router.jsx";
+import AdsProvider from "../components/ads/AdsProvider.jsx";
 
 export default function App() {
   return (
-    <HelmetProvider>
+    <AdsProvider>
       <RouterProvider router={router} />
-    </HelmetProvider>
+    </AdsProvider>
   );
 }
