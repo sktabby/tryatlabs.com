@@ -1,0 +1,168 @@
+.tool--rotate {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 18px;
+}
+
+/* 2-col desktop, stacked on mobile */
+.tool--rotate .grid2 {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 860px) {
+  .tool--rotate .grid2 {
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: stretch;
+  }
+}
+
+/* Drop zone */
+.tool--rotate .drop {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  padding: 18px;
+
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+
+.tool--rotate .drop:hover {
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+}
+
+.tool--rotate .drop.isDragging {
+  border-style: solid;
+  background: color-mix(in srgb, var(--p4) 18%, var(--card));
+}
+
+/* reliable click upload overlay */
+.tool--rotate .drop input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.tool--rotate .drop__inner {
+  text-align: center;
+  display: grid;
+  gap: 8px;
+  max-width: 520px;
+  padding: 6px 10px;
+  pointer-events: none;
+}
+
+.tool--rotate .drop__title {
+  font-weight: 900;
+  line-height: 1.2;
+  font-size: 18px;
+}
+
+/* Panel */
+.tool--rotate .panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.tool--rotate .field {
+  display: grid;
+  gap: 8px;
+}
+
+.tool--rotate .field__label {
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+/* Preview card */
+.tool--rotate .previewCard {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  display: grid;
+  gap: 10px;
+}
+
+.tool--rotate .previewTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.tool--rotate .previewTitle {
+  font-weight: 950;
+}
+
+.tool--rotate .previewMedia {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--p4) 18%, transparent);
+}
+
+.tool--rotate .previewMedia img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Actions */
+.tool--rotate .actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tool--rotate .actions .btn {
+  min-height: 44px;
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+  .tool--rotate {
+    padding: 14px;
+  }
+
+  .tool--rotate .drop {
+    min-height: 210px;
+  }
+
+  .tool--rotate .actions {
+    justify-content: stretch;
+  }
+
+  .tool--rotate .actions .btn {
+    width: 100%;
+  }
+}
+
+
+/* Optional: ensure preview placeholder looks consistent */
+.tool--rotate .previewMedia img {
+  display: block;
+}
+
+/* Make Clear button consistent on small screens */
+@media (max-width: 520px) {
+  .tool--rotate .actions .btn {
+    width: 100%;
+  }
+}

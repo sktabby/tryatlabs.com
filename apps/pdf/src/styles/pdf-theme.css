@@ -1,0 +1,17 @@
+:root {
+  /* Palette */
+  --p1: #809bce;
+  --p2: #95b8d1;
+  --p3: #b8e0d4;
+  --p4: #d6eadf;
+  --p5: #eac4d5;
+
+  /* Light theme */
+  --bg: #f7f9fc;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: rgba(17, 24, 39, 0.66);
+  --border: rgba(17, 24, 39, 0.10);
+
+  --shadow: 0 18px 50px rgba(17, 24, 39, 0.08);
+}

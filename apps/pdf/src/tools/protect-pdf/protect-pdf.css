@@ -1,0 +1,182 @@
+/* Scoped styles for protect tool only */
+
+.tool--protect .fileRow {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+
+.tool--protect .fileName {
+  font-weight: 950;
+}
+
+.tool--protect .pill--soft {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--p4) 20%, var(--card));
+}
+
+.tool--protect .protectGrid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .tool--protect .protectGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tool--protect .protectField {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+}
+
+.tool--protect .protectLabel {
+  font-weight: 950;
+  margin-bottom: 8px;
+}
+
+.tool--protect .protectHint {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.tool--protect .protectHint--warn {
+  color: color-mix(in srgb, var(--p5) 65%, var(--muted));
+}
+
+.tool--protect .protectStrength {
+  font-weight: 950;
+}
+
+.tool--protect .protectStrength--weak {
+  color: color-mix(in srgb, var(--p5) 70%, #000);
+}
+
+.tool--protect .protectStrength--medium {
+  color: color-mix(in srgb, var(--p3) 70%, #000);
+}
+
+.tool--protect .protectStrength--strong {
+  color: color-mix(in srgb, var(--p1) 70%, #000);
+}
+
+.tool--protect .protectInfo {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--p4) 20%, transparent);
+}
+
+.tool--protect .protectInfo__title {
+  font-weight: 950;
+  margin-bottom: 8px;
+}
+
+.tool--protect .protectInfo__list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+
+/* Scoped styles for protect tool only */
+.tool--protect .toolHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:12px;
+}
+.tool--protect .toolTitle{
+  font-size:18px;
+  font-weight:950;
+  margin:0;
+}
+.tool--protect .toolActions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.tool--protect .fileRow{
+  margin-top:12px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:12px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+.tool--protect .fileName{ font-weight:950; }
+.tool--protect .miniPill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background: color-mix(in srgb, var(--p4) 18%, var(--card));
+  font-weight:900;
+}
+
+.tool--protect .protectGrid{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap:12px;
+}
+@media (max-width: 900px){
+  .tool--protect .protectGrid{ grid-template-columns:1fr; }
+}
+
+.tool--protect .protectCard{
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:12px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+.tool--protect .protectCard__title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:950;
+  margin-bottom:10px;
+}
+
+.tool--protect .field{ margin-top:10px; }
+.tool--protect .field__label{ font-weight:900; margin-bottom:6px; }
+.tool--protect .field__hint{ margin-top:6px; font-size:12px; }
+
+.tool--protect .checkRow{
+  margin-top:10px;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  font-weight:850;
+}
+.tool--protect .checkRow input{ margin-top:3px; }
+
+.tool--protect .protectNote{
+  margin-top:10px;
+  font-size:12px;
+}

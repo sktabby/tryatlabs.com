@@ -1,0 +1,210 @@
+.tool--split {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 18px;
+}
+
+/* 2-col on desktop, stacked on mobile */
+.tool--split .grid2 {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 980px) {
+  .tool--split .grid2 {
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: start;
+  }
+}
+
+/* left col holds drop + preview */
+.tool--split .leftCol {
+  display: grid;
+  gap: 12px;
+}
+
+/* BIG drop area */
+.tool--split .drop {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  padding: 18px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+
+.tool--split .drop:hover {
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+}
+
+.tool--split .drop.isDragging {
+  border-style: solid;
+  background: color-mix(in srgb, var(--p4) 18%, var(--card));
+}
+
+/* input overlay */
+.tool--split .drop input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.tool--split .drop__inner {
+  text-align: center;
+  display: grid;
+  gap: 8px;
+  max-width: 560px;
+  padding: 6px 10px;
+  pointer-events: none;
+}
+
+.tool--split .drop__title {
+  font-weight: 900;
+  line-height: 1.2;
+  font-size: 18px;
+}
+
+/* Right panel */
+.tool--split .panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.tool--split .field {
+  display: grid;
+  gap: 8px;
+}
+
+.tool--split .field__label {
+  font-weight: 900;
+}
+
+/* Quick buttons row */
+.tool--split .quickRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tool--split .quickRow .btn {
+  min-height: 40px;
+}
+
+/* Note inside panel */
+.tool--split .panelNote {
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 10px;
+  color: var(--muted);
+  font-weight: 800;
+  background: color-mix(in srgb, var(--p4) 14%, transparent);
+}
+
+/* Preview card */
+.tool--split .previewCard {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  box-shadow: var(--shadow);
+}
+
+.tool--split .previewHead {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.tool--split .previewTitle {
+  font-weight: 950;
+}
+
+.tool--split .previewBody {
+  padding: 14px;
+  display: grid;
+  place-items: center;
+}
+
+.tool--split .previewImg {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.tool--split .previewPh {
+  height: 220px;
+  width: 100%;
+  max-width: 360px;
+  border-radius: 14px;
+  border: 1px dashed var(--border);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-weight: 900;
+  background: color-mix(in srgb, var(--p4) 14%, transparent);
+}
+
+.tool--split .previewNav {
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+/* Actions */
+.tool--split .actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tool--split .actions .btn {
+  min-height: 44px;
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+  .tool--split {
+    padding: 14px;
+  }
+
+  .tool--split .drop {
+    min-height: 200px;
+  }
+
+  .tool--split .actions {
+    justify-content: stretch;
+  }
+
+  .tool--split .actions .btn {
+    width: 100%;
+  }
+
+  .tool--split .previewNav .btn {
+    flex: 1;
+    justify-content: center;
+  }
+}

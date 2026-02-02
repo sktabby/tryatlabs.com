@@ -1,0 +1,130 @@
+.tool--extract {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 18px;
+}
+
+/* two column on desktop, stacked on mobile */
+.tool--extract .grid2 {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 860px) {
+  .tool--extract .grid2 {
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: stretch;
+  }
+}
+
+/* drop zone (big rectangle) */
+.tool--extract .drop {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  padding: 18px;
+
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+
+.tool--extract .drop:hover {
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+}
+
+.tool--extract .drop.isDragging {
+  border-style: solid;
+  background: color-mix(in srgb, var(--p4) 18%, var(--card));
+}
+
+/* reliable click upload overlay */
+.tool--extract .drop input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.tool--extract .drop__inner {
+  text-align: center;
+  display: grid;
+  gap: 8px;
+  max-width: 520px;
+  padding: 6px 10px;
+  pointer-events: none;
+}
+
+.tool--extract .drop__title {
+  font-weight: 900;
+  line-height: 1.2;
+  font-size: 18px;
+}
+
+/* right panel */
+.tool--extract .panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.tool--extract .field {
+  display: grid;
+  gap: 8px;
+}
+
+.tool--extract .field__label {
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+/* your existing help box */
+.tool--extract .rangeHelp {
+  margin-top: 10px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--p4) 18%, transparent);
+}
+
+/* actions */
+.tool--extract .actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tool--extract .actions .btn {
+  min-height: 44px;
+}
+
+/* mobile */
+@media (max-width: 520px) {
+  .tool--extract {
+    padding: 14px;
+  }
+
+  .tool--extract .drop {
+    min-height: 210px;
+  }
+
+  .tool--extract .actions {
+    justify-content: stretch;
+  }
+
+  .tool--extract .actions .btn {
+    width: 100%;
+  }
+}

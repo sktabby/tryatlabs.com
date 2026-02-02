@@ -1,0 +1,199 @@
+.tool--compress {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 18px;
+}
+
+/* 2-col desktop, stack mobile */
+.tool--compress .grid2 {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .tool--compress .grid2 {
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: stretch;
+  }
+}
+
+/* Drop zone */
+.tool--compress .drop {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  padding: 18px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+
+.tool--compress .drop:hover {
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+}
+
+.tool--compress .drop.isDragging {
+  border-style: solid;
+  background: color-mix(in srgb, var(--p4) 18%, var(--card));
+}
+
+/* reliable click overlay */
+.tool--compress .drop input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.tool--compress .drop__inner {
+  text-align: center;
+  display: grid;
+  gap: 8px;
+  max-width: 520px;
+  padding: 6px 10px;
+  pointer-events: none;
+}
+
+.tool--compress .drop__title {
+  font-weight: 900;
+  line-height: 1.2;
+  font-size: 18px;
+}
+
+/* Panel */
+.tool--compress .panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+/* Preview card */
+.tool--compress .previewCard {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  display: grid;
+  gap: 10px;
+}
+
+.tool--compress .previewTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.tool--compress .previewTitle {
+  font-weight: 950;
+}
+
+.tool--compress .previewMedia {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--p4) 18%, transparent);
+}
+
+.tool--compress .previewMedia img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Your existing rows (now actually used nicely) */
+.tool--compress .qualityRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+@media (max-width: 780px) {
+  .tool--compress .qualityRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tool--compress .statRow {
+  margin-top: 2px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 780px) {
+  .tool--compress .statRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tool--compress .statCard {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+
+.tool--compress .statLabel {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.tool--compress .statValue {
+  margin-top: 6px;
+  font-weight: 950;
+  font-size: 16px;
+}
+
+/* Panel actions */
+.tool--compress .panelActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Bottom actions */
+.tool--compress .actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tool--compress .actions .btn {
+  min-height: 44px;
+}
+
+/* Mobile: full width button */
+@media (max-width: 520px) {
+  .tool--compress {
+    padding: 14px;
+  }
+
+  .tool--compress .drop {
+    min-height: 220px;
+  }
+
+  .tool--compress .actions {
+    justify-content: stretch;
+  }
+
+  .tool--compress .actions .btn {
+    width: 100%;
+  }
+}

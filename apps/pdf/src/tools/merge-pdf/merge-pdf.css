@@ -1,0 +1,198 @@
+/* Merge PDF tool layout — keeps existing theme vars & btn classes */
+.tool--merge {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 18px;
+}
+
+.tool--merge .row {
+  display: grid;
+  gap: 12px;
+}
+
+/* BIG drop rectangle + real drag state */
+.tool--merge .drop {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  padding: 18px;
+
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+
+.tool--merge .drop:hover {
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+}
+
+.tool--merge .drop.isDragging {
+  border-style: solid;
+  background: color-mix(in srgb, var(--p4) 18%, var(--card));
+}
+
+/* input overlay so click always works */
+.tool--merge .drop input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.tool--merge .drop__inner {
+  text-align: center;
+  display: grid;
+  gap: 8px;
+  max-width: 560px;
+  padding: 6px 10px;
+  pointer-events: none;
+}
+
+.tool--merge .drop__title {
+  font-weight: 900;
+  line-height: 1.2;
+  font-size: 18px;
+}
+
+/* List */
+.tool--merge .list {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.tool--merge .listItem {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+
+/* Left side (thumb + info) */
+.tool--merge .fileMain {
+  display: grid;
+  grid-template-columns: 66px 1fr;
+  gap: 12px;
+  align-items: center;
+  min-width: 0;
+}
+
+.tool--merge .thumb {
+  width: 66px;
+  height: 88px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--p4) 18%, var(--card));
+  display: grid;
+  place-items: center;
+}
+
+.tool--merge .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tool--merge .thumb__ph {
+  font-weight: 950;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+
+.tool--merge .fileInfo {
+  min-width: 0;
+}
+
+.tool--merge .listItem__title {
+  font-weight: 900;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Right side buttons */
+.tool--merge .fileActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tool--merge .actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.tool--merge .actions .btn {
+  min-height: 44px;
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+  .tool--merge {
+    padding: 14px;
+  }
+
+  .tool--merge .drop {
+    min-height: 200px;
+  }
+
+  .tool--merge .listItem {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .tool--merge .fileMain {
+    grid-template-columns: 58px 1fr;
+  }
+
+  .tool--merge .thumb {
+    width: 58px;
+    height: 78px;
+  }
+
+  .tool--merge .fileActions {
+    width: 100%;
+  }
+
+  .tool--merge .fileActions .btn {
+    flex: 1;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  .tool--merge .actions {
+    justify-content: stretch;
+  }
+
+  .tool--merge .actions .btn {
+    width: 100%;
+  }
+}
+
+/* Larger screens */
+@media (min-width: 900px) {
+  .tool--merge {
+    padding: 20px;
+  }
+
+  .tool--merge .drop {
+    padding: 22px;
+  }
+}

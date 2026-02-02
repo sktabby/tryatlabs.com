@@ -1,0 +1,212 @@
+.tool--watermark {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 18px;
+}
+
+/* 2-col desktop, stacked mobile */
+.tool--watermark .grid2 {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .tool--watermark .grid2 {
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: stretch;
+  }
+}
+
+/* Drop zone */
+.tool--watermark .drop {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  padding: 18px;
+
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+
+.tool--watermark .drop:hover {
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+}
+
+.tool--watermark .drop.isDragging {
+  border-style: solid;
+  background: color-mix(in srgb, var(--p4) 18%, var(--card));
+}
+
+/* click overlay */
+.tool--watermark .drop input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.tool--watermark .drop__inner {
+  text-align: center;
+  display: grid;
+  gap: 8px;
+  max-width: 520px;
+  padding: 6px 10px;
+  pointer-events: none;
+}
+
+.tool--watermark .drop__title {
+  font-weight: 900;
+  line-height: 1.2;
+  font-size: 18px;
+}
+
+/* Panel */
+.tool--watermark .panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.tool--watermark .field {
+  display: grid;
+  gap: 8px;
+}
+
+.tool--watermark .field__label {
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+/* Grid 3 inputs */
+.tool--watermark .grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 780px) {
+  .tool--watermark .grid3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Preview block */
+.tool--watermark .previewRow {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  background: radial-gradient(
+    900px 300px at 0% 0%,
+    color-mix(in srgb, var(--p2) 18%, transparent),
+    transparent
+  );
+  display: grid;
+  gap: 10px;
+}
+
+.tool--watermark .previewTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.tool--watermark .previewTitle {
+  font-weight: 950;
+}
+
+.tool--watermark .hint {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Preview media + watermark overlay */
+.tool--watermark .previewMedia {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--p4) 18%, transparent);
+}
+
+.tool--watermark .previewMedia img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.tool--watermark .wmOverlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: 92%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Your original help styles (kept) */
+.tool--watermark .watermarkRow {
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.tool--watermark .tip {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--p5) 14%, transparent);
+}
+
+/* Actions */
+.tool--watermark .actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tool--watermark .actions .btn {
+  min-height: 44px;
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+  .tool--watermark {
+    padding: 14px;
+  }
+
+  .tool--watermark .drop {
+    min-height: 220px;
+  }
+
+  .tool--watermark .actions {
+    justify-content: stretch;
+  }
+
+  .tool--watermark .actions .btn {
+    width: 100%;
+  }
+}

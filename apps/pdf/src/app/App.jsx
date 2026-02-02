@@ -1,12 +1,19 @@
-import React from "react";
-import { RouterProvider } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
-import { router } from "../routes/router";
+import { Routes, Route } from "react-router-dom";
+import ToolLayout from "../components/layout/ToolLayout.jsx";
+import Home from "../pages/Home.jsx";
+import ToolPage from "../pages/ToolPage.jsx";
+import NotFound from "../pages/NotFound.jsx";
+import Result from "../pages/Result.jsx";
 
 export default function App() {
   return (
-    <HelmetProvider>
-      <RouterProvider router={router} />
-    </HelmetProvider>
+    <ToolLayout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/result" element={<Result />} />
+        <Route path="/:toolSlug" element={<ToolPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </ToolLayout>
   );
 }

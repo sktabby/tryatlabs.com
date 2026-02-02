@@ -1,0 +1,106 @@
+.resultCard {
+  display: grid;
+  gap: 16px;
+}
+
+.resultTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.resultTitle {
+  margin: 0;
+  font-size: clamp(26px, 3.4vw, 38px);
+  font-weight: 950;
+}
+
+.resultMain {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: radial-gradient(900px 300px at 0% 0%, color-mix(in srgb, var(--p4) 30%, transparent), transparent),
+              color-mix(in srgb, var(--card) 94%, transparent);
+}
+
+.resultDownload {
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-size: 15px;
+}
+
+.resultMeta { font-weight: 800; }
+
+.resultContinue {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--card) 96%, transparent);
+}
+
+.resultContinue__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.resultContinue__title {
+  font-weight: 950;
+  font-size: 16px;
+}
+
+.resultSeeMore {
+  font-weight: 900;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--text);
+}
+
+.resultGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 980px) {
+  .resultGrid { grid-template-columns: 1fr; }
+}
+
+.resultItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  transition: transform .12s ease, border-color .12s ease;
+}
+
+.resultItem:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--p1) 50%, var(--border));
+}
+
+.resultItem__title {
+  font-weight: 950;
+}
+
+.resultItem__desc {
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.resultShare {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
