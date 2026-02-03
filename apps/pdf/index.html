@@ -5,32 +5,16 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#809bce" />
 
-    <!-- AdSense -->
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1292393428202090"
-      crossorigin="anonymous">
-    </script>
-
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C1HLZECVF1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-C1HLZECVF1');
-    </script>
-
     <!-- ✅ FAVICON & APP ICONS -->
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="/assets/tryatlabs-pdf-logo-Bgv1WIb4.jpg"
+      href="public/assets/tryatlabs-pdf-logo.jpg"
     />
     <link
       rel="apple-touch-icon"
-      href="/assets/tryatlabs-pdf-logo-Bgv1WIb4.jpg"
+      href="public/assets/tryatlabs-pdf-logo.jpg"
     />
 
     <!-- Optional: for PWA / Android -->
@@ -71,13 +55,10 @@
       name="twitter:image"
       content="https://pdf.tryatlabs.com/assets/og-default.png"
     />
-
-    <!-- Vite build assets (DO NOT TOUCH) -->
-    <script type="module" crossorigin src="/assets/index-C0gFw9s5.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-UhAPI9Wl.css">
   </head>
 
   <body>
     <div id="root"></div>
+    <script type="module" src="/src/app/main.jsx"></script>
   </body>
 </html>

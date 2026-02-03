@@ -4,27 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- AdSense -->
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1292393428202090"
-      crossorigin="anonymous">
-    </script>
-
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C1HLZECVF1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-C1HLZECVF1');
-    </script>
-
     <!-- Primary title / description -->
     <title>TryAtLabs Text Tools</title>
     <meta
       name="description"
-      content="Fast, privacy-first text tools to edit, clean, format, compare, and analyze text directly in your browser."
+      content=""
     />
     <meta name="theme-color" content="#503d5c" />
 
@@ -32,23 +16,25 @@
     <link rel="icon" type="image/png" href="/assets/logo.png" />
     <link rel="apple-touch-icon" href="/assets/logo.png" />
 
-    <!-- OpenGraph defaults -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="TryAtLabs Text Tools" />
-    <meta
-      property="og:description"
-      content="Fast, privacy-first text tools to edit, clean, format, compare, and analyze text."
-    />
-    <meta property="og:image" content="/assets/og-default.png" />
+    <!-- Optional (recommended sizes later) -->
+    <!--
+    <link rel="icon" sizes="32x32" href="/assets/logo-32.png" />
+    <link rel="icon" sizes="16x16" href="/assets/logo-16.png" />
+    -->
 
-    <!-- Vite build assets (DO NOT TOUCH) -->
-    <script type="module" crossorigin src="/assets/index-C1wSu4c_.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/helmet-ChV2cfIg.js">
-    <link rel="modulepreload" crossorigin href="/assets/router-Lsf4nQRp.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-EKnb0bg0.css">
+    <!-- OpenGraph defaults -->
+    <meta property="og:image" content="/assets/og-default.png" />
+    <meta property="og:type" content="website" />
+
+    <!-- AdSense (kept as-is, optional) -->
+    <!--
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXX"
+      crossorigin="anonymous"></script>
+    -->
   </head>
 
   <body>
     <div id="root"></div>
+    <script type="module" src="/src/app/main.jsx"></script>
   </body>
 </html>
