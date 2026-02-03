@@ -3,15 +3,19 @@ import { Sparkles } from "lucide-react";
 import { SITE } from "../../app/site.config.js";
 import { SeoHead } from "../../seo/SeoHead.jsx";
 
-const LOGO_SRC = "public/assets/tryatlabs-pdf-logo.jpg"; // ✅ from apps/pdf/public/assets/
+// ✅ In Vite: files in /public are served at "/"
+const LOGO_SRC = "/assets/tryatlabs-pdf-logo.jpg";
 
 export default function ToolLayout({ children }) {
   const { pathname } = useLocation();
 
-  const cleanPath = pathname === "/" ? "" : pathname.replace("/", "").replace(/-/g, " ");
-  const title = pathname === "/"
-    ? `${SITE.name} — Browser PDF Tools`
-    : `${SITE.name} — ${cleanPath}`;
+  const cleanPath =
+    pathname === "/" ? "Home" : pathname.replace("/", "").replace(/-/g, " ");
+
+  const title =
+    pathname === "/"
+      ? `${SITE.name} — Browser PDF Tools`
+      : `${SITE.name} — ${cleanPath}`;
 
   return (
     <>
@@ -26,11 +30,16 @@ export default function ToolLayout({ children }) {
                 src={LOGO_SRC}
                 alt="TryAtLabs PDF"
                 className="brand__logo"
-                width={34}
-                height={34}
+                width={46}          // ✅ bigger
+                height={46}         // ✅ bigger
                 loading="eager"
+                decoding="async"
+                style={{
+                  borderRadius: 12,
+                  objectFit: "cover",
+                  marginRight: 10,
+                }}
                 onError={(e) => {
-                  // fallback (prevents broken image icon)
                   e.currentTarget.style.display = "none";
                 }}
               />

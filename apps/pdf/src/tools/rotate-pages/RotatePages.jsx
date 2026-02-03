@@ -6,10 +6,13 @@ import { loadPdfFromFile, savePdfToBlob } from "../shared/pdfCore.js";
 import { downloadBlob, niceBytes } from "../shared/fileUi.js";
 import "./rotate-pages.css";
 
+
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 export default function RotatePages() {
   const [file, setFile] = useState(null);
+  const inputRef = useRef(null);
+
   const [angle, setAngle] = useState(90);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -139,28 +142,43 @@ export default function RotatePages() {
         {/* Drop zone */}
         <div
           className={`drop ${dragging ? "isDragging" : ""}`}
-          onDragEnter={onDragEnter}
-          onDragOver={onDragOver}
-          onDragLeave={onDragLeave}
-          onDrop={onDrop}
-          onDragEnd={() => {
-            dragDepth.current = 0;
-            setDragging(false);
-          }}
           role="button"
           tabIndex={0}
+          aria-label="Upload PDF"
+          onClick={() => inputRef.current?.click()}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
-              e.currentTarget.querySelector('input[type="file"]')?.click();
+              e.preventDefault();
+              inputRef.current?.click();
             }
           }}
+          onDragEnter={() => setDragging(true)}
+          onDragOver={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setDragging(true);
+          }}
+          onDragLeave={(e) => {
+            if (e.currentTarget.contains(e.relatedTarget)) return;
+            setDragging(false);
+          }}
+          onDrop={onDrop}
         >
-          <input type="file" accept="application/pdf" onChange={onPick} />
+          <input
+            ref={inputRef}
+            type="file"
+            accept="application/pdf"
+            multiple={false /* change to true for merge */}
+            onChange={onPick}
+            style={{ display: "none" }}
+          />
+
           <div className="drop__inner">
             <div className="drop__title">{file ? "Replace PDF" : "Upload PDF"}</div>
-            <div className="muted">{file ? info : "Drop a PDF or click to upload. Rotates all pages."}</div>
+            <div className="muted">{file ? info : "Drop a PDF or click to upload"}</div>
           </div>
         </div>
+
 
         {/* Panel */}
         <div className="panel">

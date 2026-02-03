@@ -2,9 +2,13 @@ import { useMemo, useState } from "react";
 import { PDFDocument } from "pdf-lib";
 import { downloadBlob, niceBytes } from "../shared/fileUi.js";
 import "./extract-pages.css";
+import { useRef } from "react";
+
 
 export default function ExtractPages() {
   const [file, setFile] = useState(null);
+  const inputRef = useRef(null);
+
   const [pagesStr, setPagesStr] = useState("1");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -92,29 +96,44 @@ export default function ExtractPages() {
       <div className="grid2">
         {/* Drop zone with real drag & drop */}
         <div
-          className={`drop ${dragging ? "isDragging" : ""}`}
-          onDragEnter={() => setDragging(true)}
-          onDragOver={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setDragging(true);
-          }}
-          onDragLeave={() => setDragging(false)}
-          onDrop={onDrop}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.currentTarget.querySelector('input[type="file"]')?.click();
-            }
-          }}
-        >
-          <input type="file" accept="application/pdf" onChange={onPick} />
-          <div className="drop__inner">
-            <div className="drop__title">{file ? "Replace PDF" : "Upload PDF"}</div>
-            <div className="muted">{file ? info : "Drop or pick one PDF to extract pages."}</div>
-          </div>
-        </div>
+  className={`drop ${dragging ? "isDragging" : ""}`}
+  role="button"
+  tabIndex={0}
+  aria-label="Upload PDF"
+  onClick={() => inputRef.current?.click()}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      inputRef.current?.click();
+    }
+  }}
+  onDragEnter={() => setDragging(true)}
+  onDragOver={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(true);
+  }}
+  onDragLeave={(e) => {
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    setDragging(false);
+  }}
+  onDrop={onDrop}
+>
+  <input
+    ref={inputRef}
+    type="file"
+    accept="application/pdf"
+    multiple={false /* change to true for merge */}
+    onChange={onPick}
+    style={{ display: "none" }}
+  />
+
+  <div className="drop__inner">
+    <div className="drop__title">{file ? "Replace PDF" : "Upload PDF"}</div>
+    <div className="muted">{file ? info : "Drop a PDF or click to upload"}</div>
+  </div>
+</div>
+
 
         <div className="panel">
           <div className="field">

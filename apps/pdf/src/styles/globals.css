@@ -318,3 +318,10 @@ img { max-width: 100%; display: block; }
     height: 52px;
   }
 }
+
+.brand__logo{
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  object-fit: cover;
+}

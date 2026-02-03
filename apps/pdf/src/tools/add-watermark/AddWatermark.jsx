@@ -4,11 +4,15 @@ import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
 import { loadPdfFromFile, savePdfToBlob, addWatermarkText } from "../shared/pdfCore.js";
 import { downloadBlob, niceBytes } from "../shared/fileUi.js";
 import "./add-watermake.css";
+import { useRef } from "react";
+
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 export default function AddWatermark() {
   const [file, setFile] = useState(null);
+  const inputRef = useRef(null);
+
 
   const [text, setText] = useState("CONFIDENTIAL");
   const [opacity, setOpacity] = useState(0.2);
@@ -112,28 +116,43 @@ export default function AddWatermark() {
         {/* Drop zone */}
         <div
           className={`drop ${dragging ? "isDragging" : ""}`}
+          role="button"
+          tabIndex={0}
+          aria-label="Upload PDF"
+          onClick={() => inputRef.current?.click()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              inputRef.current?.click();
+            }
+          }}
           onDragEnter={() => setDragging(true)}
           onDragOver={(e) => {
             e.preventDefault();
             e.stopPropagation();
             setDragging(true);
           }}
-          onDragLeave={() => setDragging(false)}
-          onDrop={onDrop}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.currentTarget.querySelector('input[type="file"]')?.click();
-            }
+          onDragLeave={(e) => {
+            if (e.currentTarget.contains(e.relatedTarget)) return;
+            setDragging(false);
           }}
+          onDrop={onDrop}
         >
-          <input type="file" accept="application/pdf" onChange={onPick} />
+          <input
+            ref={inputRef}
+            type="file"
+            accept="application/pdf"
+            multiple={false /* change to true for merge */}
+            onChange={onPick}
+            style={{ display: "none" }}
+          />
+
           <div className="drop__inner">
             <div className="drop__title">{file ? "Replace PDF" : "Upload PDF"}</div>
-            <div className="muted">{file ? info : "Add a watermark across all pages."}</div>
+            <div className="muted">{file ? info : "Drop a PDF or click to upload"}</div>
           </div>
         </div>
+
 
         {/* Panel */}
         <div className="panel">

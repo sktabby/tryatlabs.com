@@ -10,8 +10,8 @@ export default function App() {
     <ToolLayout>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/result" element={<Result />} />
         <Route path="/:toolSlug" element={<ToolPage />} />
+        <Route path="/result" element={<Result />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ToolLayout>

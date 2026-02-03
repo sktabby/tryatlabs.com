@@ -6,11 +6,15 @@ import { niceBytes } from "../shared/fileUi.js";
 import "./add-page-number.css";
 import { useNavigate } from "react-router-dom";
 import { goToResult } from "../shared/goToResult.js";
+import { useRef } from "react";
+
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 export default function AddPageNumbers() {
   const [file, setFile] = useState(null);
+  const inputRef = useRef(null);
+
 
   // keep numeric
   const [startAt, setStartAt] = useState(1);
@@ -120,28 +124,43 @@ export default function AddPageNumbers() {
         {/* Drop zone */}
         <div
           className={`drop ${dragging ? "isDragging" : ""}`}
+          role="button"
+          tabIndex={0}
+          aria-label="Upload PDF"
+          onClick={() => inputRef.current?.click()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              inputRef.current?.click();
+            }
+          }}
           onDragEnter={() => setDragging(true)}
           onDragOver={(e) => {
             e.preventDefault();
             e.stopPropagation();
             setDragging(true);
           }}
-          onDragLeave={() => setDragging(false)}
-          onDrop={onDrop}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.currentTarget.querySelector('input[type="file"]')?.click();
-            }
+          onDragLeave={(e) => {
+            if (e.currentTarget.contains(e.relatedTarget)) return;
+            setDragging(false);
           }}
+          onDrop={onDrop}
         >
-          <input type="file" accept="application/pdf" onChange={onPick} />
+          <input
+            ref={inputRef}
+            type="file"
+            accept="application/pdf"
+            multiple={false /* change to true for merge */}
+            onChange={onPick}
+            style={{ display: "none" }}
+          />
+
           <div className="drop__inner">
             <div className="drop__title">{file ? "Replace PDF" : "Upload PDF"}</div>
-            <div className="muted">{file ? info : "Add clean page numbers to every page."}</div>
+            <div className="muted">{file ? info : "Drop a PDF or click to upload"}</div>
           </div>
         </div>
+
 
         {/* Panel */}
         <div className="panel">

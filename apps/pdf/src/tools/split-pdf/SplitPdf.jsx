@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { PDFDocument } from "pdf-lib";
 import * as pdfjs from "pdfjs-dist";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
-
 import { downloadBlob, niceBytes } from "../shared/fileUi.js";
 import "./split-pdf.css";
+import { useRef } from "react";
+
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -52,6 +53,8 @@ async function renderThumb(file, pageNo1Based = 1, scale = 0.38) {
 
 export default function SplitPdf() {
   const [file, setFile] = useState(null);
+  const inputRef = useRef(null);
+
   const [ranges, setRanges] = useState("1-1");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -190,28 +193,43 @@ export default function SplitPdf() {
         <div className="leftCol">
           <div
             className={`drop ${dragging ? "isDragging" : ""}`}
+            role="button"
+            tabIndex={0}
+            aria-label="Upload PDF"
+            onClick={() => inputRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                inputRef.current?.click();
+              }
+            }}
             onDragEnter={() => setDragging(true)}
             onDragOver={(e) => {
               e.preventDefault();
               e.stopPropagation();
               setDragging(true);
             }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={onDrop}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.currentTarget.querySelector('input[type="file"]')?.click();
-              }
+            onDragLeave={(e) => {
+              if (e.currentTarget.contains(e.relatedTarget)) return;
+              setDragging(false);
             }}
+            onDrop={onDrop}
           >
-            <input type="file" accept="application/pdf" onChange={onPick} />
+            <input
+              ref={inputRef}
+              type="file"
+              accept="application/pdf"
+              multiple={false /* change to true for merge */}
+              onChange={onPick}
+              style={{ display: "none" }}
+            />
+
             <div className="drop__inner">
               <div className="drop__title">{file ? "Replace PDF" : "Upload PDF"}</div>
-              <div className="muted">{file ? info : "Drop or pick one PDF to split"}</div>
+              <div className="muted">{file ? info : "Drop a PDF or click to upload"}</div>
             </div>
           </div>
+
 
           {/* Preview */}
           <div className="previewCard">

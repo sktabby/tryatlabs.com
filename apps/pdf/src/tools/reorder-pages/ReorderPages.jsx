@@ -4,6 +4,7 @@ import * as pdfjsLib from "pdfjs-dist";
 import workerUrl from "pdfjs-dist/build/pdf.worker.mjs?url";
 import "./reorder-pages.css";
 
+
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
 
 function uid() {
@@ -75,6 +76,8 @@ function downloadBytes(bytes, filename) {
 export default function ReorderPages() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const inputRef = useRef(null);
+
 
   // master pdf state
   const [pdfDoc, setPdfDoc] = useState(null);
@@ -379,26 +382,41 @@ export default function ReorderPages() {
       <div className="pageGrid">
         {empty ? (
           <div
-            className={`emptyBox ${draggingFile ? "isDragging" : ""}`}
+            className={`drop ${draggingFile ? "isDragging" : ""}`}
+            role="button"
+            tabIndex={0}
+            aria-label="Upload PDF"
+            onClick={() => inputRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                inputRef.current?.click();
+              }
+            }}
             onDragEnter={() => setDraggingFile(true)}
             onDragOver={(e) => {
               e.preventDefault();
               e.stopPropagation();
               setDraggingFile(true);
             }}
-            onDragLeave={() => setDraggingFile(false)}
-            onDrop={onDropMainZone}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.currentTarget.querySelector('input[type="file"]')?.click();
-              }
+            onDragLeave={(e) => {
+              if (e.currentTarget.contains(e.relatedTarget)) return;
+              setDraggingFile(false);
             }}
+            onDrop={onDropMainZone}   // ✅ IMPORTANT: file drop handler
           >
-            <input className="emptyBox__input" type="file" accept="application/pdf" onChange={onPickMain} />
-            <div className="emptyBox__title">Drop a PDF here</div>
-            <div className="muted">Or click to upload. You can also add multiple PDFs later.</div>
+            <input
+              ref={inputRef}
+              type="file"
+              accept="application/pdf"
+              onChange={onPickMain}   // ✅ IMPORTANT: file picker handler
+              style={{ display: "none" }}
+            />
+
+            <div className="drop__inner">
+              <div className="drop__title">Upload PDF</div>
+              <div className="muted">Drop a PDF here or click to upload</div>
+            </div>
           </div>
         ) : (
           pages.map((p) => {
@@ -410,7 +428,7 @@ export default function ReorderPages() {
                 draggable
                 onDragStart={() => onDragStart(p.id)}
                 onDragOver={(e) => e.preventDefault()}
-                onDrop={() => onDrop(p.id)}
+                onDrop={() => onDrop(p.id)}  // ✅ this is fine: page reorder drop
                 onClick={() => toggleSelect(p.id)}
                 role="button"
                 tabIndex={0}
@@ -436,6 +454,8 @@ export default function ReorderPages() {
             );
           })
         )}
+
+
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { goToResult } from "../shared/goToResult.js";
 import { niceBytes } from "../shared/fileUi.js";
 import "./crop-pdf.css";
 
+
 function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n));
 }
@@ -21,6 +22,8 @@ function rectFromPoints(a, b) {
 
 export default function CropPdf() {
   const navigate = useNavigate();
+  const inputRef = useRef(null);
+
 
   const [file, setFile] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -322,28 +325,43 @@ export default function CropPdf() {
       {/* Upload (drag + click) */}
       <div
         className={`drop ${dragging ? "isDragging" : ""}`}
+        role="button"
+        tabIndex={0}
+        aria-label="Upload PDF"
+        onClick={() => inputRef.current?.click()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            inputRef.current?.click();
+          }
+        }}
         onDragEnter={() => setDragging(true)}
         onDragOver={(e) => {
           e.preventDefault();
           e.stopPropagation();
           setDragging(true);
         }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={onDrop}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.currentTarget.querySelector('input[type="file"]')?.click();
-          }
+        onDragLeave={(e) => {
+          if (e.currentTarget.contains(e.relatedTarget)) return;
+          setDragging(false);
         }}
+        onDrop={onDrop}
       >
-        <input type="file" accept="application/pdf" onChange={onPick} />
+        <input
+          ref={inputRef}
+          type="file"
+          accept="application/pdf"
+          multiple={false /* change to true for merge */}
+          onChange={onPick}
+          style={{ display: "none" }}
+        />
+
         <div className="drop__inner">
-          <div className="drop__title">Drop a PDF here or click to upload</div>
-          <div className="muted">We’ll crop {applyMode === "single" ? "this page" : "all pages"} based on your selection.</div>
+          <div className="drop__title">{file ? "Replace PDF" : "Upload PDF"}</div>
+          <div className="muted">{file ? info : "Drop a PDF or click to upload"}</div>
         </div>
       </div>
+
 
       {/* Layout: Viewer + right panel */}
       <div className="cropLayout">

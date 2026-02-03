@@ -6,7 +6,7 @@ import { SITE } from "../../app/site.config.js";
 import { TEXT_TOOLS } from "../../tools/index.jsx";
 import AdSlot from "../../components/ads/AdSlot.jsx";
 import { TOOL_ICONS } from "../../tools/index.jsx";
-import "./home.css";
+import "./Home.css";
 
 
 export default function Home() {

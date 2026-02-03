@@ -1,32 +1,21 @@
-import { useMemo } from "react";
+import { useMemo, Suspense, lazy } from "react";
 import { useParams, Link } from "react-router-dom";
 import { PDF_TOOLS, SITE } from "../app/site.config.js";
 import { SeoHead } from "../seo/SeoHead.jsx";
 import { websiteJsonLd, breadcrumbJsonLd, toolJsonLd } from "../seo/jsonld.js";
 
-// Tools
-import MergePdf from "../tools/merge-pdf/MergePdf.jsx";
-import SplitPdf from "../tools/split-pdf/SplitPdf.jsx";
-import CompressPdf from "../tools/compress-pdf/CompressPdf.jsx";
-import ReorderPages from "../tools/reorder-pages/ReorderPages.jsx";
-import RotatePages from "../tools/rotate-pages/RotatePages.jsx";
-import ExtractPages from "../tools/extract-pages/ExtractPages.jsx";
-import AddPageNumbers from "../tools/add-page-numbers/AddPageNumbers.jsx";
-import AddWatermark from "../tools/add-watermark/AddWatermark.jsx";
-import WordToPdf from "../tools/word-to-pdf/WordToPdf.jsx";
-import CropPdf from "../tools/crop-pdf/CropPdf.jsx";
-
+// ✅ Lazy-load tools (code-splitting)
 const MAP = {
-  "merge-pdf": MergePdf,
-  "split-pdf": SplitPdf,
-  "compress-pdf": CompressPdf,
-  "reorder-pages": ReorderPages,
-  "rotate-pages": RotatePages,
-  "extract-pages": ExtractPages,
-  "add-page-numbers": AddPageNumbers,
-  "add-watermark": AddWatermark,
-  "word-to-pdf": WordToPdf,
-  "crop-pdf": CropPdf,
+  "merge-pdf": lazy(() => import("../tools/merge-pdf/MergePdf.jsx")),
+  "split-pdf": lazy(() => import("../tools/split-pdf/SplitPdf.jsx")),
+  "compress-pdf": lazy(() => import("../tools/compress-pdf/CompressPdf.jsx")),
+  "reorder-pages": lazy(() => import("../tools/reorder-pages/ReorderPages.jsx")),
+  "rotate-pages": lazy(() => import("../tools/rotate-pages/RotatePages.jsx")),
+  "extract-pages": lazy(() => import("../tools/extract-pages/ExtractPages.jsx")),
+  "add-page-numbers": lazy(() => import("../tools/add-page-numbers/AddPageNumbers.jsx")),
+  "add-watermark": lazy(() => import("../tools/add-watermark/AddWatermark.jsx")),
+  "word-to-pdf": lazy(() => import("../tools/word-to-pdf/WordToPdf.jsx")),
+  "crop-pdf": lazy(() => import("../tools/crop-pdf/CropPdf.jsx")),
 };
 
 const CATEGORY_LABEL = {
@@ -134,7 +123,17 @@ export default function ToolPage() {
           </div>
         </div>
       ) : (
-        <Tool />
+        <Suspense
+          fallback={
+            <div className="card">
+              <p className="muted" style={{ margin: 0 }}>
+                Loading tool…
+              </p>
+            </div>
+          }
+        >
+          <Tool />
+        </Suspense>
       )}
     </div>
   );
