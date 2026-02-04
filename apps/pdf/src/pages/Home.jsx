@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { PDF_CATEGORIES, PDF_TOOLS, SITE } from "../app/site.config.js";
-import { ArrowRight, ShieldCheck, Zap, Lock } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import { SeoHead } from "../seo/SeoHead.jsx";
 import { websiteJsonLd } from "../seo/jsonld.js";
+import "../styles/home.css";
 
 const SECTION_META = {
   all: {
@@ -34,18 +35,25 @@ const SECTION_META = {
 
 export default function Home() {
   const [activeCat, setActiveCat] = useState("all");
+  const [q, setQ] = useState("");
 
   const filteredTools = useMemo(() => {
-    if (activeCat === "all") return PDF_TOOLS;
-    return PDF_TOOLS.filter((t) => t.category === activeCat);
-  }, [activeCat]);
+    const base = activeCat === "all" ? PDF_TOOLS : PDF_TOOLS.filter((t) => t.category === activeCat);
+
+    const query = (q || "").trim().toLowerCase();
+    if (!query) return base;
+
+    return base.filter((t) => {
+      const hay = `${t.title} ${t.desc} ${t.keywords || ""}`.toLowerCase();
+      return hay.includes(query);
+    });
+  }, [activeCat, q]);
 
   const head = SECTION_META[activeCat] || SECTION_META.all;
 
   // ✅ SEO (ALWAYS full URL)
   const canonical = `${SITE.url}/`;
 
-  // ✅ Collection / list of tools
   const collectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -57,11 +65,10 @@ export default function Home() {
       name: t.title,
       url: `${SITE.url}/${t.slug}`,
       applicationCategory: "UtilitiesApplication",
-      operatingSystem: "Web",
-    })),
+      operatingSystem: "Web"
+    }))
   };
 
-  // ✅ ItemList (extra helpful for SEO on a tools directory)
   const itemListJsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -71,12 +78,19 @@ export default function Home() {
       "@type": "ListItem",
       position: idx + 1,
       name: t.title,
-      url: `${SITE.url}/${t.slug}`,
-    })),
+      url: `${SITE.url}/${t.slug}`
+    }))
   };
 
-  // ✅ Home keywords (optional)
   const homeKeywords = PDF_TOOLS.map((t) => t.keywords).filter(Boolean).join(", ");
+
+  // ✅ necessary: hero 4 tools (and allows icons usage cleanly)
+  const heroTools = useMemo(() => {
+    return [...PDF_TOOLS].sort(() => 0.5 - Math.random()).slice(0, 4);
+  }, []);
+
+  const [catOpen, setCatOpen] = useState(false);
+
 
   return (
     <>
@@ -84,11 +98,11 @@ export default function Home() {
         title="Free PDF Tools"
         description={SITE.description}
         canonical={canonical}
-        keywords={homeKeywords} // ✅ optional (only works if you add keywords prop in SeoHead)
+        keywords={homeKeywords}
         jsonLd={{
           website: websiteJsonLd(),
           collection: collectionJsonLd,
-          list: itemListJsonLd,
+          list: itemListJsonLd
         }}
       />
 
@@ -96,54 +110,45 @@ export default function Home() {
       <section className="hero hero--light">
         <div className="hero__grid">
           <div className="hero__left">
-            <div className="kicker">pdf.tryatlabs.com</div>
+            <div className="kicker">Free PDF Tools, Just For You!</div>
+
             <h1 className="hero__title">
               PDF ka kaam tha mushkil kabhi,
               <br />
               ab ek jagah pe, <span className="grad">aasaan sabhi.</span>
             </h1>
 
-            <p className="hero__sub">
-              Fast tools, clean design, aur poori privacy.
-              <br />
-              PDFs rahein tumhare device pe — hamesha.
-            </p>
             <div className="hero__cta">
               <a className="btn btn--primary" href="#all-tools">
                 Explore PDF Tools <ArrowRight size={18} />
               </a>
-
-              <div className="hero__trust">
-                <span className="pill">
-                  <ShieldCheck size={16} /> Local processing
-                </span>
-                <span className="pill">
-                  <Lock size={16} /> No uploads
-                </span>
-                <span className="pill">
-                  <Zap size={16} /> Instant results
-                </span>
-              </div>
             </div>
           </div>
 
+          {/* RIGHT: 4 quick services */}
           <div className="hero__right">
-            <div className="glassCard glassCard--light">
-              <div className="glassCard__top">
-                <div>
-                  <div className="muted">TryAtLabs</div>
-                  <div className="glassCard__title">PDF Toolkit</div>
-                </div>
-                <span className="badge">Light + Fast</span>
+            <div className="glassCard glassCard--light heroServices">
+              <div className="heroServices__head">
+                <div className="heroServices__kicker">Quick Access</div>
+                <div className="heroServices__title">Popular PDF Tools</div>
               </div>
 
-              <div className="glassCard__body">
-                <ul className="checklist">
-                  <li>Production-ready tools for everyday PDFs</li>
-                  <li>Runs fully in your browser (privacy-first)</li>
-                  <li>Fast, clean UI on mobile + desktop</li>
-                </ul>
-
+              <div className="heroServices__grid">
+                {heroTools.map((tool) => (
+                  <Link
+                    key={tool.slug}
+                    to={`/${tool.slug}`}
+                    className="heroServiceCard"
+                    aria-label={tool.title}
+                  >
+                    <span
+                      className="toolIcon toolIcon--sm"
+                      aria-hidden="true"
+                      dangerouslySetInnerHTML={{ __html: tool.icon || "" }}
+                    />
+                    <span className="heroServiceCard__text">{tool.title}</span>
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
@@ -151,14 +156,53 @@ export default function Home() {
       </section>
 
       {/* TOOLS */}
-      <section id="all-tools" className="section">
+      <section id="all-tools" className="section allTools">
         <div className="section__head">
           <h2>{head.title}</h2>
-          <p className="muted">{head.sub}</p>
+          
         </div>
 
-        {/* Pills */}
-        <div className="tabsRow" role="tablist" aria-label="PDF categories">
+        {/* ✅ Search bar ABOVE categories */}
+        <div className="searchRow">
+          <div className="searchInputWrap">
+            <input
+              className="searchInput"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search tools… (merge, compress, split)"
+              aria-label="Search PDF tools"
+            />
+
+            <button
+              className="searchIconBtn"
+              onClick={() => setQ("")}
+              aria-label="Clear search"
+              type="button"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+                <line
+                  x1="16.65"
+                  y1="16.65"
+                  x2="21"
+                  y2="21"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Desktop Pills */}
+        <div className="tabsRow tabsRow--desktop" role="tablist" aria-label="PDF categories">
           {PDF_CATEGORIES.map((c) => {
             const isActive = activeCat === c.id;
             return (
@@ -176,31 +220,105 @@ export default function Home() {
           })}
         </div>
 
+        {/* Mobile Dropdown (below search bar) */}
+       {/* Mobile Category Dropdown (Custom UI) */}
+<div className="tabsRowMobile">
+  <span className="tabsRowMobile__label">Category</span>
+
+  <div className="uiSelect" role="button" tabIndex={0}>
+    <button
+      type="button"
+      className="uiSelect__trigger"
+      onClick={() => setCatOpen((v) => !v)}
+      aria-haspopup="listbox"
+      aria-expanded={catOpen}
+    >
+      <span>
+        {PDF_CATEGORIES.find((c) => c.id === activeCat)?.label}
+      </span>
+
+      <svg
+        className={`uiSelect__chevron ${catOpen ? "isOpen" : ""}`}
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          d="M6 9l6 6 6-6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </button>
+
+    {catOpen && (
+      <div className="uiSelect__menu" role="listbox">
+        {PDF_CATEGORIES.map((c) => (
+          <button
+            key={c.id}
+            type="button"
+            className={`uiSelect__item ${
+              activeCat === c.id ? "active" : ""
+            }`}
+            onClick={() => {
+              setActiveCat(c.id);
+              setCatOpen(false);
+            }}
+            role="option"
+            aria-selected={activeCat === c.id}
+          >
+            {c.label}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
+
         {/* One grid only */}
         <div className="toolGrid toolGrid--home">
           {filteredTools.length === 0 ? (
             <div className="card" style={{ gridColumn: "1 / -1" }}>
-              <h3 style={{ marginTop: 0 }}>Coming soon</h3>
-              <p className="muted">
-                We’re adding more tools to this category. For now, try Merge PDF or Compress PDF.
-              </p>
+              <h3 style={{ marginTop: 0 }}>No results</h3>
+              <p className="muted">Try a different keyword or switch category.</p>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 10 }}>
-                <Link className="btn btn--primary" to="/merge-pdf">Merge PDF</Link>
-                <Link className="btn btn--ghost" to="/compress-pdf">Compress PDF</Link>
+                <button className="btn btn--ghost" onClick={() => setQ("")} type="button">
+                  Clear search
+                </button>
+                <button className="btn btn--ghost" onClick={() => setActiveCat("all")} type="button">
+                  Show all
+                </button>
               </div>
             </div>
           ) : (
             filteredTools.map((t) => (
-              <Link key={t.slug} to={`/${t.slug}`} className="toolCard toolCard--light">
+              <div key={t.slug} className="toolCard toolCard--light toolCard--split">
                 <div className="toolCard__top">
                   {t.badge ? <span className="toolCard__badge">{t.badge}</span> : <span />}
                 </div>
-                <div className="toolCard__title">{t.title}</div>
-                <div className="toolCard__desc">{t.desc}</div>
-                <div className="toolCard__go">
-                  Open <ArrowRight size={16} />
+
+                {/* ✅ necessary: icon + title row */}
+                <div className="toolCard__row">
+                  <span
+                    className="toolIcon"
+                    aria-hidden="true"
+                    dangerouslySetInnerHTML={{ __html: t.icon || "" }}
+                  />
+                  <div className="toolCard__title">{t.title}</div>
                 </div>
-              </Link>
+
+                <div className="toolCard__desc">{t.desc}</div>
+
+                {/* ✅ only button is clickable */}
+                <div className="toolCard__actions">
+                  <Link to={`/${t.slug}`} className="btn btn--primary toolOpenBtn">
+                    Open
+                  </Link>
+                </div>
+              </div>
             ))
           )}
         </div>
@@ -208,4 +326,3 @@ export default function Home() {
     </>
   );
 }
-

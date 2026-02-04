@@ -7,5 +7,5 @@ git stash pop
 
 🔼 PUSH
 git add .
-git commit -m "update by aqsa main and text"
+git commit -m "update by aqsa pdf UI half"
 git push origin main

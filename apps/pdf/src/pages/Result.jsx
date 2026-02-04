@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Download } from "lucide-react";
 import { useMemo } from "react";
 import { PDF_TOOLS } from "../app/site.config.js";
-import "./result.css";
+import "../styles/result.css";
 
 function pickSuggestions(currentSlug, count = 6) {
   const other = PDF_TOOLS.filter((t) => t.slug !== currentSlug);
@@ -25,16 +25,23 @@ export default function Result() {
   // If user refreshed or opened directly
   if (!state?.blobUrl) {
     return (
-      <section className="section">
-        <div className="card resultCard">
+      <section className="section resultSection">
+        <div className="card resultCard resultCard--expired">
+          <div className="resultTop">
+            <button className="btn btn--ghost" onClick={() => nav(-1)}>
+              <ArrowLeft size={18} /> Back
+            </button>
+            <div className="muted">TryAtLabs PDF</div>
+          </div>
+
           <h1 className="resultTitle">Result expired</h1>
-          <p className="muted">
+          <p className="muted resultSubtitle">
             This download link is no longer available. Please run the tool again.
           </p>
 
           <div className="actions">
-            <Link className="btn btn--primary" to="/">
-              Go to tools
+            <Link className="btn btn--primary resultCta" to="/">
+              Go to tools <ArrowRight size={18} />
             </Link>
           </div>
         </div>
@@ -58,7 +65,14 @@ export default function Result() {
   };
 
   return (
-    <section className="section">
+    <section className="section resultSection">
+      {/* Ambient bg blobs (theme-friendly, pure CSS) */}
+      <div className="resultAmbient" aria-hidden="true">
+        <span className="resultBlob resultBlob--a" />
+        <span className="resultBlob resultBlob--b" />
+        <span className="resultBlob resultBlob--c" />
+      </div>
+
       <div className="card resultCard">
         <div className="resultTop">
           <button className="btn btn--ghost" onClick={() => nav(-1)}>
@@ -67,18 +81,31 @@ export default function Result() {
           <div className="muted">TryAtLabs PDF</div>
         </div>
 
-        <h1 className="resultTitle">{title}</h1>
+        <div className="resultHeader">
+          <div className="resultBadge">Ready</div>
+          <h1 className="resultTitle">{title}</h1>
+          <p className="muted resultSubtitle">
+            Your file is processed and ready to download — everything stays on your device.
+          </p>
+        </div>
 
         <div className="resultMain">
-          <button className="btn btn--primary resultDownload" onClick={download}>
-            <Download size={18} /> Download {fileName}
-          </button>
-
-          {sizeBytes != null && (
-            <div className="muted resultMeta">
-              File size: {bytesToSize(sizeBytes)}
+          <div className="resultMain__inner">
+            <div className="resultFile">
+              <div className="resultFile__name">{fileName}</div>
+              {sizeBytes != null && (
+                <div className="muted resultMeta">File size: {bytesToSize(sizeBytes)}</div>
+              )}
             </div>
-          )}
+
+            <button className="btn btn--primary resultDownload" onClick={download}>
+              <Download size={18} /> Download
+            </button>
+
+            <div className="resultHint muted">
+              Tip: If you’re working with sensitive docs, client-side tools are safest.
+            </div>
+          </div>
         </div>
 
         <div className="resultContinue">
@@ -92,15 +119,18 @@ export default function Result() {
           <div className="resultGrid">
             {suggestions.map((t) => (
               <Link key={t.slug} to={`/${t.slug}`} className="resultItem">
-                <div>
+                <div className="resultItem__text">
                   <div className="resultItem__title">{t.title}</div>
-                  <div className="muted">{t.desc}</div>
+                  <div className="muted resultItem__desc">{t.desc}</div>
                 </div>
                 <ArrowRight size={18} />
               </Link>
             ))}
           </div>
         </div>
+
+        {/* Small footer row */}
+    
       </div>
     </section>
   );

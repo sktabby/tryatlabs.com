@@ -1,0 +1,371 @@
+/* Bigger, premium Result screen — no logic changes */
+/* Uses your existing tokens: --border, --card, --text, --p1..--p4 etc */
+
+.resultSection{
+  position: relative;
+  isolation: isolate;
+  padding-top: clamp(26px, 4vw, 54px);
+  padding-bottom: clamp(28px, 4vw, 58px);
+}
+
+/* Ambient blobs */
+.resultAmbient{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.resultBlob{
+  position: absolute;
+  width: min(520px, 74vw);
+  height: min(520px, 74vw);
+  border-radius: 999px;
+  filter: blur(30px);
+  opacity: .55;
+  transform: translate3d(0,0,0);
+  animation: blobFloat 9s ease-in-out infinite;
+  
+}
+
+.resultBlob--a{ left: -140px; top: -140px; animation-delay: 0s; }
+.resultBlob--b{
+  right: -160px; top: 10%;
+  width: min(460px, 68vw);
+  height: min(460px, 68vw);
+  opacity: .45;
+  background:
+    radial-gradient(circle at 40% 40%,
+      color-mix(in srgb, var(--p3) 55%, transparent),
+      transparent 62%);
+  animation-delay: -2.5s;
+}
+.resultBlob--c{
+  left: 20%;
+  bottom: -200px;
+  width: min(620px, 80vw);
+  height: min(620px, 80vw);
+  opacity: .35;
+  background:
+    radial-gradient(circle at 45% 45%,
+      color-mix(in srgb, var(--p4) 55%, transparent),
+      transparent 65%);
+  animation-delay: -5s;
+}
+
+@keyframes blobFloat{
+  0%, 100%{ transform: translate3d(0,0,0) scale(1); }
+  50%{ transform: translate3d(18px,-10px,0) scale(1.04); }
+}
+
+/* Card: larger + cinematic entrance */
+.resultCard{
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 18px;
+
+  width: min(980px, 100%);
+  margin-inline: auto;
+
+  padding: clamp(16px, 2.6vw, 26px);
+  border-radius: clamp(18px, 2.2vw, 26px);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  background:
+    radial-gradient(900px 320px at 0% 0%,
+      color-mix(in srgb, var(--p4) 22%, transparent),
+      transparent),
+    radial-gradient(650px 260px at 100% 0%,
+      color-mix(in srgb, var(--p2) 18%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 92%, transparent);
+
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  box-shadow:
+    0 30px 110px color-mix(in srgb, var(--p1) 18%, transparent),
+    0 18px 70px rgba(0,0,0,.24);
+
+  animation: cardIn .45s ease-out both;
+}
+
+@keyframes cardIn{
+  from{ opacity: 0; transform: translateY(10px) scale(.985); }
+  to{ opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Expired state still premium */
+.resultCard--expired{
+  background:
+    radial-gradient(900px 320px at 0% 0%,
+      color-mix(in srgb, var(--p4) 14%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 90%, transparent);
+}
+
+/* Top row */
+.resultTop{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Header cluster */
+.resultHeader{
+  display: grid;
+  gap: 10px;
+  padding-top: 2px;
+}
+
+.resultBadge{
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 950;
+  font-size: 12px;
+  letter-spacing: .2px;
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 86%, transparent),
+      color-mix(in srgb, var(--card) 96%, transparent));
+  box-shadow: 0 10px 30px rgba(0,0,0,.16);
+}
+
+.resultTitle{
+  margin: 0;
+  font-size: clamp(30px, 3.8vw, 46px);
+  font-weight: 950;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.resultSubtitle{
+  margin: 0;
+  max-width: 68ch;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Main download panel: larger + glow ring */
+.resultMain{
+  position: relative;
+  padding: clamp(16px, 2.2vw, 22px);
+  border-radius: clamp(18px, 2vw, 24px);
+  border: 1px solid color-mix(in srgb, var(--border) 92%, transparent);
+
+  background:
+    radial-gradient(1100px 340px at 0% 0%,
+      color-mix(in srgb, var(--p4) 28%, transparent),
+      transparent),
+    radial-gradient(800px 300px at 100% 100%,
+      color-mix(in srgb, var(--p1) 18%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 94%, transparent);
+
+  overflow: hidden;
+}
+
+.resultMain::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius: inherit;
+  padding: 1px;
+  background:
+    linear-gradient(120deg,
+      color-mix(in srgb, var(--p1) 38%, transparent),
+      transparent 35%,
+      color-mix(in srgb, var(--p4) 32%, transparent));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: .55;
+  pointer-events:none;
+}
+
+.resultMain__inner{
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  text-align: center;
+}
+
+.resultFile{
+  display: grid;
+  gap: 6px;
+}
+
+.resultFile__name{
+  font-weight: 950;
+  font-size: 15px;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.resultMeta{
+  font-weight: 850;
+}
+
+.resultDownload{
+  padding: 14px 22px;
+  border-radius: 18px;
+  font-size: 15px;
+  min-width: 220px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  transform: translateZ(0);
+  transition: transform .14s ease, filter .14s ease;
+  animation: popIn .55s ease-out both;
+  animation-delay: .1s;
+}
+
+.resultDownload:hover{
+  transform: translateY(-2px) scale(1.01);
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,.24));
+}
+
+.resultDownload:active{
+  transform: translateY(0px) scale(.99);
+}
+
+@keyframes popIn{
+  from{ opacity: 0; transform: translateY(6px) scale(.98); }
+  to{ opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.resultHint{
+  font-size: 12.5px;
+  line-height: 1.55;
+  max-width: 60ch;
+}
+
+/* Continue panel */
+.resultContinue{
+  border: 1px solid color-mix(in srgb, var(--border) 92%, transparent);
+  border-radius: clamp(18px, 2vw, 24px);
+  padding: clamp(12px, 2vw, 16px);
+  background: color-mix(in srgb, var(--card) 95%, transparent);
+  animation: fadeUp .5s ease-out both;
+  animation-delay: .08s;
+}
+
+@keyframes fadeUp{
+  from{ opacity: 0; transform: translateY(8px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+.resultContinue__head{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.resultContinue__title{
+  font-weight: 950;
+  font-size: 16px;
+}
+
+.resultSeeMore{
+  font-weight: 900;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  transition: transform .12s ease, border-color .12s ease;
+}
+
+.resultSeeMore:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--p1) 48%, var(--border));
+}
+
+/* Grid: larger cards, smoother hover, better mobile */
+.resultGrid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 980px){
+  .resultGrid{ grid-template-columns: 1fr; }
+}
+
+.resultItem{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  border: 1px solid color-mix(in srgb, var(--border) 92%, transparent);
+  border-radius: 18px;
+  padding: 14px;
+
+  background:
+    radial-gradient(520px 160px at 0% 0%,
+      color-mix(in srgb, var(--p4) 14%, transparent),
+      transparent 60%),
+    color-mix(in srgb, var(--card) 92%, transparent);
+
+  transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+  will-change: transform;
+}
+
+.resultItem:hover{
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--p1) 50%, var(--border));
+  box-shadow: 0 14px 40px rgba(0,0,0,.22);
+}
+
+.resultItem__text{ display: grid; gap: 4px; }
+
+.resultItem__title{
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.resultItem__desc{
+  font-size: 13px;
+  margin-top: 0;
+  line-height: 1.45;
+}
+
+/* Footer */
+.resultFooter{
+  border-top: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  padding-top: 12px;
+  font-size: 12.5px;
+}
+
+/* Existing helper you had (kept) */
+.resultShare{
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .resultCard,
+  .resultContinue,
+  .resultDownload,
+  .resultBlob{
+    animation: none !important;
+    transition: none !important;
+  }
+}

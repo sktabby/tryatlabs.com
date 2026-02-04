@@ -1,9 +1,9 @@
 import { useMemo, useRef, useState } from "react";
 import { PDFDocument } from "pdf-lib";
 import * as pdfjsLib from "pdfjs-dist";
-import workerUrl from "pdfjs-dist/build/pdf.worker.mjs?url";
+import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import BusyOverlay from "../../components/BusyOverlay.jsx"; // ✅ adjust path if needed
 import "./reorder-pages.css";
-
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
 
@@ -11,43 +11,38 @@ function uid() {
   return Math.random().toString(16).slice(2) + Date.now().toString(16);
 }
 
-async function renderPdfThumbnails(file, scale = 0.25) {
+async function renderPdfThumbnails(file, targetCssWidth = 220) {
   const buf = await file.arrayBuffer();
+  const bytes = new Uint8Array(buf);
 
-  // ✅ clone so pdf.js can't detach the one we use for pdf-lib
-  const pdfjsData = buf.slice(0);
+  const pdf = await pdfjsLib.getDocument({ data: bytes.slice() }).promise;
 
-  const pdf = await pdfjsLib.getDocument({ data: pdfjsData }).promise;
+  const dpr = Math.max(1, Math.min(2.25, window.devicePixelRatio || 1));
+  const thumbs = [];
 
-  const pages = [];
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
+
+    const base = page.getViewport({ scale: 1 });
+    const scale = (targetCssWidth * dpr) / base.width;
     const viewport = page.getViewport({ scale });
+
     const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: false });
 
     canvas.width = Math.floor(viewport.width);
     canvas.height = Math.floor(viewport.height);
 
     await page.render({ canvasContext: ctx, viewport }).promise;
-    const dataUrl = canvas.toDataURL("image/png");
-
-    pages.push({ pageNumber: i, thumb: dataUrl });
+    thumbs.push({ pageNumber: i, thumb: canvas.toDataURL("image/png") });
   }
 
-  return { arrayBuffer: buf.slice(0), thumbs: pages };
-}
-
-async function appendPdfPages(targetPdfDoc, sourceArrayBuffer) {
-  const srcDoc = await PDFDocument.load(sourceArrayBuffer);
-  const copied = await targetPdfDoc.copyPages(srcDoc, srcDoc.getPageIndices());
-  copied.forEach((p) => targetPdfDoc.addPage(p));
+  return { bytes, thumbs, pageCount: pdf.numPages };
 }
 
 function insertBlankPage(pdfDoc, insertIndex) {
   const pageCount = pdfDoc.getPageCount();
 
-  // Use previous page size if exists, else A4-ish
   let w = 595;
   let h = 842;
 
@@ -59,7 +54,6 @@ function insertBlankPage(pdfDoc, insertIndex) {
     h = height;
   }
 
-  // ✅ truly blank page
   pdfDoc.insertPage(insertIndex, [w, h]);
 }
 
@@ -74,26 +68,34 @@ function downloadBytes(bytes, filename) {
 }
 
 export default function ReorderPages() {
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
   const inputRef = useRef(null);
+  const dragIdRef = useRef(null);
 
+  const [busy, setBusy] = useState(false);
+  const [overlayOpen, setOverlayOpen] = useState(false);
+  const [overlayStep, setOverlayStep] = useState("Working…");
+  const [error, setError] = useState("");
 
-  // master pdf state
   const [pdfDoc, setPdfDoc] = useState(null);
-
-  // UI pages state (derived)
   const [pages, setPages] = useState([]); // {id, kind:'pdf'|'blank', label, thumb, srcIndex?}
   const [selected, setSelected] = useState(new Set());
 
-  // drag state for page reorder
-  const dragIdRef = useRef(null);
-
-  // drag state for file drop zone
-  const [draggingFile, setDraggingFile] = useState(false);
-
-  const canDownload = !!pdfDoc && pages.length > 0 && !busy;
+  const empty = pages.length === 0;
+  const hasPdf = pages.some((p) => p.kind === "pdf");
   const selectedCount = selected.size;
+  const canExport = !!pdfDoc && hasPdf && !busy;
+
+  const usage = useMemo(
+    () => [
+      "Upload your PDF.",
+      "Drag page cards to reorder.",
+      "Tap pages to select (multi-select supported).",
+      "Delete removes selected pages.",
+      "Insert Blank adds a blank page after your selection.",
+      "Download the final organized PDF.",
+    ],
+    []
+  );
 
   const toggleSelect = (id) => {
     setSelected((prev) => {
@@ -105,136 +107,38 @@ export default function ReorderPages() {
   };
 
   const clearSelection = () => setSelected(new Set());
+  const selectAll = () => setSelected(new Set(pages.map((p) => p.id)));
 
-  const handleMainFile = async (f) => {
-    if (!f) return;
-    if (f.type !== "application/pdf") return setError("Please select a PDF.");
-
-    setError("");
-    setBusy(true);
+  const deleteSelected = () => {
+    if (!selectedCount) return;
+    setPages((prev) => prev.filter((p) => !selected.has(p.id)));
     clearSelection();
+  };
 
-    try {
-      const { arrayBuffer, thumbs } = await renderPdfThumbnails(f, 0.32);
-      const doc = await PDFDocument.load(arrayBuffer);
-
-      const uiPages = thumbs.map((p, idx) => ({
-        id: uid(),
-        kind: "pdf",
-        srcIndex: idx,
-        label: `Page ${idx + 1}`,
-        thumb: p.thumb
-      }));
-
-      setPdfDoc(doc);
-      setPages(uiPages);
-    } catch (err) {
-      setError(err?.message || "Failed to load PDF.");
-    } finally {
-      setBusy(false);
+  const insertBlankAfter = () => {
+    const ids = Array.from(selected);
+    let insertAt = pages.length;
+    if (ids.length) {
+      const idx = pages.findIndex((p) => p.id === ids[0]);
+      if (idx >= 0) insertAt = idx + 1;
     }
-  };
 
-  const onPickMain = async (e) => {
-    const f = e.target.files?.[0];
-    e.target.value = "";
-    await handleMainFile(f);
-  };
+    const newItem = { id: uid(), kind: "blank", label: "Blank Page", thumb: "" };
 
-  const onDropMainZone = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDraggingFile(false);
+    setPages((prev) => {
+      const next = [...prev];
+      next.splice(insertAt, 0, newItem);
+      return next;
+    });
 
-    const f = e.dataTransfer.files?.[0];
-    await handleMainFile(f);
-  };
-
-  const onAddMorePdfs = async (e) => {
-    const files = Array.from(e.target.files || []);
-    e.target.value = "";
-    if (!files.length) return;
-
-    setError("");
-    setBusy(true);
-
-    try {
-      if (!pdfDoc) {
-        // If no base PDF exists, treat first file as base.
-        const f = files[0];
-        const { arrayBuffer, thumbs } = await renderPdfThumbnails(f, 0.32);
-        const doc = await PDFDocument.load(arrayBuffer);
-        const uiPages = thumbs.map((p, idx) => ({
-          id: uid(),
-          kind: "pdf",
-          srcIndex: idx,
-          label: `Page ${idx + 1}`,
-          thumb: p.thumb
-        }));
-
-        setPdfDoc(doc);
-        setPages(uiPages);
-
-        // remaining files appended
-        for (let i = 1; i < files.length; i++) {
-          const fx = files[i];
-          if (fx.type !== "application/pdf") continue;
-
-          const res = await renderPdfThumbnails(fx, 0.32);
-          await appendPdfPages(doc, res.arrayBuffer);
-
-          const beforeCount = uiPages.filter((x) => x.kind === "pdf").length;
-          res.thumbs.forEach((p, j) => {
-            uiPages.push({
-              id: uid(),
-              kind: "pdf",
-              srcIndex: beforeCount + j,
-              label: `Page ${beforeCount + j + 1}`,
-              thumb: p.thumb
-            });
-          });
-
-          setPages([...uiPages]);
-          setPdfDoc(doc);
-        }
-        return;
-      }
-
-      // Append each new PDF to current doc
-      const updatedPages = [...pages];
-      for (const f of files) {
-        if (f.type !== "application/pdf") continue;
-
-        const res = await renderPdfThumbnails(f, 0.32);
-
-        const beforeCount = pdfDoc.getPageCount();
-        await appendPdfPages(pdfDoc, res.arrayBuffer);
-
-        res.thumbs.forEach((p, idx) => {
-          updatedPages.push({
-            id: uid(),
-            kind: "pdf",
-            srcIndex: beforeCount + idx,
-            label: `Page ${beforeCount + idx + 1}`,
-            thumb: p.thumb
-          });
-        });
-      }
-
-      setPages(updatedPages);
-      setPdfDoc(pdfDoc);
-    } catch (err) {
-      setError(err?.message || "Failed to add files.");
-    } finally {
-      setBusy(false);
-    }
+    clearSelection();
   };
 
   const onDragStart = (id) => {
     dragIdRef.current = id;
   };
 
-  const onDrop = (overId) => {
+  const onDropOver = (overId) => {
     const dragId = dragIdRef.current;
     dragIdRef.current = null;
     if (!dragId || dragId === overId) return;
@@ -251,45 +155,71 @@ export default function ReorderPages() {
     });
   };
 
-  const deleteSelected = () => {
-    if (!selectedCount) return;
-    setPages((prev) => prev.filter((p) => !selected.has(p.id)));
+  const clearAll = () => {
+    setBusy(false);
+    setOverlayOpen(false);
+    setError("");
+    setPdfDoc(null);
+    setPages([]);
     clearSelection();
+    if (inputRef.current) inputRef.current.value = "";
   };
 
-  const insertBlankAfter = async () => {
-    // Insert blank after first selected, else at end
-    const ids = Array.from(selected);
-    let insertAt = pages.length;
-    if (ids.length) {
-      const idx = pages.findIndex((p) => p.id === ids[0]);
-      if (idx >= 0) insertAt = idx + 1;
+  const handleUpload = async (f) => {
+    if (!f) return;
+    if (f.type !== "application/pdf") {
+      setError("Please select a PDF file.");
+      return;
     }
 
-    const newItem = {
-      id: uid(),
-      kind: "blank",
-      label: "Blank Page",
-      thumb: ""
-    };
-
-    setPages((prev) => {
-      const next = [...prev];
-      next.splice(insertAt, 0, newItem);
-      return next;
-    });
-
+    setBusy(true);
+    setError("");
     clearSelection();
+
+    // ✅ show overlay immediately
+    setOverlayStep("Uploading…");
+    setOverlayOpen(true);
+
+    try {
+      const targetWidth = window.innerWidth < 520 ? 180 : 220;
+
+      setOverlayStep("Reading file…");
+      const { bytes, thumbs } = await renderPdfThumbnails(f, targetWidth);
+
+      setOverlayStep("Preparing pages…");
+      const doc = await PDFDocument.load(bytes.slice(), { ignoreEncryption: true });
+
+      const uiPages = thumbs.map((p, idx) => ({
+        id: uid(),
+        kind: "pdf",
+        srcIndex: idx,
+        label: `Page ${idx + 1}`,
+        thumb: p.thumb,
+      }));
+
+      setPdfDoc(doc);
+      setPages(uiPages);
+    } catch (err) {
+      setError(err?.message || "Failed to load PDF.");
+    } finally {
+      setBusy(false);
+      setOverlayOpen(false);
+    }
   };
 
-  const selectAll = () => {
-    setSelected(new Set(pages.map((p) => p.id)));
+  const onPick = async (e) => {
+    const f = e.target.files?.[0];
+    e.target.value = "";
+    await handleUpload(f);
   };
 
   const download = async () => {
     if (!pdfDoc) return;
+
     setBusy(true);
     setError("");
+    setOverlayStep("Building final PDF…");
+    setOverlayOpen(true);
 
     try {
       const out = await PDFDocument.create();
@@ -302,14 +232,13 @@ export default function ReorderPages() {
       const copied = await out.copyPages(pdfDoc, pdfPageIndices);
       copied.forEach((p) => out.addPage(p));
 
-      // Insert blank pages where needed
-      let pdfCursor = 0;
+      let cursor = 0;
       for (let i = 0; i < pages.length; i++) {
         if (pages[i].kind === "blank") {
-          insertBlankPage(out, pdfCursor);
-          pdfCursor += 1;
+          insertBlankPage(out, cursor);
+          cursor += 1;
         } else {
-          pdfCursor += 1;
+          cursor += 1;
         }
       }
 
@@ -319,104 +248,103 @@ export default function ReorderPages() {
       setError(err?.message || "Failed to export PDF.");
     } finally {
       setBusy(false);
+      setOverlayOpen(false);
     }
   };
 
-  const hasPdf = pages.some((p) => p.kind === "pdf");
-  const empty = !hasPdf && pages.length === 0;
-
-  const helpText = useMemo(() => {
-    if (empty) return "Upload a PDF to start organizing.";
-    return "Drag pages to reorder. Select pages to delete or insert blank pages.";
-  }, [empty]);
-
   return (
     <div className="tool tool--reorder card">
-      <div className="toolHead">
-        <div>
-          <h2 className="toolTitle">Organize PDF (Reorder + Delete + Blank Pages)</h2>
-          <p className="muted">{helpText}</p>
+      <BusyOverlay
+        open={overlayOpen}
+        stepLabel={overlayStep}
+        title="Organizing your PDF"
+        subtitle="Everything runs locally in your browser. Please keep this tab open."
+      />
+
+      <div className="reorderTop">
+        <div className="reorderTop__left">
+         
+          <p className="muted reorderSub">
+            Reorder pages, delete pages, and insert blank pages.
+          </p>
         </div>
 
-        <div className="toolActions">
-          <label className="btn btn--ghost">
-            <input hidden type="file" accept="application/pdf" onChange={onPickMain} />
-            Upload PDF
-          </label>
+        <div className="reorderTop__right">
+          <input
+            ref={inputRef}
+            type="file"
+            accept="application/pdf"
+            onChange={onPick}
+            style={{ display: "none" }}
+          />
 
-          <label className="btn btn--ghost">
-            <input hidden type="file" multiple accept="application/pdf" onChange={onAddMorePdfs} />
-            Add More PDFs
-          </label>
-
-          <button className="btn" onClick={selectAll} disabled={!pages.length || busy}>
-            Select all
-          </button>
-          <button className="btn" onClick={clearSelection} disabled={!selectedCount || busy}>
-            Clear
-          </button>
+          
+          {!empty && (
+            <button type="button" className="btn btn--ghost" disabled={busy} onClick={clearAll}>
+              Reset
+            </button>
+          )}
         </div>
+      </div>
+
+      <div className="guideCard">
+        <div className="guideHead">
+          <div className="guideTitle">How to use</div>
+          <div className="muted">
+            {empty ? "Upload a PDF to begin." : `${pages.length} items loaded`}
+          </div>
+        </div>
+        <ol className="guideList">
+          {usage.map((t) => (
+            <li key={t}>{t}</li>
+          ))}
+        </ol>
       </div>
 
       {error && <div className="alert alert--danger">{error}</div>}
 
-      <div className="toolbar">
-        <div className="toolbar__left">
-          <span className="pill">{pages.length} items</span>
-          <span className="pill">{selectedCount} selected</span>
-        </div>
+      {!empty && (
+        <div className="toolbar">
+          <div className="toolbar__left">
+            <span className="pill">{pages.length} items</span>
+            <span className="pill">{selectedCount} selected</span>
+          </div>
 
-        <div className="toolbar__right">
-          <button className="btn" onClick={insertBlankAfter} disabled={busy || !pages.length}>
-            Insert blank page
-          </button>
-          <button className="btn btn--danger" onClick={deleteSelected} disabled={busy || !selectedCount}>
-            Delete selected
-          </button>
-          <button className="btn btn--primary" onClick={download} disabled={!canDownload || !hasPdf}>
-            {busy ? "Processing..." : "Download PDF"}
-          </button>
+          <div className="toolbar__right">
+            <button type="button" className="btn" onClick={selectAll} disabled={busy || !pages.length}>
+              Select all
+            </button>
+            <button type="button" className="btn" onClick={clearSelection} disabled={busy || !selectedCount}>
+              Clear
+            </button>
+            <button type="button" className="btn" onClick={insertBlankAfter} disabled={busy || !pages.length}>
+              Insert Blank
+            </button>
+            <button type="button" className="btn btn--danger" onClick={deleteSelected} disabled={busy || !selectedCount}>
+              Delete
+            </button>
+            <button type="button" className="btn btn--primary" onClick={download} disabled={!canExport}>
+              {busy ? "Processing…" : "Download"}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="pageGrid">
         {empty ? (
-          <div
-            className={`drop ${draggingFile ? "isDragging" : ""}`}
-            role="button"
-            tabIndex={0}
-            aria-label="Upload PDF"
-            onClick={() => inputRef.current?.click()}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                inputRef.current?.click();
-              }
-            }}
-            onDragEnter={() => setDraggingFile(true)}
-            onDragOver={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDraggingFile(true);
-            }}
-            onDragLeave={(e) => {
-              if (e.currentTarget.contains(e.relatedTarget)) return;
-              setDraggingFile(false);
-            }}
-            onDrop={onDropMainZone}   // ✅ IMPORTANT: file drop handler
-          >
-            <input
-              ref={inputRef}
-              type="file"
-              accept="application/pdf"
-              onChange={onPickMain}   // ✅ IMPORTANT: file picker handler
-              style={{ display: "none" }}
-            />
+          <div className="emptyState">
+           
+            <div className="emptyState__title">Upload a PDF to start</div>
+            <div className="muted">After upload, drag cards to reorder and tap to select.</div>
 
-            <div className="drop__inner">
-              <div className="drop__title">Upload PDF</div>
-              <div className="muted">Drop a PDF here or click to upload</div>
-            </div>
+            <button
+              type="button"
+              className="btn btn--primary emptyState__btn"
+              disabled={busy}
+              onClick={() => inputRef.current?.click()}
+            >
+              Upload PDF
+            </button>
           </div>
         ) : (
           pages.map((p) => {
@@ -428,7 +356,7 @@ export default function ReorderPages() {
                 draggable
                 onDragStart={() => onDragStart(p.id)}
                 onDragOver={(e) => e.preventDefault()}
-                onDrop={() => onDrop(p.id)}  // ✅ this is fine: page reorder drop
+                onDrop={() => onDropOver(p.id)}
                 onClick={() => toggleSelect(p.id)}
                 role="button"
                 tabIndex={0}
@@ -454,8 +382,6 @@ export default function ReorderPages() {
             );
           })
         )}
-
-
       </div>
     </div>
   );

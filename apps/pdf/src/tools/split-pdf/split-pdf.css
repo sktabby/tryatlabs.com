@@ -1,110 +1,177 @@
-.tool--split {
+.tool--split{
   width: 100%;
-  max-width: 1040px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 18px;
+  padding: clamp(14px, 2vw, 18px);
+  animation: splitIn .35s ease-out both;
 }
 
-/* 2-col on desktop, stacked on mobile */
-.tool--split .grid2 {
+@keyframes splitIn{
+  from{ opacity: 0; transform: translateY(8px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+/* Top bar */
+.splitTop{
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.splitTop__left{
+  display: grid;
+  gap: 6px;
+  min-width: min(520px, 100%);
+}
+
+.splitKicker{
+  font-weight: 950;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.splitSub{
+  line-height: 1.55;
+  font-size: 13px;
+  max-width: 70ch;
+}
+
+.splitTop__right{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.splitUploadBtn{
+  border-radius: 14px;
+  padding: 10px 14px;
+}
+
+/* Compact drop strip */
+.dropStrip{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px dashed color-mix(in srgb, var(--border) 92%, transparent);
+  background:
+    radial-gradient(850px 240px at 0% 0%,
+      color-mix(in srgb, var(--p4) 18%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 90%, transparent);
+  cursor: pointer;
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+  margin-bottom: 14px;
+  user-select: none;
+}
+
+.dropStrip:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--p1) 46%, var(--border));
+}
+
+.dropStrip.isDragging{
+  border-style: solid;
+  background:
+    radial-gradient(900px 280px at 0% 0%,
+      color-mix(in srgb, var(--p4) 26%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 92%, transparent);
+}
+
+.dropStrip.hasFile{ border-style: solid; }
+
+.dropStrip__dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--p1) 70%, var(--text));
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--p4) 18%, transparent);
+  flex: 0 0 auto;
+}
+
+.dropStrip__text{
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dropStrip__title{
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.dropStrip__pill{
+  margin-left: auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  font-weight: 900;
+  font-size: 12px;
+}
+
+/* ✅ Equal columns + equal height cards */
+.tool--split .grid2{
   display: grid;
   gap: 14px;
   grid-template-columns: 1fr;
+  align-items: stretch; /* ✅ stretch children */
 }
 
-@media (min-width: 980px) {
-  .tool--split .grid2 {
-    grid-template-columns: 1.1fr 0.9fr;
-    align-items: start;
+@media (min-width: 980px){
+  .tool--split .grid2{
+    grid-template-columns: 1fr 1fr; /* ✅ equal size */
   }
 }
 
-/* left col holds drop + preview */
-.tool--split .leftCol {
+.tool--split .leftCol{
   display: grid;
-  gap: 12px;
+  height: 100%;
 }
 
-/* BIG drop area */
-.tool--split .drop {
-  position: relative;
-  width: 100%;
-  min-height: 220px;
-  display: grid;
-  place-items: center;
-
-  cursor: pointer;
-  border: 1px dashed var(--border);
-  border-radius: 18px;
-  padding: 18px;
-  background: color-mix(in srgb, var(--card) 88%, transparent);
+.tool--split .previewCard,
+.tool--split .panel{
+  height: 100%; /* ✅ both cards equal height */
 }
 
-.tool--split .drop:hover {
-  background: color-mix(in srgb, var(--card) 92%, transparent);
-}
-
-.tool--split .drop.isDragging {
-  border-style: solid;
-  background: color-mix(in srgb, var(--p4) 18%, var(--card));
-}
-
-/* input overlay */
-.tool--split .drop input[type="file"] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.tool--split .drop__inner {
-  text-align: center;
-  display: grid;
-  gap: 8px;
-  max-width: 560px;
-  padding: 6px 10px;
-  pointer-events: none;
-}
-
-.tool--split .drop__title {
-  font-weight: 900;
-  line-height: 1.2;
-  font-size: 18px;
-}
-
-/* Right panel */
-.tool--split .panel {
+/* Panel */
+.tool--split .panel{
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: 14px;
-  background: color-mix(in srgb, var(--card) 88%, transparent);
+  background:
+    radial-gradient(900px 260px at 0% 0%,
+      color-mix(in srgb, var(--p4) 16%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 88%, transparent);
   display: grid;
   align-content: start;
   gap: 12px;
 }
 
-.tool--split .field {
+.tool--split .field{
   display: grid;
   gap: 8px;
 }
 
-.tool--split .field__label {
-  font-weight: 900;
+.tool--split .field__label{
+  font-weight: 950;
 }
 
-/* Quick buttons row */
-.tool--split .quickRow {
+.tool--split .quickRow{
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.tool--split .quickRow .btn {
-  min-height: 40px;
-}
+.tool--split .quickRow .btn{ min-height: 40px; }
 
-/* Note inside panel */
-.tool--split .panelNote {
+.tool--split .panelNote{
   border: 1px dashed var(--border);
   border-radius: 14px;
   padding: 10px;
@@ -113,16 +180,18 @@
   background: color-mix(in srgb, var(--p4) 14%, transparent);
 }
 
-/* Preview card */
-.tool--split .previewCard {
+/* ✅ Preview: smaller and neat */
+.tool--split .previewCard{
   border: 1px solid var(--border);
   border-radius: 18px;
   overflow: hidden;
   background: color-mix(in srgb, var(--card) 88%, transparent);
   box-shadow: var(--shadow);
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* ✅ lets body expand */
 }
 
-.tool--split .previewHead {
+.tool--split .previewHead{
   padding: 12px 14px;
   border-bottom: 1px solid var(--border);
   background: color-mix(in srgb, var(--card) 92%, transparent);
@@ -132,39 +201,61 @@
   align-items: baseline;
 }
 
-.tool--split .previewTitle {
-  font-weight: 950;
-}
+.tool--split .previewTitle{ font-weight: 950; }
 
-.tool--split .previewBody {
-  padding: 14px;
+.tool--split .previewBody{
+  padding: 12px;
   display: grid;
   place-items: center;
 }
 
-.tool--split .previewImg {
+/* Smaller max-width */
+.previewFrame{
+  position: relative;
   width: 100%;
-  max-width: 360px;
-  height: auto;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--card);
+  max-width: 420px; /* ✅ smaller */
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
 }
 
-.tool--split .previewPh {
-  height: 220px;
+.tool--split .previewImg{
+  display: block;
   width: 100%;
-  max-width: 360px;
-  border-radius: 14px;
+  height: auto;
+  transform: translateZ(0);
+  image-rendering: auto;
+}
+
+.previewOverlay{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 950;
+  background: color-mix(in srgb, rgba(0,0,0,.28) 70%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.tool--split .previewPh{
+  height: 220px;         /* ✅ smaller */
+  width: 100%;
+  max-width: 420px;      /* ✅ smaller */
+  border-radius: 16px;
   border: 1px dashed var(--border);
   display: grid;
   place-items: center;
   color: var(--muted);
-  font-weight: 900;
-  background: color-mix(in srgb, var(--p4) 14%, transparent);
+  font-weight: 950;
+  background:
+    radial-gradient(850px 220px at 0% 0%,
+      color-mix(in srgb, var(--p4) 14%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 90%, transparent);
 }
 
-.tool--split .previewNav {
+.tool--split .previewNav{
   padding: 12px 14px;
   border-top: 1px solid var(--border);
   display: flex;
@@ -173,38 +264,53 @@
 }
 
 /* Actions */
-.tool--split .actions {
-  margin-top: 16px;
+.tool--split .actions{
+  margin-top: 14px;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.tool--split .actions .btn {
+.tool--split .actions .btn{
   min-height: 44px;
+  border-radius: 14px;
 }
 
-/* Mobile */
-@media (max-width: 520px) {
-  .tool--split {
-    padding: 14px;
-  }
-
-  .tool--split .drop {
-    min-height: 200px;
-  }
-
-  .tool--split .actions {
+/* Mobile polish */
+@media (max-width: 640px){
+  .splitTop__right{
+    width: 100%;
     justify-content: stretch;
   }
 
-  .tool--split .actions .btn {
-    width: 100%;
-  }
-
-  .tool--split .previewNav .btn {
+  .splitTop__right .btn{
     flex: 1;
     justify-content: center;
   }
+
+  .dropStrip{
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .dropStrip__pill{ display: none; }
+
+  .tool--split .actions{
+    justify-content: stretch;
+  }
+
+  .tool--split .actions .btn{
+    width: 100%;
+  }
+
+  .tool--split .previewNav .btn{
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .tool--split{ animation: none !important; }
+  .dropStrip, .tool--split .previewImg{ transition: none !important; }
 }

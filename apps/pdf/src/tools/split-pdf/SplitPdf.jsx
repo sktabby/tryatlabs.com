@@ -1,13 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { PDFDocument } from "pdf-lib";
 import * as pdfjs from "pdfjs-dist";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
-import { downloadBlob, niceBytes } from "../shared/fileUi.js";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import { niceBytes } from "../shared/fileUi.js";
 import "./split-pdf.css";
-import { useRef } from "react";
-
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
+const TOOL_SLUG = "split-pdf";
+const TOOL_TITLE = "Split PDF";
 
 function parseRanges(input, totalPages) {
   const parts = input
@@ -30,16 +32,25 @@ function parseRanges(input, totalPages) {
   return Array.from(pages).sort((a, b) => a - b);
 }
 
-async function renderThumb(file, pageNo1Based = 1, scale = 0.38) {
+/**
+ * ✅ Sharp thumbnail rendering:
+ * - Uses container width
+ * - Uses devicePixelRatio (retina)
+ * - Uses fresh bytes (no detach)
+ */
+async function renderThumbFromPdf(pdfDoc, pageNo1Based, targetCssWidth = 320) {
   try {
-    const buf = await file.arrayBuffer();
-    const pdf = await pdfjs.getDocument({ data: buf.slice(0) }).promise;
-    const pageNo = Math.max(1, Math.min(pageNo1Based, pdf.numPages));
-    const page = await pdf.getPage(pageNo);
+    const pageNo = Math.max(1, Math.min(pageNo1Based, pdfDoc.numPages));
+    const page = await pdfDoc.getPage(pageNo);
 
+    const dpr = Math.max(1, Math.min(2.25, window.devicePixelRatio || 1));
+    const baseViewport = page.getViewport({ scale: 1 });
+
+    const scale = (targetCssWidth * dpr) / baseViewport.width;
     const viewport = page.getViewport({ scale });
+
     const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: false });
 
     canvas.width = Math.floor(viewport.width);
     canvas.height = Math.floor(viewport.height);
@@ -52,6 +63,8 @@ async function renderThumb(file, pageNo1Based = 1, scale = 0.38) {
 }
 
 export default function SplitPdf() {
+  const nav = useNavigate();
+
   const [file, setFile] = useState(null);
   const inputRef = useRef(null);
 
@@ -64,6 +77,12 @@ export default function SplitPdf() {
   // Preview
   const [previewPage, setPreviewPage] = useState(1);
   const [thumb, setThumb] = useState("");
+  const [thumbBusy, setThumbBusy] = useState(false);
+
+  // ✅ Store stable bytes (prevents ArrayBuffer detach issues)
+  const bytesRef = useRef(null);       // Uint8Array
+  const pdfjsDocRef = useRef(null);    // pdfjs doc
+  const previewWrapRef = useRef(null); // measure width
 
   const info = useMemo(() => (file ? `${file.name} • ${niceBytes(file.size)}` : ""), [file]);
 
@@ -72,29 +91,61 @@ export default function SplitPdf() {
     return parseRanges(ranges, pageCount).length;
   }, [ranges, pageCount]);
 
+  const getPreviewTargetWidth = () => {
+    const w = previewWrapRef.current?.clientWidth || 320;
+    return Math.max(240, Math.min(360, Math.floor(w))); // ✅ smaller preview
+  };
+
+  const updateThumb = async (nextPage) => {
+    const pdf = pdfjsDocRef.current;
+    if (!pdf) return;
+
+    const safe = Math.max(1, Math.min(nextPage, pageCount || pdf.numPages));
+    setPreviewPage(safe);
+
+    setThumbBusy(true);
+    const t = await renderThumbFromPdf(pdf, safe, getPreviewTargetWidth());
+    setThumb(t);
+    setThumbBusy(false);
+  };
+
   const loadPdfInfo = async (f) => {
     setError("");
     setFile(f);
     setThumb("");
+    setThumbBusy(false);
     setPreviewPage(1);
+    setPageCount(0);
+    bytesRef.current = null;
+    pdfjsDocRef.current = null;
 
     try {
-      const doc = await PDFDocument.load(await f.arrayBuffer(), { ignoreEncryption: true });
-      const count = doc.getPageCount();
-      setPageCount(count);
+      const buf = await f.arrayBuffer();
+      const bytes = new Uint8Array(buf);        // ✅ stable bytes
+      bytesRef.current = bytes;
 
-      // keep safe default
+      // ✅ pdf-lib: pass a fresh copy (prevents detach / mutation issues)
+      const src = await PDFDocument.load(bytes.slice(), { ignoreEncryption: true });
+      const count = src.getPageCount();
+      setPageCount(count);
       setRanges("1-1");
 
-      // generate initial thumb
-      const t = await renderThumb(f, 1, 0.38);
-      setThumb(t);
+      // ✅ pdfjs: pass fresh copy (do NOT pass the same ArrayBuffer)
+      try {
+        const pdf = await pdfjs.getDocument({ data: bytes.slice() }).promise;
+        pdfjsDocRef.current = pdf;
+        await updateThumb(1);
+      } catch {
+        setThumb("");
+      }
     } catch {
       setError("Could not read this PDF.");
       setFile(null);
       setPageCount(0);
       setThumb("");
       setPreviewPage(1);
+      bytesRef.current = null;
+      pdfjsDocRef.current = null;
     }
   };
 
@@ -134,6 +185,11 @@ export default function SplitPdf() {
     setDragging(false);
     setPreviewPage(1);
     setThumb("");
+    setThumbBusy(false);
+    bytesRef.current = null;
+    pdfjsDocRef.current = null;
+
+    if (inputRef.current) inputRef.current.value = "";
   };
 
   const setQuick = (mode) => {
@@ -154,20 +210,15 @@ export default function SplitPdf() {
     }
   };
 
-  const updatePreview = async (nextPage) => {
-    if (!file || !pageCount) return;
-    const safe = Math.max(1, Math.min(nextPage, pageCount));
-    setPreviewPage(safe);
-    const t = await renderThumb(file, safe, 0.38);
-    setThumb(t);
-  };
-
   const split = async () => {
     setBusy(true);
     setError("");
+
     try {
-      if (!file) throw new Error("Please upload a PDF.");
-      const src = await PDFDocument.load(await file.arrayBuffer(), { ignoreEncryption: true });
+      if (!file || !bytesRef.current) throw new Error("Please upload a PDF.");
+
+      // ✅ fresh copy again (never reuse the same backing store)
+      const src = await PDFDocument.load(bytesRef.current.slice(), { ignoreEncryption: true });
       const total = src.getPageCount();
 
       const selected = parseRanges(ranges, total);
@@ -178,7 +229,19 @@ export default function SplitPdf() {
       copied.forEach((p) => out.addPage(p));
 
       const outBytes = await out.save();
-      downloadBlob(new Blob([outBytes], { type: "application/pdf" }), "tryatlabs-split.pdf");
+      const blob = new Blob([outBytes], { type: "application/pdf" });
+      const blobUrl = URL.createObjectURL(blob);
+
+      // ✅ go to Result page (your Result screen handles download + revoke)
+      nav("/result", {
+        state: {
+          slug: TOOL_SLUG,
+          title: TOOL_TITLE,
+          fileName: "tryatlabs-split.pdf",
+          blobUrl,
+          sizeBytes: outBytes?.byteLength ?? blob.size,
+        },
+      });
     } catch (e) {
       setError(e?.message || "Split failed.");
     } finally {
@@ -186,63 +249,82 @@ export default function SplitPdf() {
     }
   };
 
+  // ✅ Re-render thumbnail on resize (keeps crisp on responsive)
+  useEffect(() => {
+    if (!pdfjsDocRef.current || !file) return;
+
+    const el = previewWrapRef.current;
+    if (!el) return;
+
+    let raf = 0;
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => updateThumb(previewPage));
+    });
+
+    ro.observe(el);
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file, previewPage]);
+
   return (
     <div className="tool tool--split card">
-      <div className="grid2">
-        {/* Upload + Preview */}
-        <div className="leftCol">
-          <div
-            className={`drop ${dragging ? "isDragging" : ""}`}
-            role="button"
-            tabIndex={0}
-            aria-label="Upload PDF"
+      {/* Top bar */}
+      <div className="splitTop">
+        <div className="splitTop__left">
+          <div className="splitKicker">Split PDF</div>
+         
+        </div>
+
+        <div className="splitTop__right">
+          <input
+            ref={inputRef}
+            type="file"
+            accept="application/pdf"
+            multiple={false}
+            onChange={onPick}
+            style={{ display: "none" }}
+          />
+
+          <button
+            className="btn btn--primary splitUploadBtn"
+            type="button"
             onClick={() => inputRef.current?.click()}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                inputRef.current?.click();
-              }
-            }}
-            onDragEnter={() => setDragging(true)}
-            onDragOver={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragging(true);
-            }}
-            onDragLeave={(e) => {
-              if (e.currentTarget.contains(e.relatedTarget)) return;
-              setDragging(false);
-            }}
-            onDrop={onDrop}
+            disabled={busy}
           >
-            <input
-              ref={inputRef}
-              type="file"
-              accept="application/pdf"
-              multiple={false /* change to true for merge */}
-              onChange={onPick}
-              style={{ display: "none" }}
-            />
+            {file ? "Replace PDF" : "Upload PDF"}
+          </button>
 
-            <div className="drop__inner">
-              <div className="drop__title">{file ? "Replace PDF" : "Upload PDF"}</div>
-              <div className="muted">{file ? info : "Drop a PDF or click to upload"}</div>
-            </div>
-          </div>
+          <button className="btn btn--ghost" type="button" onClick={clear} disabled={busy || (!file && !error)}>
+            Clear
+          </button>
+        </div>
+      </div>
 
+      
 
-          {/* Preview */}
+      <div className="grid2">
+        {/* Preview */}
+        <div className="leftCol">
           <div className="previewCard">
             <div className="previewHead">
               <div className="previewTitle">Preview</div>
-              <div className="muted">{pageCount ? `Page ${previewPage} of ${pageCount}` : "Upload a PDF to preview"}</div>
+              <div className="muted">
+                {pageCount ? `Page ${previewPage} of ${pageCount}` : "Upload a PDF to preview"}
+              </div>
             </div>
 
-            <div className="previewBody">
+            <div className="previewBody" ref={previewWrapRef}>
               {thumb ? (
-                <img className="previewImg" src={thumb} alt="PDF preview" />
+                <div className="previewFrame">
+                  <img className="previewImg" src={thumb} alt="PDF preview" />
+                  {thumbBusy && <div className="previewOverlay">Rendering…</div>}
+                </div>
               ) : (
-                <div className="previewPh">No preview</div>
+                <div className="previewPh">{file ? "Preview unavailable (tool still works)" : "No preview"}</div>
               )}
             </div>
 
@@ -251,7 +333,7 @@ export default function SplitPdf() {
                 className="btn btn--ghost"
                 type="button"
                 disabled={!file || busy || previewPage <= 1}
-                onClick={() => updatePreview(previewPage - 1)}
+                onClick={() => updateThumb(previewPage - 1)}
               >
                 ← Prev
               </button>
@@ -259,7 +341,7 @@ export default function SplitPdf() {
                 className="btn btn--ghost"
                 type="button"
                 disabled={!file || busy || !pageCount || previewPage >= pageCount}
-                onClick={() => updatePreview(previewPage + 1)}
+                onClick={() => updateThumb(previewPage + 1)}
               >
                 Next →
               </button>
@@ -302,7 +384,7 @@ export default function SplitPdf() {
           </div>
 
           <div className="panelNote">
-            Tip: Use commas for individual pages (e.g., <b>1,3,5</b>) and dashes for ranges (e.g., <b>2-8</b>).
+            Tip: Use commas for individual pages (<b>1,3,5</b>) and dashes for ranges (<b>2-8</b>).
           </div>
         </div>
       </div>
@@ -311,10 +393,7 @@ export default function SplitPdf() {
 
       <div className="actions">
         <button className="btn btn--primary" disabled={!file || busy || selectedCount === 0} onClick={split}>
-          {busy ? "Splitting..." : "Split & Download"}
-        </button>
-        <button className="btn btn--ghost" disabled={busy || (!file && !error)} onClick={clear}>
-          Clear
+          {busy ? "Splitting..." : "Continue"}
         </button>
       </div>
     </div>

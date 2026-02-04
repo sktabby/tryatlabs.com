@@ -1,26 +1,91 @@
-/* Scoped styles for reorder tool only */
-.tool--reorder .toolHead {
+/* Reorder tool — simple, clean, premium mobile */
+
+.tool--reorder{
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(14px, 2vw, 18px);
+  animation: in .35s ease-out both;
+}
+
+@keyframes in{
+  from{ opacity:0; transform: translateY(8px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+/* Top header */
+.reorderTop{
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
   margin-bottom: 12px;
 }
 
-.tool--reorder .toolTitle {
+.reorderTitle{
+  margin: 0;
   font-size: 18px;
   font-weight: 950;
-  margin: 0;
+  letter-spacing: -0.01em;
 }
 
-.tool--reorder .toolActions {
+.reorderSub{
+  margin: 6px 0 0;
+  line-height: 1.55;
+  font-size: 13px;
+  max-width: 70ch;
+}
+
+.reorderTop__right{
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
   align-items: center;
 }
 
-.tool--reorder .toolbar {
+/* Guide card */
+.guideCard{
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background:
+    radial-gradient(880px 260px at 0% 0%,
+      color-mix(in srgb, var(--p4) 14%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 92%, transparent);
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.guideHead{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 4px 4px 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+}
+
+.guideTitle{
+  font-weight: 950;
+}
+
+.guideList{
+  margin: 10px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  color: var(--text);
+  font-weight: 650;
+}
+
+.guideList li{
+  color: color-mix(in srgb, var(--text) 92%, transparent);
+  line-height: 1.45;
+  font-size: 13px;
+}
+
+/* Toolbar */
+.toolbar{
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -32,69 +97,89 @@
   margin: 12px 0 14px;
 }
 
-.tool--reorder .toolbar__left,
-.tool--reorder .toolbar__right {
+.toolbar__left,
+.toolbar__right{
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
   align-items: center;
 }
 
-.tool--reorder .btn--danger {
+.btn--danger{
   border-color: color-mix(in srgb, var(--p5) 65%, var(--border));
   background: color-mix(in srgb, var(--p5) 35%, transparent);
 }
 
-.tool--reorder .pageGrid {
+/* Grid */
+.pageGrid{
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
 }
 
-@media (max-width: 1100px) {
-  .tool--reorder .pageGrid { grid-template-columns: repeat(4, 1fr); }
-}
-@media (max-width: 780px) {
-  .tool--reorder .pageGrid { grid-template-columns: repeat(2, 1fr); }
-  .tool--reorder .toolHead { flex-direction: column; }
-}
-
-.tool--reorder .pageCard {
+/* Cards */
+.pageCard{
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
-  background: var(--card);
+  background: color-mix(in srgb, var(--card) 94%, transparent);
   box-shadow: var(--shadow);
   cursor: pointer;
   position: relative;
-  transition: transform .12s ease, border-color .12s ease;
+  transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.tool--reorder .pageCard:hover {
+.pageCard:hover{
   transform: translateY(-2px);
   border-color: color-mix(in srgb, var(--p1) 55%, var(--border));
 }
 
-.tool--reorder .pageCard--selected {
-  border-color: color-mix(in srgb, var(--p1) 70%, var(--border));
-  box-shadow: 0 18px 60px rgba(128, 155, 206, 0.22);
+.pageCard--selected{
+  border-color: color-mix(in srgb, var(--p1) 72%, var(--border));
+  box-shadow: 0 18px 60px rgba(128,155,206,.22);
 }
 
-.tool--reorder .pageThumb {
+.pageThumb{
   aspect-ratio: 3 / 4;
-  background: color-mix(in srgb, var(--p4) 55%, transparent);
+  background: color-mix(in srgb, var(--p4) 18%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.tool--reorder .pageThumb img {
+.pageThumb img{
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.tool--reorder .blankThumb {
+.pageMeta{
+  padding: 10px;
+}
+
+.pageLabel{
+  font-weight: 950;
+  line-height: 1.15;
+}
+
+.pageTick{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-weight: 950;
+  background: color-mix(in srgb, var(--card) 85%, transparent);
+  border: 1px solid var(--border);
+}
+
+/* Blank */
+.blankThumb{
   width: 100%;
   height: 100%;
   display: grid;
@@ -102,7 +187,7 @@
   gap: 6px;
 }
 
-.tool--reorder .blankThumb__icon {
+.blankThumb__icon{
   width: 52px;
   height: 52px;
   border-radius: 16px;
@@ -114,229 +199,79 @@
   color: #0c1222;
 }
 
-.tool--reorder .blankThumb__txt {
+.blankThumb__txt{
   font-weight: 900;
   color: var(--muted);
 }
 
-.tool--reorder .pageMeta {
-  padding: 10px;
-}
-
-.tool--reorder .pageLabel {
-  font-weight: 950;
-}
-
-.tool--reorder .pageTick {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  font-weight: 950;
-  background: color-mix(in srgb, var(--card) 85%, transparent);
-  border: 1px solid var(--border);
-}
-
-.tool--reorder .emptyBox {
+/* Empty state */
+.emptyState{
   grid-column: 1 / -1;
   border: 1px dashed var(--border);
   border-radius: 18px;
-  padding: 28px;
+  padding: 22px;
   text-align: center;
-  background: color-mix(in srgb, var(--p4) 35%, transparent);
+  background:
+    radial-gradient(900px 280px at 0% 0%,
+      color-mix(in srgb, var(--p4) 18%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 92%, transparent);
+  display: grid;
+  gap: 8px;
+  place-items: center;
 }
 
-.tool--reorder .emptyBox__title {
-  font-size: 18px;
+.emptyState__icon{
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
   font-weight: 950;
-  margin-bottom: 6px;
+  letter-spacing: .3px;
+  background: color-mix(in srgb, var(--p4) 22%, transparent);
+  border: 1px solid var(--border);
 }
 
-
-/* Reorder tool: layout + responsiveness only */
-
-.tool--reorder {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 18px;
+.emptyState__title{
+  font-weight: 950;
+  font-size: 16px;
 }
 
-/* Header: stacks nicely on smaller screens */
-.tool--reorder .toolHead {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 12px;
+.emptyState__btn{
+  margin-top: 6px;
+  min-height: 44px;
+  border-radius: 14px;
+  padding-inline: 16px;
 }
 
-@media (max-width: 780px) {
-  .tool--reorder .toolHead {
-    flex-direction: column;
-  }
-  .tool--reorder .toolActions {
+/* Mobile premium */
+@media (max-width: 640px){
+  .reorderTop__right{
     width: 100%;
   }
-}
-
-/* Actions: wrap + keep buttons comfortable */
-.tool--reorder .toolActions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-@media (max-width: 520px) {
-  .tool--reorder .toolActions > * {
-    width: 100%;
-  }
-  .tool--reorder .toolActions .btn {
-    width: 100%;
+  .reorderTop__right .btn{
+    flex: 1;
     justify-content: center;
     min-height: 44px;
   }
-}
 
-/* Toolbar: stack left/right areas cleanly */
-.tool--reorder .toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--card) 96%, transparent);
-  margin: 12px 0 14px;
-}
-
-.tool--reorder .toolbar__left,
-.tool--reorder .toolbar__right {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-@media (max-width: 780px) {
-  .tool--reorder .toolbar {
+  .toolbar{
     flex-direction: column;
     align-items: stretch;
   }
-  .tool--reorder .toolbar__right .btn {
+  .toolbar__right .btn{
     flex: 1;
     min-height: 44px;
   }
+
+  .pageGrid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-/* Grid: auto-fit instead of hardcoded 6/4/2 */
-.tool--reorder .pageGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-}
-
-/* Page card: keep your look, just ensure tap-friendly */
-.tool--reorder .pageCard {
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-  background: var(--card);
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  position: relative;
-  transition: transform .12s ease, border-color .12s ease;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.tool--reorder .pageCard:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--p1) 55%, var(--border));
-}
-
-.tool--reorder .pageCard--selected {
-  border-color: color-mix(in srgb, var(--p1) 70%, var(--border));
-  box-shadow: 0 18px 60px rgba(128, 155, 206, 0.22);
-}
-
-/* Thumb area */
-.tool--reorder .pageThumb {
-  aspect-ratio: 3 / 4;
-  background: color-mix(in srgb, var(--p4) 55%, transparent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.tool--reorder .pageThumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.tool--reorder .pageMeta {
-  padding: 10px;
-}
-
-.tool--reorder .pageLabel {
-  font-weight: 950;
-}
-
-/* Tick */
-.tool--reorder .pageTick {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  font-weight: 950;
-  background: color-mix(in srgb, var(--card) 85%, transparent);
-  border: 1px solid var(--border);
-}
-
-/* Empty drop zone: now real */
-.tool--reorder .emptyBox {
-  grid-column: 1 / -1;
-  border: 1px dashed var(--border);
-  border-radius: 18px;
-  padding: 28px;
-  text-align: center;
-  background: color-mix(in srgb, var(--p4) 35%, transparent);
-  position: relative;
-  cursor: pointer;
-}
-
-.tool--reorder .emptyBox.isDragging {
-  border-style: solid;
-  background: color-mix(in srgb, var(--p4) 45%, var(--card));
-}
-
-.tool--reorder .emptyBox__title {
-  font-size: 18px;
-  font-weight: 950;
-  margin-bottom: 6px;
-}
-
-/* input overlay so click works everywhere */
-.tool--reorder .emptyBox__input {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-/* danger button stays yours */
-.tool--reorder .btn--danger {
-  border-color: color-mix(in srgb, var(--p5) 65%, var(--border));
-  background: color-mix(in srgb, var(--p5) 35%, transparent);
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .tool--reorder{ animation: none !important; }
+  .pageCard{ transition: none !important; }
 }

@@ -3,11 +3,20 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  server: {
-    port: 5175,
-    strictPort: false
-  },
   build: {
-    outDir: "dist"
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom"],
+          router: ["react-router-dom"],
+          helmet: ["react-helmet-async"]
+        }
+      }
+    }
+  },
+  server: {
+     host: true,
+    port: 5177
   }
 });

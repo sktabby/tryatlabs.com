@@ -1,8 +1,9 @@
-import { useMemo, Suspense, lazy } from "react";
+import { useMemo, Suspense, lazy, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { PDF_TOOLS, SITE } from "../app/site.config.js";
 import { SeoHead } from "../seo/SeoHead.jsx";
 import { websiteJsonLd, breadcrumbJsonLd, toolJsonLd } from "../seo/jsonld.js";
+import BusyOverlay from "../components/BusyOverlay.jsx";
 
 // ✅ Lazy-load tools (code-splitting)
 const MAP = {
@@ -32,12 +33,22 @@ export default function ToolPage() {
   const meta = useMemo(() => PDF_TOOLS.find((x) => x.slug === toolSlug), [toolSlug]);
   const Tool = MAP[toolSlug];
 
+  const [busy, setBusy] = useState(false);
+
+
   // ✅ Not found page
   if (!meta) {
     const canonical = `${SITE.url}/${toolSlug || ""}`;
 
     return (
       <div className="toolPage">
+
+         <BusyOverlay
+    open={busy}
+    title={`${meta.title} in progress`}
+    subtitle="We’re processing your file locally in your browser."
+    stepLabel="Please wait"
+  />
         <SeoHead
           title="Tool not found"
           description="That PDF tool doesn’t exist or was moved."
@@ -69,7 +80,17 @@ export default function ToolPage() {
   // ✅ If route exists in config but component missing
   const comingSoon = !Tool;
 
+  // ✅ Random 4 suggestions excluding current tool
+  const suggestions = useMemo(() => {
+    const others = PDF_TOOLS.filter((t) => t.slug !== meta.slug);
+    // shuffle
+    const shuffled = [...others].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 4);
+  }, [meta.slug]);
+
   return (
+
+    
     <div className="toolPage">
       <SeoHead
         title={meta.seoTitle || meta.title}
@@ -95,7 +116,6 @@ export default function ToolPage() {
         <div>
           <div className="kicker">{CATEGORY_LABEL[meta.category] || "PDF Tool"}</div>
           <h1 className="toolTitle">{meta.title}</h1>
-          <p className="muted">{meta.desc || "Fast, private PDF processing — runs in your browser."}</p>
         </div>
 
         <Link className="btn btn--ghost" to="/">
@@ -135,6 +155,35 @@ export default function ToolPage() {
           <Tool />
         </Suspense>
       )}
+
+      {/* ✅ Random 4 tools (exclude current) */}
+      <div className="card" style={{ marginTop: 14 }}>
+        <div className="section__head" style={{ margin: 0 }}>
+          <h2 style={{ margin: 0, fontSize: 18 }}>Try another tool</h2>
+         
+        </div>
+
+        <div style={{ display: "grid", gap: 10, marginTop: 12 }}>
+          {suggestions.map((t) => (
+            <div
+              key={t.slug}
+              className="listItem"
+              style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}
+            >
+              <div>
+                <div className="listItem__title">{t.title}</div>
+                <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>
+                  {t.desc}
+                </div>
+              </div>
+
+              <Link className="btn btn--primary" to={`/${t.slug}`}>
+                Open
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

@@ -12,10 +12,14 @@ img { max-width: 100%; display: block; }
 .container { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
 .muted { color: var(--muted); }
 .kicker { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-.section { padding: 28px 0 52px; }
+
+/* ✅ reduced top padding so title doesn't look too low */
+.section { padding: 14px 0 52px; }
 
 .appShell { min-height: 100vh; display: flex; flex-direction: column; }
-.main { flex: 1; padding: 26px 0 50px; }
+
+/* ✅ reduced top padding here too to avoid double-spacing with .section */
+.main { flex: 1; padding: 10px 0 50px; }
 
 .topbar {
   position: sticky; top: 0; z-index: 30;
@@ -67,7 +71,8 @@ img { max-width: 100%; display: block; }
 }
 .checklist { padding-left: 18px; margin: 12px 0 0; color: var(--muted); }
 
-.section__head { display: grid; gap: 8px; margin: 18px 0 14px; }
+/* ✅ reduce title head top margin (this is what you feel most) */
+.section__head { display: grid; gap: 8px; margin: 8px 0 14px; }
 .section__head h2 { margin: 0; font-size: 22px; }
 
 .toolGrid {
@@ -158,6 +163,8 @@ img { max-width: 100%; display: block; }
   border-color: color-mix(in srgb, var(--p1) 55%, var(--border));
   background: linear-gradient(135deg, var(--p1), var(--p5));
   color: #0c1222;
+  width: fit-content;
+  align-items: center;
 }
 .btn--ghost { background: transparent; }
 
@@ -296,6 +303,7 @@ img { max-width: 100%; display: block; }
 @media (max-width: 520px) {
   .toolGrid--home { grid-template-columns: 1fr; }
   .tabPill { width: 100%; justify-content: center; }
+  .hero__title { font-size: 25px; margin: 10px 0 10px; line-height: 1.06; }
 }
 
 .brand {
@@ -305,7 +313,7 @@ img { max-width: 100%; display: block; }
 }
 
 .brand__logo {
-  width: 44px;        /* 🔥 increase size here */
+  width: 44px;
   height: 44px;
   object-fit: contain;
   display: block;
