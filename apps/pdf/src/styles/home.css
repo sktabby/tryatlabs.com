@@ -536,3 +536,18 @@
     color: #0c1222;
   }
 }
+
+
+.grad {
+  background: linear-gradient(
+    135deg,
+    #877074,
+    #735e62,
+    #5e4d50,
+    #352b2d
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 900;
+}

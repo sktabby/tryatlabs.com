@@ -1,184 +1,185 @@
-/* Wrapper sizing */
-.tool--word2pdf {
+.tool--word2pdf{
   width: 100%;
-  max-width: 1040px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 18px;
+  padding: clamp(14px, 2vw, 18px);
 }
 
-/* BIG drop zone with real drag-drop (same pattern as other tools) */
-.tool--word2pdf .drop {
-  position: relative;
-  width: 100%;
-  min-height: 260px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-
-  border: 1px dashed var(--border);
-  border-radius: 18px;
-  padding: 18px;
-  background: color-mix(in srgb, var(--card) 88%, transparent);
+/* Top */
+.wTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
 }
+.wKicker{ font-weight:950; font-size:18px; letter-spacing:-0.01em; }
+.wSub{ font-size:13px; line-height:1.55; max-width:72ch; }
+.wTop__right{ display:flex; gap:10px; align-items:center; }
 
-.tool--word2pdf .drop:hover {
+/* File bar (cleaner than long list card) */
+.fileBar{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:18px;
+  border:1px solid color-mix(in srgb, var(--border) 90%, transparent);
+  background:
+    radial-gradient(850px 240px at 0% 0%,
+      color-mix(in srgb, var(--p4) 18%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 90%, transparent);
+  margin-bottom:14px;
+}
+.fileDot{
+  width:10px; height:10px; border-radius:999px;
+  background: color-mix(in srgb, var(--p1) 70%, var(--text));
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--p4) 18%, transparent);
+}
+.fileText{ display:grid; gap:2px; min-width:0; }
+.fileName{ font-weight:950; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.filePill{
+  margin-left:auto;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb, var(--border) 85%, transparent);
   background: color-mix(in srgb, var(--card) 92%, transparent);
+  font-weight:900;
+  font-size:12px;
 }
 
-.tool--word2pdf .drop.isDragging {
-  border-style: solid;
-  background: color-mix(in srgb, var(--p4) 18%, var(--card));
+/* Grid */
+.grid2{
+  display:grid;
+  gap:14px;
+  grid-template-columns:1fr;
+  align-items:stretch;
+}
+@media (min-width:980px){
+  .grid2{ grid-template-columns:1fr 1fr; }
 }
 
-/* reliable click overlay */
-.tool--word2pdf .drop input[type="file"] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
+/* Panel */
+.panel{
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:14px;
+  background:
+    radial-gradient(900px 260px at 0% 0%,
+      color-mix(in srgb, var(--p4) 16%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 88%, transparent);
+  display:grid;
+  gap:12px;
+  align-content:start;
+}
+.panelTitle{ font-weight:950; }
+.wGrid{
+  display:grid;
+  gap:12px;
+  grid-template-columns:1fr;
+}
+@media (min-width:980px){
+  .wGrid{ grid-template-columns: 1fr 1fr 1fr; }
+}
+.field{ display:grid; gap:8px; }
+.field__label{ font-weight:950; }
+.small{ font-size:12px; }
+.panelNote{
+  border:1px dashed var(--border);
+  border-radius:14px;
+  padding:10px;
+  color:var(--muted);
+  font-weight:800;
+  background: color-mix(in srgb, var(--p4) 14%, transparent);
 }
 
-.tool--word2pdf .drop__inner {
-  text-align: center;
-  display: grid;
-  gap: 8px;
-  max-width: 620px;
-  padding: 6px 10px;
-  pointer-events: none;
-}
-
-.tool--word2pdf .drop__title {
-  font-weight: 900;
-  line-height: 1.2;
-  font-size: 18px;
-}
-
-/* ✅ Your existing scoped styles (kept as-is) */
-.tool--word2pdf .wHint {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.tool--word2pdf .hintChip {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--p4) 22%, var(--card));
-  font-weight: 900;
-  font-size: 12px;
-  color: color-mix(in srgb, var(--text) 86%, var(--muted));
-}
-
-.tool--word2pdf .wOptions {
-  margin-top: 12px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 14px;
+/* Preview card */
+.previewCard{
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
   background: color-mix(in srgb, var(--card) 88%, transparent);
-}
-
-.tool--word2pdf .wOptions__title {
-  font-weight: 950;
-  margin-bottom: 10px;
-}
-
-.tool--word2pdf .wGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-}
-
-@media (max-width: 900px) {
-  .tool--word2pdf .wGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.tool--word2pdf .field__label {
-  font-weight: 900;
-  margin-bottom: 6px;
-}
-
-.tool--word2pdf .small {
-  font-size: 12px;
-}
-
-.tool--word2pdf .wNote {
-  margin-top: 12px;
-  border: 1px dashed var(--border);
-  border-radius: 14px;
-  padding: 10px;
-  color: var(--muted);
-  font-weight: 800;
-  background: color-mix(in srgb, var(--p4) 16%, transparent);
-}
-
-/* Preview wrap */
-.tool--word2pdf .wPreviewWrap {
-  margin-top: 12px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  background: var(--card);
   box-shadow: var(--shadow);
+  display:grid;
+  grid-template-rows:auto 1fr;
+  min-height:520px;
+}
+.previewHead{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:baseline;
+}
+.previewTitle{ font-weight:950; }
+
+/* ✅ Clean white preview area */
+.wPreview{
+  padding:16px;
+  background:#fff !important;
+  overflow:auto;
 }
 
-.tool--word2pdf .wPreviewHead {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--card) 90%, transparent);
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 10px;
+/* ✅ Lock preview to paper width to reduce weird wrapping */
+.wPreview--a4 .docx-wrapper{ width:794px !important; max-width:100%; margin:0 auto; background:#fff !important; padding:0 !important; }
+.wPreview--letter .docx-wrapper{ width:816px !important; max-width:100%; margin:0 auto; background:#fff !important; padding:0 !important; }
+
+.wPreview--a4 .docx .page,
+.wPreview--a4 .docx-wrapper .page,
+.wPreview--a4 .page{
+  width:794px !important;
+  min-height:1123px !important;
+  margin:0 auto 14px !important;
+  background:#fff !important;
+  box-shadow:none !important;
+  border:0 !important;
+}
+.wPreview--letter .docx .page,
+.wPreview--letter .docx-wrapper .page,
+.wPreview--letter .page{
+  width:816px !important;
+  min-height:1056px !important;
+  margin:0 auto 14px !important;
+  background:#fff !important;
+  box-shadow:none !important;
+  border:0 !important;
 }
 
-.tool--word2pdf .wPreviewTitle {
-  font-weight: 950;
+.wPreview .docx *{ box-sizing:border-box; max-width:100%; }
+
+.previewPh{
+  padding:16px;
+  border-top:1px dashed var(--border);
+  color:var(--muted);
+  font-weight:900;
+  background:
+    radial-gradient(850px 220px at 0% 0%,
+      color-mix(in srgb, var(--p4) 14%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 90%, transparent);
 }
 
-/* Important: make preview safe on mobile */
-.tool--word2pdf .wPreview {
-  padding: 16px;
-  background: #fff;
-  overflow: auto;
-  max-width: 100%;
+/* Actions */
+.actions{
+  margin-top:14px;
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  flex-wrap:wrap;
 }
-
-/* docx-preview output tweaks */
-.tool--word2pdf .docx-wrapper {
-  background: #fff;
-  max-width: 100%;
-}
-
-.tool--word2pdf .docx {
-  color: #111;
-  max-width: 100%;
-}
+.actions .btn{ min-height:44px; border-radius:14px; }
 
 /* Mobile */
-@media (max-width: 520px) {
-  .tool--word2pdf {
-    padding: 14px;
-  }
-
-  .tool--word2pdf .drop {
-    min-height: 220px;
-  }
-
-  .tool--word2pdf .wPreview {
-    padding: 12px;
-  }
-
-  .tool--word2pdf .actions {
-    justify-content: stretch;
-  }
-
-  .tool--word2pdf .actions .btn {
-    width: 100%;
-  }
+@media (max-width:640px){
+  .wTop__right{ width:100%; justify-content:stretch; }
+  .wTop__right .btn{ flex:1; justify-content:center; }
+  .filePill{ display:none; }
+  .actions{ justify-content:stretch; }
+  .actions .btn{ width:100%; }
+  .wPreview{ padding:12px; }
 }

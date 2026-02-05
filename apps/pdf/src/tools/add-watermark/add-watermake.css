@@ -1,152 +1,210 @@
-.tool--watermark {
+.tool--watermark{
   width: 100%;
-  max-width: 1040px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 18px;
+  padding: clamp(14px, 2vw, 18px);
+  animation: wmIn .35s ease-out both;
 }
 
-/* 2-col desktop, stacked mobile */
-.tool--watermark .grid2 {
+@keyframes wmIn{
+  from{ opacity: 0; transform: translateY(8px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+/* Top bar */
+.wmTop{
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.wmTop__left{
+  display: grid;
+  gap: 6px;
+  min-width: min(520px, 100%);
+}
+
+.wmKicker{
+  font-weight: 950;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.wmSub{
+  line-height: 1.55;
+  font-size: 13px;
+  max-width: 70ch;
+}
+
+.wmTop__right{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.wmUploadBtn{
+  border-radius: 14px;
+  padding: 10px 14px;
+}
+
+/* ✅ dropStrip */
+.dropStrip{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px dashed color-mix(in srgb, var(--border) 92%, transparent);
+  background:
+    radial-gradient(850px 240px at 0% 0%,
+      color-mix(in srgb, var(--p4) 18%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 90%, transparent);
+  cursor: pointer;
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+  margin-bottom: 14px;
+  user-select: none;
+}
+
+.dropStrip:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--p1) 46%, var(--border));
+}
+
+.dropStrip.isDragging{
+  border-style: solid;
+  background:
+    radial-gradient(900px 280px at 0% 0%,
+      color-mix(in srgb, var(--p4) 26%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 92%, transparent);
+}
+
+.dropStrip.hasFile{ border-style: solid; }
+
+.dropStrip__dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--p1) 70%, var(--text));
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--p4) 18%, transparent);
+  flex: 0 0 auto;
+}
+
+.dropStrip__text{
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dropStrip__title{
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.dropStrip__pill{
+  margin-left: auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  font-weight: 900;
+  font-size: 12px;
+}
+
+/* Layout */
+.tool--watermark .grid2{
   display: grid;
   gap: 14px;
   grid-template-columns: 1fr;
+  align-items: stretch;
 }
 
-@media (min-width: 900px) {
-  .tool--watermark .grid2 {
-    grid-template-columns: 1.05fr 0.95fr;
-    align-items: stretch;
+@media (min-width: 980px){
+  .tool--watermark .grid2{
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-/* Drop zone */
-.tool--watermark .drop {
-  position: relative;
-  width: 100%;
-  min-height: 260px;
+.leftCol{
   display: grid;
-  place-items: center;
-
-  cursor: pointer;
-  border: 1px dashed var(--border);
-  border-radius: 18px;
-  padding: 18px;
-
-  background: color-mix(in srgb, var(--card) 88%, transparent);
+  height: 100%;
 }
 
-.tool--watermark .drop:hover {
+/* Preview card */
+.previewCard{
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+}
+
+.previewHead{
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
   background: color-mix(in srgb, var(--card) 92%, transparent);
-}
-
-.tool--watermark .drop.isDragging {
-  border-style: solid;
-  background: color-mix(in srgb, var(--p4) 18%, var(--card));
-}
-
-/* click overlay */
-.tool--watermark .drop input[type="file"] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.tool--watermark .drop__inner {
-  text-align: center;
-  display: grid;
-  gap: 8px;
-  max-width: 520px;
-  padding: 6px 10px;
-  pointer-events: none;
-}
-
-.tool--watermark .drop__title {
-  font-weight: 900;
-  line-height: 1.2;
-  font-size: 18px;
-}
-
-/* Panel */
-.tool--watermark .panel {
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 14px;
-  background: color-mix(in srgb, var(--card) 88%, transparent);
-  display: grid;
-  gap: 12px;
-  align-content: start;
-}
-
-.tool--watermark .field {
-  display: grid;
-  gap: 8px;
-}
-
-.tool--watermark .field__label {
-  font-weight: 900;
-  line-height: 1.2;
-}
-
-/* Grid 3 inputs */
-.tool--watermark .grid3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-@media (max-width: 780px) {
-  .tool--watermark .grid3 {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Preview block */
-.tool--watermark .previewRow {
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 14px;
-  background: radial-gradient(
-    900px 300px at 0% 0%,
-    color-mix(in srgb, var(--p2) 18%, transparent),
-    transparent
-  );
-  display: grid;
-  gap: 10px;
-}
-
-.tool--watermark .previewTop {
   display: flex;
   justify-content: space-between;
   gap: 10px;
   align-items: baseline;
 }
 
-.tool--watermark .previewTitle {
-  font-weight: 950;
+.previewTitle{ font-weight: 950; }
+
+.previewFoot{
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
 }
 
-.tool--watermark .hint {
-  color: var(--muted);
-  font-size: 13px;
+/* ✅ You asked to keep previewBody block exact: these classes must exist */
+.previewBody{
+  padding: 12px;
+  display: grid;
+  place-items: center;
 }
 
-/* Preview media + watermark overlay */
-.tool--watermark .previewMedia {
+.previewFrame{
   position: relative;
-  border-radius: 14px;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--p4) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
 }
 
-.tool--watermark .previewMedia img {
+.previewImg{
+  display: block;
   width: 100%;
   height: auto;
-  display: block;
 }
 
-.tool--watermark .wmOverlay {
+.previewPh{
+  height: 220px;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  border: 1px dashed var(--border);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-weight: 950;
+  background:
+    radial-gradient(850px 220px at 0% 0%,
+      color-mix(in srgb, var(--p4) 14%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 90%, transparent);
+}
+
+/* Watermark overlay */
+.wmOverlay{
   position: absolute;
   left: 50%;
   top: 50%;
@@ -165,48 +223,126 @@
   text-overflow: ellipsis;
 }
 
-/* Your original help styles (kept) */
-.tool--watermark .watermarkRow {
+/* Panel */
+.panel{
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  background:
+    radial-gradient(900px 260px at 0% 0%,
+      color-mix(in srgb, var(--p4) 16%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 88%, transparent);
   display: grid;
+  align-content: start;
   gap: 12px;
-  margin-top: 10px;
+  height: 100%;
 }
 
-.tool--watermark .tip {
+.panelTitle{ font-weight: 950; }
+
+.field{
+  display: grid;
+  gap: 8px;
+}
+
+.field__label{
+  font-weight: 950;
+}
+
+.grid3{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 780px){
+  .grid3{ grid-template-columns: 1fr; }
+}
+
+.statsRow{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 780px){
+  .statsRow{ grid-template-columns: 1fr; }
+}
+
+.statCard{
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 12px;
-  background: color-mix(in srgb, var(--p5) 14%, transparent);
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+
+.statLabel{
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.statValue{
+  margin-top: 6px;
+  font-weight: 950;
+  font-size: 16px;
+}
+
+.panelNote{
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 10px;
+  color: var(--muted);
+  font-weight: 800;
+  background: color-mix(in srgb, var(--p4) 14%, transparent);
 }
 
 /* Actions */
-.tool--watermark .actions {
-  margin-top: 16px;
+.actions{
+  margin-top: 14px;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.tool--watermark .actions .btn {
+.actions .btn{
   min-height: 44px;
+  border-radius: 14px;
 }
 
 /* Mobile */
-@media (max-width: 520px) {
-  .tool--watermark {
-    padding: 14px;
-  }
-
-  .tool--watermark .drop {
-    min-height: 220px;
-  }
-
-  .tool--watermark .actions {
+@media (max-width: 640px){
+  .wmTop__right{
+    width: 100%;
     justify-content: stretch;
   }
 
-  .tool--watermark .actions .btn {
+  .wmTop__right .btn{
+    flex: 1;
+    justify-content: center;
+  }
+
+  .dropStrip{
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .dropStrip__pill{ display: none; }
+
+  .actions{
+    justify-content: stretch;
+  }
+
+  .actions .btn{
     width: 100%;
   }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .tool--watermark{ animation: none !important; }
+  .dropStrip{ transition: none !important; }
 }

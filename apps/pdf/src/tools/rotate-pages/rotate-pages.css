@@ -1,168 +1,343 @@
-.tool--rotate {
+.tool--rotate{
   width: 100%;
-  max-width: 980px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 18px;
+  padding: clamp(14px, 2vw, 18px);
+  animation: rotIn .35s ease-out both;
 }
 
-/* 2-col desktop, stacked on mobile */
-.tool--rotate .grid2 {
+@keyframes rotIn{
+  from{ opacity: 0; transform: translateY(8px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+/* Top bar */
+.rotateTop{
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.rotateTop__left{
+  display: grid;
+  gap: 6px;
+  min-width: min(520px, 100%);
+}
+
+.rotateKicker{
+  font-weight: 950;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.rotateSub{
+  line-height: 1.55;
+  font-size: 13px;
+  max-width: 70ch;
+}
+
+.rotateTop__right{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.rotateUploadBtn{
+  border-radius: 14px;
+  padding: 10px 14px;
+}
+
+/* Drop strip */
+.dropStrip{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px dashed color-mix(in srgb, var(--border) 92%, transparent);
+  background:
+    radial-gradient(850px 240px at 0% 0%,
+      color-mix(in srgb, var(--p4) 18%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 90%, transparent);
+  cursor: pointer;
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+  margin-bottom: 14px;
+  user-select: none;
+}
+
+.dropStrip:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--p1) 46%, var(--border));
+}
+
+.dropStrip.isDragging{
+  border-style: solid;
+  background:
+    radial-gradient(900px 280px at 0% 0%,
+      color-mix(in srgb, var(--p4) 26%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 92%, transparent);
+}
+
+.dropStrip.hasFile{ border-style: solid; }
+
+.dropStrip__dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--p1) 70%, var(--text));
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--p4) 18%, transparent);
+  flex: 0 0 auto;
+}
+
+.dropStrip__text{
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dropStrip__title{
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.dropStrip__pill{
+  margin-left: auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  font-weight: 900;
+  font-size: 12px;
+}
+
+/* Layout */
+.tool--rotate .grid2{
   display: grid;
   gap: 14px;
   grid-template-columns: 1fr;
+  align-items: stretch;
 }
 
-@media (min-width: 860px) {
-  .tool--rotate .grid2 {
-    grid-template-columns: 1.05fr 0.95fr;
-    align-items: stretch;
+@media (min-width: 980px){
+  .tool--rotate .grid2{
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-/* Drop zone */
-.tool--rotate .drop {
-  position: relative;
-  width: 100%;
-  min-height: 240px;
+.leftCol{
   display: grid;
-  place-items: center;
-
-  cursor: pointer;
-  border: 1px dashed var(--border);
-  border-radius: 18px;
-  padding: 18px;
-
-  background: color-mix(in srgb, var(--card) 88%, transparent);
+  height: 100%;
 }
 
-.tool--rotate .drop:hover {
-  background: color-mix(in srgb, var(--card) 92%, transparent);
-}
-
-.tool--rotate .drop.isDragging {
-  border-style: solid;
-  background: color-mix(in srgb, var(--p4) 18%, var(--card));
-}
-
-/* reliable click upload overlay */
-.tool--rotate .drop input[type="file"] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.tool--rotate .drop__inner {
-  text-align: center;
-  display: grid;
-  gap: 8px;
-  max-width: 520px;
-  padding: 6px 10px;
-  pointer-events: none;
-}
-
-.tool--rotate .drop__title {
-  font-weight: 900;
-  line-height: 1.2;
-  font-size: 18px;
-}
-
-/* Panel */
-.tool--rotate .panel {
+/* Preview Card */
+.previewCard{
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 14px;
+  overflow: hidden;
   background: color-mix(in srgb, var(--card) 88%, transparent);
+  box-shadow: var(--shadow);
   display: grid;
-  gap: 12px;
-  align-content: start;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
 }
 
-.tool--rotate .field {
-  display: grid;
-  gap: 8px;
-}
-
-.tool--rotate .field__label {
-  font-weight: 900;
-  line-height: 1.2;
-}
-
-/* Preview card */
-.tool--rotate .previewCard {
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 12px;
+.previewHead{
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
   background: color-mix(in srgb, var(--card) 92%, transparent);
-  display: grid;
-  gap: 10px;
-}
-
-.tool--rotate .previewTop {
   display: flex;
   justify-content: space-between;
   gap: 10px;
   align-items: baseline;
 }
 
-.tool--rotate .previewTitle {
+.previewTitle{ font-weight: 950; }
+
+.previewBody{
+  padding: 12px;
+  display: grid;
+  place-items: center;
+}
+
+.previewFrame{
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  display: grid;
+  place-items: center;
+  /* gives breathing space when rotated */
+  padding: 10px;
+}
+
+.previewImg{
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: center center;
+  transition: transform .18s ease;
+  will-change: transform;
+}
+
+.previewOverlay{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 950;
+  background: color-mix(in srgb, rgba(0,0,0,.28) 70%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.previewPh{
+  height: 220px;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  border: 1px dashed var(--border);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-weight: 950;
+  background:
+    radial-gradient(850px 220px at 0% 0%,
+      color-mix(in srgb, var(--p4) 14%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 90%, transparent);
+}
+
+.previewNav{
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+/* Panel */
+.panel{
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  background:
+    radial-gradient(900px 260px at 0% 0%,
+      color-mix(in srgb, var(--p4) 16%, transparent),
+      transparent),
+    color-mix(in srgb, var(--card) 88%, transparent);
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  height: 100%;
+}
+
+.panelTitle{ font-weight: 950; }
+
+.field{
+  display: grid;
+  gap: 8px;
+}
+
+.field__label{
   font-weight: 950;
 }
 
-.tool--rotate .previewMedia {
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--p4) 18%, transparent);
+/* Stats row */
+.statsRow{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
-.tool--rotate .previewMedia img {
-  width: 100%;
-  height: auto;
-  display: block;
+@media (max-width: 780px){
+  .statsRow{ grid-template-columns: 1fr; }
+}
+
+.statCard{
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+}
+
+.statLabel{
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.statValue{
+  margin-top: 6px;
+  font-weight: 950;
+  font-size: 16px;
+}
+
+.panelNote{
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 10px;
+  color: var(--muted);
+  font-weight: 800;
+  background: color-mix(in srgb, var(--p4) 14%, transparent);
 }
 
 /* Actions */
-.tool--rotate .actions {
-  margin-top: 16px;
+.tool--rotate .actions{
+  margin-top: 14px;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.tool--rotate .actions .btn {
+.tool--rotate .actions .btn{
   min-height: 44px;
+  border-radius: 14px;
 }
 
-/* Mobile */
-@media (max-width: 520px) {
-  .tool--rotate {
-    padding: 14px;
-  }
-
-  .tool--rotate .drop {
-    min-height: 210px;
-  }
-
-  .tool--rotate .actions {
+/* Mobile polish */
+@media (max-width: 640px){
+  .rotateTop__right{
+    width: 100%;
     justify-content: stretch;
   }
 
-  .tool--rotate .actions .btn {
+  .rotateTop__right .btn{
+    flex: 1;
+    justify-content: center;
+  }
+
+  .dropStrip{
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .dropStrip__pill{ display: none; }
+
+  .tool--rotate .actions{
+    justify-content: stretch;
+  }
+
+  .tool--rotate .actions .btn{
     width: 100%;
+  }
+
+  .previewNav .btn{
+    flex: 1;
+    justify-content: center;
   }
 }
 
-
-/* Optional: ensure preview placeholder looks consistent */
-.tool--rotate .previewMedia img {
-  display: block;
-}
-
-/* Make Clear button consistent on small screens */
-@media (max-width: 520px) {
-  .tool--rotate .actions .btn {
-    width: 100%;
-  }
+@media (prefers-reduced-motion: reduce){
+  .tool--rotate{ animation: none !important; }
+  .dropStrip, .previewImg{ transition: none !important; }
 }

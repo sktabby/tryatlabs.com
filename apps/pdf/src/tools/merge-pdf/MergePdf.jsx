@@ -1,49 +1,28 @@
 import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PDFDocument } from "pdf-lib";
-import * as pdfjs from "pdfjs-dist";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
 import { niceBytes } from "../shared/fileUi.js";
 import { goToResult } from "../shared/goToResult.js";
 import "./merge-pdf.css";
-
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
-
-async function renderThumb(file, scale = 0.35) {
-  try {
-    const buf = await file.arrayBuffer();
-    const pdf = await pdfjs.getDocument({ data: buf }).promise;
-    const page = await pdf.getPage(1);
-
-    const viewport = page.getViewport({ scale });
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = Math.floor(viewport.width);
-    canvas.height = Math.floor(viewport.height);
-
-    await page.render({ canvasContext: ctx, viewport }).promise;
-    return canvas.toDataURL("image/png");
-  } catch {
-    return "";
-  }
-}
 
 export default function MergePdf() {
   const navigate = useNavigate();
   const inputRef = useRef(null);
 
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState([]); // { id, file }
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
+  // Drop strip state
   const [dragging, setDragging] = useState(false);
+  const dragDepth = useRef(0);
 
   const files = useMemo(() => items.map((x) => x.file), [items]);
 
   const addPickedFiles = async (fileList) => {
     setError("");
-
     const picked = Array.from(fileList || []).filter((f) => f.type === "application/pdf");
+
     if (picked.length === 0) {
       setError("Please upload PDF files only.");
       return;
@@ -52,15 +31,9 @@ export default function MergePdf() {
     const newItems = picked.map((f) => ({
       id: `${f.name}-${f.size}-${f.lastModified}-${Math.random().toString(16).slice(2)}`,
       file: f,
-      thumb: "",
     }));
 
     setItems((prev) => [...prev, ...newItems]);
-
-    for (const it of newItems) {
-      const thumb = await renderThumb(it.file, 0.32);
-      setItems((prev) => prev.map((p) => (p.id === it.id ? { ...p, thumb } : p)));
-    }
   };
 
   const onPick = (e) => {
@@ -71,11 +44,36 @@ export default function MergePdf() {
   const onDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    dragDepth.current = 0;
     setDragging(false);
     addPickedFiles(e.dataTransfer.files);
   };
 
+  const onDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragDepth.current += 1;
+    setDragging(true);
+  };
+
+  const onDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragDepth.current -= 1;
+    if (dragDepth.current <= 0) {
+      dragDepth.current = 0;
+      setDragging(false);
+    }
+  };
+
+  const onDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(true);
+  };
+
   const remove = (id) => setItems((prev) => prev.filter((x) => x.id !== id));
+
   const clear = () => {
     setItems([]);
     setError("");
@@ -129,88 +127,126 @@ export default function MergePdf() {
 
   return (
     <div className="tool tool--merge card">
-      {/* Drop area (drag only) */}
-      <div className="row">
-        <div
-          className={`drop ${dragging ? "isDragging" : ""}`}
-          role="button"
-          tabIndex={0}
-          aria-label="Drop PDFs"
-          onDragEnter={() => setDragging(true)}
-          onDragOver={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setDragging(true);
-          }}
-          onDragLeave={(e) => {
-            if (e.currentTarget.contains(e.relatedTarget)) return;
-            setDragging(false);
-          }}
-          onDrop={onDrop}
-        >
-          <div className="drop__inner">
-            <div className="drop__title">Drop PDFs here</div>
-            <div className="muted">Drag & drop multiple PDF files</div>
+      {/* ✅ Top bar (ONE upload button) */}
+      <div className="mergeTop">
+        <div className="mergeTop__left">
+        
+          <div className="muted mergeSub">
+            Combine multiple PDFs into one — processed locally in your browser.
           </div>
         </div>
+
+        <div className="mergeTop__right">
+          <input
+            ref={inputRef}
+            type="file"
+            accept="application/pdf"
+            multiple
+            onChange={onPick}
+            style={{ display: "none" }}
+          />
+
+          <button
+            className="btn btn--primary mergeUploadBtn"
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={busy}
+          >
+            {items.length ? "Add more PDFs" : "Upload PDFs"}
+          </button>
+
+          <button
+            className="btn btn--ghost"
+            type="button"
+            onClick={clear}
+            disabled={busy || items.length === 0}
+          >
+            Clear
+          </button>
+        </div>
       </div>
 
-      {/* Separate upload button */}
-      <div style={{ marginTop: 12 }}>
-        <button
-          className="btn btn--ghost"
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          disabled={busy}
-        >
-          Upload PDFs
-        </button>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="application/pdf"
-          multiple
-          onChange={onPick}
-          style={{ display: "none" }}
-        />
+      {/* ✅ Drop strip (drag + click to upload) */}
+      <div
+        className={`dropStrip ${dragging ? "isDragging" : ""} ${items.length ? "hasFile" : ""}`}
+        role="button"
+        tabIndex={0}
+        aria-label="Drop PDFs"
+        onClick={() => inputRef.current?.click()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            inputRef.current?.click();
+          }
+        }}
+        onDragEnter={onDragEnter}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+      >
+        <div className="dropStrip__dot" />
+        <div className="dropStrip__text">
+          <div className="dropStrip__title">
+            {items.length ? `${items.length} PDF${items.length > 1 ? "s" : ""} selected` : "Drop PDFs here"}
+          </div>
+          <div className="muted">{items.length ? "Reorder below, then merge." : "Or click to upload multiple PDFs"}</div>
+        </div>
+
+        <div className="dropStrip__pill">{items.length ? "Ready" : "Drag & drop"}</div>
       </div>
 
-      {/* Fixed-height list */}
       {items.length > 0 && (
-        <div className="list" style={{ maxHeight: 320, overflowY: "auto" }}>
-          {items.map((it, idx) => (
-            <div key={it.id} className="listItem">
-              <div className="fileMain">
-                <div className="thumb">
-                  {it.thumb ? <img src={it.thumb} alt="PDF preview page 1" /> : <div className="thumb__ph">PDF</div>}
-                </div>
-
-                <div className="fileInfo">
-                  <div className="listItem__title" title={it.file.name}>
-                    {it.file.name}
+        <div className="mergeListWrap">
+          <div className="mergeList">
+            {items.map((it, idx) => (
+              <div key={it.id} className="mergeItem">
+                <div className="mergeItem__left">
+                  <div className="mergeIndex">{idx + 1}</div>
+                  <div className="mergeMeta">
+                    <div className="mergeName" title={it.file.name}>
+                      {it.file.name}
+                    </div>
+                    <div className="muted">{niceBytes(it.file.size)}</div>
                   </div>
-                  <div className="muted">{niceBytes(it.file.size)}</div>
+                </div>
+
+                <div className="mergeItem__actions">
+                  <button
+                    className="btn btn--ghost mergeArrow"
+                    onClick={() => move(idx, idx - 1)}
+                    disabled={busy || idx === 0}
+                  >
+                    ↑
+                  </button>
+
+                  <button
+                    className="btn btn--ghost mergeArrow"
+                    onClick={() => move(idx, idx + 1)}
+                    disabled={busy || idx === items.length - 1}
+                  >
+                    ↓
+                  </button>
+
+                  <button
+                    className="btn btn--ghost"
+                    onClick={() => remove(it.id)}
+                    disabled={busy}
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
-
-              <div className="fileActions">
-                <button className="btn btn--ghost" onClick={() => move(idx, idx - 1)} disabled={busy || idx === 0}>↑</button>
-                <button className="btn btn--ghost" onClick={() => move(idx, idx + 1)} disabled={busy || idx === items.length - 1}>↓</button>
-                <button className="btn btn--ghost" onClick={() => remove(it.id)} disabled={busy}>Remove</button>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
+
 
       {error && <div className="alert alert--danger">{error}</div>}
 
       <div className="actions">
         <button className="btn btn--primary" disabled={busy || items.length < 2} onClick={merge}>
           {busy ? "Merging..." : "Merge & Continue"}
-        </button>
-        <button className="btn btn--ghost" disabled={busy || items.length === 0} onClick={clear}>
-          Clear
         </button>
       </div>
     </div>

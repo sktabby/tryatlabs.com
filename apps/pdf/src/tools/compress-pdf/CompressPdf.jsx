@@ -1,129 +1,124 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import * as pdfjs from "pdfjs-dist";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import { PDFDocument } from "pdf-lib";
-import { downloadBlob, niceBytes } from "../shared/fileUi.js";
+import { niceBytes } from "../shared/fileUi.js";
 import "./compresspdf.css";
-import { useRef } from "react";
-
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
+const TOOL_SLUG = "compress-pdf";
+const TOOL_TITLE = "Compress PDF";
+
 export default function CompressPdf() {
+  const nav = useNavigate();
+
   const [file, setFile] = useState(null);
   const inputRef = useRef(null);
 
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
 
-  // keep numeric
+  // Controls
   const [quality, setQuality] = useState(0.7); // 0.3 - 0.9
   const [scale, setScale] = useState(1.0); // 0.6 - 1.2
 
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const [resultInfo, setResultInfo] = useState("");
-
-  // drag + preview
+  // Drag UI
   const [dragging, setDragging] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState(""); // first page png dataURL
-  const [previewMeta, setPreviewMeta] = useState(""); // pages count or hint
 
-  const info = useMemo(() => (file ? `${file.name} • ${niceBytes(file.size)}` : ""), [file]);
+  // Stable bytes (prevents ArrayBuffer detach issues)
+  const bytesRef = useRef(null); // Uint8Array
 
-  const clearAll = () => {
+  const info = useMemo(
+    () => (file ? `${file.name} • ${niceBytes(file.size)}` : ""),
+    [file]
+  );
+
+  const clear = () => {
     setFile(null);
+    setBusy(false);
     setError("");
-    setResultInfo("");
-    setPreviewUrl("");
-    setPreviewMeta("");
+    bytesRef.current = null;
+    if (inputRef.current) inputRef.current.value = "";
   };
 
-  const buildPreview = async (pdfBytes) => {
-    try {
-      const doc = await pdfjs.getDocument({ data: pdfBytes }).promise;
-      const page = await doc.getPage(1);
-
-      // small preview render (fast)
-      const viewport = page.getViewport({ scale: 0.9 });
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-
-      canvas.width = Math.floor(viewport.width);
-      canvas.height = Math.floor(viewport.height);
-
-      await page.render({ canvasContext: ctx, viewport }).promise;
-
-      setPreviewUrl(canvas.toDataURL("image/png"));
-      setPreviewMeta(`Pages: ${doc.numPages}`);
-    } catch {
-      // preview is optional
-      setPreviewUrl("");
-      setPreviewMeta("");
-    }
-  };
-
-  const addPickedFile = async (f) => {
+  const loadPdf = async (f) => {
     setError("");
-    setResultInfo("");
+    setFile(null);
+    bytesRef.current = null;
 
-    if (!f) return;
-
-    if (f.type !== "application/pdf") {
-      setError("Please select a PDF.");
-      return;
-    }
-
-    setFile(f);
-
-    // build preview (first page)
     try {
-      const bytes = await f.arrayBuffer();
-      await buildPreview(bytes);
+      const buf = await f.arrayBuffer();
+      bytesRef.current = new Uint8Array(buf);
+      setFile(f);
     } catch {
-      setPreviewUrl("");
-      setPreviewMeta("");
+      setError("Could not read this PDF.");
+      setFile(null);
+      bytesRef.current = null;
     }
   };
 
   const onPick = async (e) => {
     const f = e.target.files?.[0];
     e.target.value = "";
-    await addPickedFile(f);
+    if (!f) return;
+
+    if (f.type !== "application/pdf") {
+      setError("Please select a PDF file.");
+      return;
+    }
+
+    await loadPdf(f);
   };
 
   const onDrop = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     setDragging(false);
+
     const f = e.dataTransfer.files?.[0];
-    await addPickedFile(f);
+    if (!f) return;
+
+    if (f.type !== "application/pdf") {
+      setError("Please drop a PDF file only.");
+      return;
+    }
+
+    await loadPdf(f);
   };
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
   const compress = async () => {
     setBusy(true);
     setError("");
-    setResultInfo("");
 
     try {
-      if (!file) throw new Error("Please upload a PDF first.");
+      if (!file || !bytesRef.current) throw new Error("Please upload a PDF.");
 
-      const bytes = await file.arrayBuffer();
-      const src = await pdfjs.getDocument({ data: bytes }).promise;
+      const q = clamp(Number(quality) || 0.7, 0.3, 0.9);
+      const s = clamp(Number(scale) || 1.0, 0.6, 1.2);
+
+      // ✅ pdfjs source for rendering pages (fresh bytes slice)
+      const src = await pdfjs.getDocument({ data: bytesRef.current.slice() }).promise;
 
       const out = await PDFDocument.create();
 
       for (let i = 1; i <= src.numPages; i++) {
         const page = await src.getPage(i);
-        const viewport = page.getViewport({ scale: 1.4 * Number(scale) });
+        const viewport = page.getViewport({ scale: 1.4 * s });
 
         const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d", { alpha: false });
+        if (!ctx) throw new Error("Canvas not supported in this browser.");
 
         canvas.width = Math.floor(viewport.width);
         canvas.height = Math.floor(viewport.height);
 
         await page.render({ canvasContext: ctx, viewport }).promise;
 
-        const jpgUrl = canvas.toDataURL("image/jpeg", Number(quality));
+        const jpgUrl = canvas.toDataURL("image/jpeg", q);
         const jpgBytes = await (await fetch(jpgUrl)).arrayBuffer();
 
         const jpg = await out.embedJpg(jpgBytes);
@@ -133,9 +128,18 @@ export default function CompressPdf() {
 
       const outBytes = await out.save();
       const blob = new Blob([outBytes], { type: "application/pdf" });
+      const blobUrl = URL.createObjectURL(blob);
 
-      setResultInfo(`Original: ${niceBytes(file.size)} • New: ${niceBytes(blob.size)}`);
-      downloadBlob(blob, "tryatlabs-compressed.pdf");
+      // ✅ redirect to your existing Result.jsx
+      nav("/result", {
+        state: {
+          slug: TOOL_SLUG,
+          title: TOOL_TITLE,
+          fileName: "tryatlabs-compressed.pdf",
+          blobUrl,
+          sizeBytes: outBytes?.byteLength ?? blob.size,
+        },
+      });
     } catch (e) {
       setError(e?.message || "Compress failed (some PDFs are restricted).");
     } finally {
@@ -145,131 +149,136 @@ export default function CompressPdf() {
 
   return (
     <div className="tool tool--compress card">
-      <div className="grid2">
-        {/* Drop Zone */}
-        <div
-          className={`drop ${dragging ? "isDragging" : ""}`}
-          role="button"
-          tabIndex={0}
-          aria-label="Upload PDF"
-          onClick={() => inputRef.current?.click()}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              inputRef.current?.click();
-            }
-          }}
-          onDragEnter={() => setDragging(true)}
-          onDragOver={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setDragging(true);
-          }}
-          onDragLeave={(e) => {
-            if (e.currentTarget.contains(e.relatedTarget)) return;
-            setDragging(false);
-          }}
-          onDrop={onDrop}
-        >
+      {/* Top bar */}
+      <div className="compressTop">
+        <div className="compressTop__left">
+        
+          <div className="muted compressSub">
+            Reduce file size by re-rendering pages with controlled <b>quality</b> and <b>scale</b>.
+          </div>
+        </div>
+
+        <div className="compressTop__right">
           <input
             ref={inputRef}
             type="file"
             accept="application/pdf"
-            multiple={false /* change to true for merge */}
+            multiple={false}
             onChange={onPick}
             style={{ display: "none" }}
           />
 
-          <div className="drop__inner">
-            <div className="drop__title">{file ? "Replace PDF" : "Upload PDF"}</div>
-            <div className="muted">{file ? info : "Drop a PDF or click to upload"}</div>
-          </div>
-        </div>
+          <button
+            className="btn btn--primary compressUploadBtn"
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={busy}
+          >
+            {file ? "Replace PDF" : "Upload PDF"}
+          </button>
 
-
-        {/* Settings Panel */}
-        <div className="panel">
-          {/* Preview */}
-          {file && (
-            <div className="previewCard">
-              <div className="previewTop">
-                <div className="previewTitle">Preview</div>
-                <div className="muted">{previewMeta}</div>
-              </div>
-
-              {previewUrl ? (
-                <div className="previewMedia">
-                  <img src={previewUrl} alt="PDF preview page 1" />
-                </div>
-              ) : (
-                <div className="muted">Preview unavailable for this PDF.</div>
-              )}
-            </div>
-          )}
-
-          <div className="qualityRow">
-            <div className="field">
-              <div className="field__label">Quality (JPEG)</div>
-              <input
-                className="input"
-                type="number"
-                min="0.3"
-                max="0.9"
-                step="0.05"
-                value={quality}
-                onChange={(e) => setQuality(Number(e.target.value))}
-              />
-              <div className="muted">Lower = smaller size, more blur.</div>
-            </div>
-
-            <div className="field">
-              <div className="field__label">Scale</div>
-              <input
-                className="input"
-                type="number"
-                min="0.6"
-                max="1.2"
-                step="0.1"
-                value={scale}
-                onChange={(e) => setScale(Number(e.target.value))}
-              />
-              <div className="muted">Lower scale reduces resolution (smaller file).</div>
-            </div>
-          </div>
-
-          {file && (
-            <div className="statRow">
-              <div className="statCard">
-                <div className="statLabel">Original size</div>
-                <div className="statValue">{niceBytes(file.size)}</div>
-              </div>
-              <div className="statCard">
-                <div className="statLabel">Quality</div>
-                <div className="statValue">{Number(quality).toFixed(2)}</div>
-              </div>
-              <div className="statCard">
-                <div className="statLabel">Scale</div>
-                <div className="statValue">{Number(scale).toFixed(1)}×</div>
-              </div>
-            </div>
-          )}
-
-          {file && (
-            <div className="panelActions">
-              <button className="btn btn--ghost" disabled={busy} onClick={clearAll}>
-                Clear
-              </button>
-            </div>
-          )}
+          <button
+            className="btn btn--ghost"
+            type="button"
+            onClick={clear}
+            disabled={busy || (!file && !error)}
+          >
+            Clear
+          </button>
         </div>
       </div>
 
-      {resultInfo && <div className="alert alert--ok">{resultInfo}</div>}
+      {/* Upload strip (header only, no preview) */}
+   
+
+      <div className="grid2">
+        {/* File header card */}
+        <div className="fileCard">
+          <div className="fileCard__head">
+            <div className="fileCard__title">File</div>
+            <div className="fileCard__badge">{file ? "Loaded" : "No file"}</div>
+          </div>
+
+          <div className="fileCard__body">
+            <div className="fileName">{file ? file.name : "Upload a PDF to start"}</div>
+            <div className="muted">{file ? `Size: ${niceBytes(file.size)}` : "PDF remains on your device."}</div>
+          </div>
+
+          <div className="fileCard__foot muted">
+            Tip: If your PDF is already optimized, size may not reduce much.
+          </div>
+        </div>
+
+        {/* Settings Panel */}
+        <div className="panel">
+          <div className="panelTitle">Compression Settings</div>
+
+          <div className="controlCard">
+            <div className="controlTop">
+              <div className="controlLabel">Quality</div>
+              <div className="valuePill">{Number(quality).toFixed(2)}</div>
+            </div>
+
+            <input
+              className="range"
+              type="range"
+              min="0.3"
+              max="0.9"
+              step="0.05"
+              value={quality}
+              onChange={(e) => setQuality(Number(e.target.value))}
+              disabled={!file || busy}
+            />
+
+            <div className="muted controlHint">Lower = smaller size, more blur.</div>
+          </div>
+
+          <div className="controlCard">
+            <div className="controlTop">
+              <div className="controlLabel">Scale</div>
+              <div className="valuePill">{Number(scale).toFixed(1)}×</div>
+            </div>
+
+            <input
+              className="range"
+              type="range"
+              min="0.6"
+              max="1.2"
+              step="0.1"
+              value={scale}
+              onChange={(e) => setScale(Number(e.target.value))}
+              disabled={!file || busy}
+            />
+
+            <div className="muted controlHint">Lower scale reduces resolution.</div>
+          </div>
+
+          <div className="statsRow">
+            <div className="statCard">
+              <div className="statLabel">Original</div>
+              <div className="statValue">{file ? niceBytes(file.size) : "—"}</div>
+            </div>
+            <div className="statCard">
+              <div className="statLabel">Quality</div>
+              <div className="statValue">{Number(quality).toFixed(2)}</div>
+            </div>
+            <div className="statCard">
+              <div className="statLabel">Scale</div>
+              <div className="statValue">{Number(scale).toFixed(1)}×</div>
+            </div>
+          </div>
+
+          <div className="panelNote">
+            Best range: <b>Quality 0.60–0.75</b> and <b>Scale 0.8–1.0</b>.
+          </div>
+        </div>
+      </div>
+
       {error && <div className="alert alert--danger">{error}</div>}
 
       <div className="actions">
         <button className="btn btn--primary" disabled={!file || busy} onClick={compress}>
-          {busy ? "Compressing..." : "Compress & Download"}
+          {busy ? "Compressing..." : "Continue"}
         </button>
       </div>
     </div>

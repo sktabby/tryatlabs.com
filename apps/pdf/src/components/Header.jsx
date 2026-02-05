@@ -100,7 +100,7 @@ export default function Header() {
             target="_blank"
             rel="noreferrer"
           >
-            Main Site <ArrowRight size={16} />
+           tryatlabs.com 
           </a>
 
           {/* Mobile menu button */}
@@ -152,7 +152,7 @@ export default function Header() {
                 rel="noreferrer"
                 onClick={() => setOpen(false)}
               >
-                Main Site <ArrowRight size={18} />
+              tryatlabs.com
               </a>
             </div>
           </div>

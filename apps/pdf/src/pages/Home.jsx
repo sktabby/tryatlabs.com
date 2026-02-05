@@ -109,21 +109,24 @@ export default function Home() {
       {/* HERO */}
       <section className="hero hero--light">
         <div className="hero__grid">
-          <div className="hero__left">
-            <div className="kicker">Free PDF Tools, Just For You!</div>
+         <div className="hero__left">
+  <div className="kicker">Free PDF Tools, Just For You!</div>
 
-            <h1 className="hero__title">
-              PDF ka kaam tha mushkil kabhi,
-              <br />
-              ab ek jagah pe, <span className="grad">aasaan sabhi.</span>
-            </h1>
+  <h1 className="hero__title">
+    All Your PDF Work,
+    <br />
+    Made <span className="grad">Available</span> in One Place.
+  </h1>
 
-            <div className="hero__cta">
-              <a className="btn btn--primary" href="#all-tools">
-                Explore PDF Tools <ArrowRight size={18} />
-              </a>
-            </div>
-          </div>
+ 
+
+  <div className="hero__cta">
+    <a className="btn btn--primary" href="#all-tools">
+      Explore PDF Tools <ArrowRight size={18} />
+    </a>
+  </div>
+</div>
+
 
           {/* RIGHT: 4 quick services */}
           <div className="hero__right">

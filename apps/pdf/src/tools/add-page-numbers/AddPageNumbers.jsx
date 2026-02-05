@@ -1,22 +1,21 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import * as pdfjs from "pdfjs-dist";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import { loadPdfFromFile, addPageNumbers } from "../shared/pdfCore.js";
 import { niceBytes } from "../shared/fileUi.js";
-import "./add-page-number.css";
 import { useNavigate } from "react-router-dom";
 import { goToResult } from "../shared/goToResult.js";
-import { useRef } from "react";
-
+import "./add-page-number.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
+const TOOL_SLUG = "add-page-numbers";
+const TOOL_TITLE = "Add Page Numbers";
 
 export default function AddPageNumbers() {
   const [file, setFile] = useState(null);
   const inputRef = useRef(null);
 
-
-  // keep numeric
   const [startAt, setStartAt] = useState(1);
   const [fontSize, setFontSize] = useState(10);
   const [position, setPosition] = useState("bottom-center");
@@ -24,14 +23,27 @@ export default function AddPageNumbers() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  // drag + preview
+  // drag (stable)
   const [dragging, setDragging] = useState(false);
+  const dragDepth = useRef(0);
+
+  // preview
   const [previewUrl, setPreviewUrl] = useState("");
   const [previewMeta, setPreviewMeta] = useState("");
 
   const navigate = useNavigate();
 
   const info = useMemo(() => (file ? `${file.name} • ${niceBytes(file.size)}` : ""), [file]);
+
+  const clear = () => {
+    setFile(null);
+    setError("");
+    setDragging(false);
+    dragDepth.current = 0;
+    setPreviewUrl("");
+    setPreviewMeta("");
+    if (inputRef.current) inputRef.current.value = "";
+  };
 
   const buildPreview = async (pdfBytes) => {
     try {
@@ -40,7 +52,7 @@ export default function AddPageNumbers() {
 
       const viewport = page.getViewport({ scale: 0.95 });
       const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext("2d", { alpha: false });
 
       canvas.width = Math.floor(viewport.width);
       canvas.height = Math.floor(viewport.height);
@@ -60,7 +72,7 @@ export default function AddPageNumbers() {
     if (!f) return;
 
     if (f.type !== "application/pdf") {
-      setError("Please select a PDF.");
+      setError("Please select a PDF file.");
       return;
     }
 
@@ -85,14 +97,40 @@ export default function AddPageNumbers() {
   const onDrop = async (e) => {
     e.preventDefault();
     e.stopPropagation();
+    dragDepth.current = 0;
     setDragging(false);
+
     const f = e.dataTransfer.files?.[0];
     await addPickedFile(f);
+  };
+
+  const onDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragDepth.current += 1;
+    setDragging(true);
+  };
+
+  const onDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragDepth.current -= 1;
+    if (dragDepth.current <= 0) {
+      dragDepth.current = 0;
+      setDragging(false);
+    }
+  };
+
+  const onDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(true);
   };
 
   const run = async () => {
     setBusy(true);
     setError("");
+
     try {
       if (!file) throw new Error("Please upload a PDF first.");
 
@@ -100,16 +138,17 @@ export default function AddPageNumbers() {
       await addPageNumbers(pdf, {
         startAt: Number(startAt),
         fontSize: Number(fontSize),
-        position
+        position,
       });
 
       const bytes = await pdf.save();
 
+      // ✅ Your existing helper
       goToResult(navigate, {
-        slug: "add-page-numbers",
+        slug: TOOL_SLUG,
         title: "Page numbers added!",
         fileName: "tryatlabs-page-numbers.pdf",
-        bytes
+        bytes,
       });
     } catch (e) {
       setError(e?.message || "Failed.");
@@ -120,74 +159,83 @@ export default function AddPageNumbers() {
 
   return (
     <div className="tool tool--pagenum card">
-      <div className="grid2">
-        {/* Drop zone */}
-        <div
-          className={`drop ${dragging ? "isDragging" : ""}`}
-          role="button"
-          tabIndex={0}
-          aria-label="Upload PDF"
-          onClick={() => inputRef.current?.click()}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              inputRef.current?.click();
-            }
-          }}
-          onDragEnter={() => setDragging(true)}
-          onDragOver={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setDragging(true);
-          }}
-          onDragLeave={(e) => {
-            if (e.currentTarget.contains(e.relatedTarget)) return;
-            setDragging(false);
-          }}
-          onDrop={onDrop}
-        >
+      {/* Top bar */}
+      <div className="pagenumTop">
+        <div className="pagenumTop__left">
+         
+          <div className="muted pagenumSub">
+            Preview shows placement on page 1 — numbering increments automatically for next pages.
+          </div>
+        </div>
+
+        <div className="pagenumTop__right">
           <input
             ref={inputRef}
             type="file"
             accept="application/pdf"
-            multiple={false /* change to true for merge */}
+            multiple={false}
             onChange={onPick}
             style={{ display: "none" }}
           />
 
-          <div className="drop__inner">
-            <div className="drop__title">{file ? "Replace PDF" : "Upload PDF"}</div>
-            <div className="muted">{file ? info : "Drop a PDF or click to upload"}</div>
-          </div>
+          <button
+            className="btn btn--primary pagenumUploadBtn"
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={busy}
+          >
+            {file ? "Replace PDF" : "Upload PDF"}
+          </button>
+
+          <button
+            className="btn btn--ghost"
+            type="button"
+            onClick={clear}
+            disabled={busy || (!file && !error)}
+          >
+            Clear
+          </button>
         </div>
+      </div>
 
+    
+      <div className="grid2">
+        {/* Preview */}
+        <div className="leftCol">
+          <div className="previewCard">
+            <div className="previewHead">
+              <div className="previewTitle">Preview</div>
+              <div className="muted">{file ? previewMeta || "Loading…" : "Upload a PDF to preview"}</div>
+            </div>
 
-        {/* Panel */}
-        <div className="panel">
-          {file && (
-            <div className="previewRow">
-              <div className="previewTop">
-                <div className="previewTitle">Preview</div>
-                <div className="muted">{previewMeta}</div>
-              </div>
-
+            <div className="previewBody">
               {previewUrl ? (
-                <div className="previewMedia">
-                  <img src={previewUrl} alt="PDF preview page 1" />
-                  {/* Overlay simulation of page number placement */}
-                  <div className={`previewNum previewNum--${position}`}>
-                    {Number(startAt)}
+                <div className="previewFrame">
+                  <img className="previewImg" src={previewUrl} alt="PDF preview page 1" />
+
+                  {/* Overlay simulation */}
+                  <div
+                    className={`previewNum previewNum--${position}`}
+                    style={{ fontSize: `${Math.max(8, Math.min(22, Number(fontSize) || 10))}px` }}
+                  >
+                    {Number(startAt) || 1}
                   </div>
                 </div>
               ) : (
-                <div className="muted">Preview unavailable for this PDF.</div>
+                <div className="previewPh">{file ? "Loading Preview" : " preview will appear here!"}</div>
               )}
-
-              <div className="hint">Preview shows placement on page 1 (number will increment on next pages).</div>
             </div>
-          )}
 
-          {/* Controls */}
+            <div className="previewFoot muted">
+              Placement preview is approximate (real placement depends on page margins).
+            </div>
+          </div>
+        </div>
+
+        {/* Controls panel */}
+        <div className="panel">
+          <div className="panelTitle">Settings</div>
+
           <div className="panelGrid">
             <div className="field">
               <div className="field__label">Start number</div>
@@ -197,6 +245,7 @@ export default function AddPageNumbers() {
                 value={startAt}
                 min={1}
                 onChange={(e) => setStartAt(Number(e.target.value))}
+                disabled={!file || busy}
               />
             </div>
 
@@ -206,16 +255,22 @@ export default function AddPageNumbers() {
                 className="input"
                 type="number"
                 value={fontSize}
-                onChange={(e) => setFontSize(Number(e.target.value))}
                 min={8}
-                max={20}
+                max={22}
+                onChange={(e) => setFontSize(Number(e.target.value))}
+                disabled={!file || busy}
               />
             </div>
           </div>
 
           <div className="field">
             <div className="field__label">Position</div>
-            <select className="input" value={position} onChange={(e) => setPosition(e.target.value)}>
+            <select
+              className="input"
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+              disabled={!file || busy}
+            >
               <option value="bottom-center">Bottom Center</option>
               <option value="bottom-left">Bottom Left</option>
               <option value="bottom-right">Bottom Right</option>
@@ -224,6 +279,25 @@ export default function AddPageNumbers() {
               <option value="top-right">Top Right</option>
             </select>
           </div>
+
+          <div className="statsRow">
+            <div className="statCard">
+              <div className="statLabel">File</div>
+              <div className="statValue">{file ? niceBytes(file.size) : "—"}</div>
+            </div>
+            <div className="statCard">
+              <div className="statLabel">Start</div>
+              <div className="statValue">{Number(startAt) || 1}</div>
+            </div>
+            <div className="statCard">
+              <div className="statLabel">Position</div>
+              <div className="statValue">{position.replace("-", " ")}</div>
+            </div>
+          </div>
+
+          <div className="panelNote">
+            Tip: Bottom Center looks best for reports; Top Right is great for scanned docs.
+          </div>
         </div>
       </div>
 
@@ -231,7 +305,7 @@ export default function AddPageNumbers() {
 
       <div className="actions">
         <button className="btn btn--primary" disabled={!file || busy} onClick={run}>
-          {busy ? "Adding..." : "Add & Continue"}
+          {busy ? "Adding..." : "Continue"}
         </button>
       </div>
     </div>

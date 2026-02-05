@@ -1,18 +1,19 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import * as pdfjs from "pdfjs-dist";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
-import { loadPdfFromFile, savePdfToBlob, addWatermarkText } from "../shared/pdfCore.js";
-import { downloadBlob, niceBytes } from "../shared/fileUi.js";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import { useNavigate } from "react-router-dom";
+import { loadPdfFromFile, addWatermarkText } from "../shared/pdfCore.js";
+import { niceBytes } from "../shared/fileUi.js";
+import { goToResult } from "../shared/goToResult.js";
 import "./add-watermake.css";
-import { useRef } from "react";
-
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 export default function AddWatermark() {
+  const navigate = useNavigate();
+
   const [file, setFile] = useState(null);
   const inputRef = useRef(null);
-
 
   const [text, setText] = useState("CONFIDENTIAL");
   const [opacity, setOpacity] = useState(0.2);
@@ -22,12 +23,25 @@ export default function AddWatermark() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  // drag + preview
+  // dropStrip drag stability
   const [dragging, setDragging] = useState(false);
+  const dragDepth = useRef(0);
+
+  // preview
   const [previewUrl, setPreviewUrl] = useState("");
   const [previewMeta, setPreviewMeta] = useState("");
 
   const info = useMemo(() => (file ? `${file.name} • ${niceBytes(file.size)}` : ""), [file]);
+
+  const clear = () => {
+    setFile(null);
+    setError("");
+    setDragging(false);
+    dragDepth.current = 0;
+    setPreviewUrl("");
+    setPreviewMeta("");
+    if (inputRef.current) inputRef.current.value = "";
+  };
 
   const buildPreview = async (pdfBytes) => {
     try {
@@ -36,7 +50,7 @@ export default function AddWatermark() {
 
       const viewport = page.getViewport({ scale: 0.95 });
       const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext("2d", { alpha: false });
 
       canvas.width = Math.floor(viewport.width);
       canvas.height = Math.floor(viewport.height);
@@ -56,13 +70,13 @@ export default function AddWatermark() {
     if (!f) return;
 
     if (f.type !== "application/pdf") {
-      setError("Please select a PDF.");
+      setError("Please select a PDF file.");
       return;
     }
 
     setFile(f);
 
-    // Preview is optional (best-effort)
+    // preview best-effort
     try {
       const bytes = await f.arrayBuffer();
       await buildPreview(bytes);
@@ -81,9 +95,34 @@ export default function AddWatermark() {
   const onDrop = async (e) => {
     e.preventDefault();
     e.stopPropagation();
+    dragDepth.current = 0;
     setDragging(false);
+
     const f = e.dataTransfer.files?.[0];
     await addPickedFile(f);
+  };
+
+  const onDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragDepth.current += 1;
+    setDragging(true);
+  };
+
+  const onDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragDepth.current -= 1;
+    if (dragDepth.current <= 0) {
+      dragDepth.current = 0;
+      setDragging(false);
+    }
+  };
+
+  const onDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(true);
   };
 
   const run = async () => {
@@ -95,14 +134,22 @@ export default function AddWatermark() {
       if (!text.trim()) throw new Error("Please enter watermark text.");
 
       const pdf = await loadPdfFromFile(file);
+
       await addWatermarkText(pdf, text.trim(), {
         opacity: Number(opacity),
         rotation: Number(rotation),
-        fontSize: Number(fontSize)
+        fontSize: Number(fontSize),
       });
 
-      const blob = await savePdfToBlob(pdf);
-      downloadBlob(blob, "tryatlabs-watermarked.pdf");
+      const bytes = await pdf.save();
+
+      // ✅ Redirect to Result page
+      goToResult(navigate, {
+        slug: "add-watermark",
+        title: "Watermark added!",
+        fileName: "tryatlabs-watermarked.pdf",
+        bytes,
+      });
     } catch (e) {
       setError(e?.message || "Failed.");
     } finally {
@@ -112,67 +159,61 @@ export default function AddWatermark() {
 
   return (
     <div className="tool tool--watermark card">
-      <div className="grid2">
-        {/* Drop zone */}
-        <div
-          className={`drop ${dragging ? "isDragging" : ""}`}
-          role="button"
-          tabIndex={0}
-          aria-label="Upload PDF"
-          onClick={() => inputRef.current?.click()}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              inputRef.current?.click();
-            }
-          }}
-          onDragEnter={() => setDragging(true)}
-          onDragOver={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setDragging(true);
-          }}
-          onDragLeave={(e) => {
-            if (e.currentTarget.contains(e.relatedTarget)) return;
-            setDragging(false);
-          }}
-          onDrop={onDrop}
-        >
+      {/* Top bar (ONE upload button) */}
+      <div className="wmTop">
+        <div className="wmTop__left">
+         
+          <div className="muted wmSub">Apply a text watermark to every page.</div>
+        </div>
+
+        <div className="wmTop__right">
           <input
             ref={inputRef}
             type="file"
             accept="application/pdf"
-            multiple={false /* change to true for merge */}
+            multiple={false}
             onChange={onPick}
             style={{ display: "none" }}
           />
 
-          <div className="drop__inner">
-            <div className="drop__title">{file ? "Replace PDF" : "Upload PDF"}</div>
-            <div className="muted">{file ? info : "Drop a PDF or click to upload"}</div>
-          </div>
+          <button
+            className="btn btn--primary wmUploadBtn"
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={busy}
+          >
+            {file ? "Replace PDF" : "Upload PDF"}
+          </button>
+
+          <button className="btn btn--ghost" type="button" onClick={clear} disabled={busy || (!file && !error)}>
+            Clear
+          </button>
         </div>
+      </div>
 
 
-        {/* Panel */}
-        <div className="panel">
-          {file && (
-            <div className="previewRow">
-              <div className="previewTop">
-                <div className="previewTitle">Preview</div>
-                <div className="muted">{previewMeta}</div>
-              </div>
+      <div className="grid2">
+        {/* Preview (left) */}
+        <div className="leftCol">
+          <div className="previewCard">
+            <div className="previewHead">
+              <div className="previewTitle">Preview</div>
+              <div className="muted">{file ? previewMeta || "Loading…" : "Page 1"}</div>
+            </div>
 
+            {/* ✅ EXACT previewBody block (as requested) */}
+            <div className="previewBody">
               {previewUrl ? (
-                <div className="previewMedia">
-                  <img src={previewUrl} alt="PDF preview page 1" />
-                  {/* simulated overlay */}
+                <div className="previewFrame">
+                  <img className="previewImg" src={previewUrl} alt="PDF preview page 1" />
+
+                  {/* Overlay simulation */}
                   <div
                     className="wmOverlay"
                     style={{
                       opacity: Number(opacity),
                       transform: `translate(-50%, -50%) rotate(${Number(rotation)}deg)`,
-                      fontSize: Math.max(12, Math.min(72, Number(fontSize))) * 0.45
+                      fontSize: `${Math.max(12, Math.min(72, Number(fontSize) || 42)) * 0.45}px`,
                     }}
                     aria-hidden="true"
                   >
@@ -180,16 +221,21 @@ export default function AddWatermark() {
                   </div>
                 </div>
               ) : (
-                <div className="muted">Preview unavailable for this PDF.</div>
+                <div className="previewPh">{file ? "Loading Preview" : " preview will appear here!"}</div>
               )}
-
-              <div className="hint">Preview is simulated on page 1 to show placement/rotation.</div>
             </div>
-          )}
+
+            <div className="previewFoot muted">Simulated on page 1 to show opacity + rotation.</div>
+          </div>
+        </div>
+
+        {/* Options (right) */}
+        <div className="panel">
+          <div className="panelTitle">Watermark</div>
 
           <div className="field">
             <div className="field__label">Watermark text</div>
-            <input className="input" value={text} onChange={(e) => setText(e.target.value)} />
+            <input className="input" value={text} onChange={(e) => setText(e.target.value)} disabled={!file || busy} />
           </div>
 
           <div className="grid3">
@@ -203,7 +249,9 @@ export default function AddWatermark() {
                 max="0.9"
                 value={opacity}
                 onChange={(e) => setOpacity(Number(e.target.value))}
+                disabled={!file || busy}
               />
+              <div className="muted">0.10–0.25 looks professional.</div>
             </div>
 
             <div className="field">
@@ -213,7 +261,9 @@ export default function AddWatermark() {
                 type="number"
                 value={rotation}
                 onChange={(e) => setRotation(Number(e.target.value))}
+                disabled={!file || busy}
               />
+              <div className="muted">Try 30–45 for diagonal.</div>
             </div>
 
             <div className="field">
@@ -221,16 +271,33 @@ export default function AddWatermark() {
               <input
                 className="input"
                 type="number"
-                value={fontSize}
-                onChange={(e) => setFontSize(Number(e.target.value))}
                 min={8}
                 max={120}
+                value={fontSize}
+                onChange={(e) => setFontSize(Number(e.target.value))}
+                disabled={!file || busy}
               />
+              <div className="muted">Large = better visibility.</div>
             </div>
           </div>
 
-          <div className="tip">
-            Tip: Use lower opacity (0.10–0.25) for clean “professional” watermarking.
+          <div className="statsRow">
+            <div className="statCard">
+              <div className="statLabel">File</div>
+              <div className="statValue">{file ? niceBytes(file.size) : "—"}</div>
+            </div>
+            <div className="statCard">
+              <div className="statLabel">Opacity</div>
+              <div className="statValue">{Number(opacity).toFixed(2)}</div>
+            </div>
+            <div className="statCard">
+              <div className="statLabel">Rotation</div>
+              <div className="statValue">{Number(rotation)}°</div>
+            </div>
+          </div>
+
+          <div className="panelNote">
+            Tip: Keep opacity low and use diagonal rotation for clean watermarking.
           </div>
         </div>
       </div>
@@ -239,7 +306,7 @@ export default function AddWatermark() {
 
       <div className="actions">
         <button className="btn btn--primary" disabled={!file || busy} onClick={run}>
-          {busy ? "Applying..." : "Apply & Download"}
+          {busy ? "Applying..." : "Apply & Continue"}
         </button>
       </div>
     </div>

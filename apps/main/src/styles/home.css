@@ -74,6 +74,7 @@
   width: 100%;
 }
 
+/* grid stays same for desktop */
 .hero__cards{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -81,32 +82,145 @@
   margin-top: 14px;
 }
 
-/* Service card polish */
+/* ✅ Service card: better alignment, consistent height, premium spacing */
 .serviceCard{
-  min-height: 172px;
+  min-height: 178px;
   padding: 18px;
-}
-
-.serviceCard__head{
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 10px;
-}
 
-.serviceCard__badge{
-  font-size: 12px;
-  padding: 7px 10px;
-  border-radius: 999px;
   border: 1px solid var(--labs-border);
-  background: rgba(255,255,255,.04);
-  color: rgba(255,255,255,.78);
-  font-weight: 900;
-  letter-spacing: .08em;
+  background: rgba(255,255,255,.045);
+  border-radius: var(--labs-radius);
+  box-shadow: var(--labs-soft);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  position: relative;
+  overflow: hidden;
+
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
 }
 
-/* ====== TRUST STRIP ====== *//* =========================
+/* subtle glow sweep */
+.serviceCard::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 22% 14%, rgba(124,92,255,.20), transparent 55%),
+    radial-gradient(circle at 78% 30%, rgba(46,233,166,.12), transparent 60%);
+  opacity: .55;
+  filter: blur(18px);
+}
+
+.serviceCard > *{
+  position: relative;
+  z-index: 1;
+}
+
+.serviceCard:hover{
+  transform: translateY(-2px);
+  border-color: var(--labs-border-2);
+  background: rgba(255,255,255,.06);
+}
+
+/* ✅ Header alignment: badge+title locked, consistent spacing */
+.serviceCard__head{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin: 0;
+  min-height: 34px;
+}
+
+/* ✅ Make title align nicely even if badge wraps */
+.serviceCard .card__title{
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 950;
+}
+
+/* ✅ Premium badge (works now, icons-ready) */
+.serviceCard__badge{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  font-size: 11px;
+  padding: 7px 12px;
+  border-radius: 999px;
+
+  font-weight: 950;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,.9);
+
+  background:
+    linear-gradient(135deg, rgba(124,92,255,.18), rgba(46,233,166,.10));
+
+  border: 1px solid rgba(124,92,255,.35);
+
+  box-shadow:
+    0 0 0 1px rgba(124,92,255,.12) inset,
+    0 8px 26px rgba(124,92,255,.18);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  white-space: nowrap;
+  flex: 0 0 auto;
+
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.serviceCard:hover .serviceCard__badge{
+  transform: translateY(-1px);
+  border-color: rgba(124,92,255,.55);
+  box-shadow:
+    0 0 0 1px rgba(124,92,255,.22) inset,
+    0 12px 34px rgba(124,92,255,.28);
+}
+
+/* If you later insert SVG inside badge, it will auto style */
+.serviceCard__badge svg{
+  width: 14px;
+  height: 14px;
+  stroke: rgba(255,255,255,.92);
+  stroke-width: 1.8;
+  fill: none;
+  flex: 0 0 auto;
+}
+
+/* ✅ Description spacing consistent */
+.serviceCard .muted{
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ✅ Button alignment: always at bottom, consistent width */
+.serviceCard .btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 40px;
+  border-radius: 14px;
+}
+
+.serviceCard .btn.btn--ghost{
+  width: 100%;
+}
+
+/* ====== TRUST STRIP ====== */
+/* =========================
    TRUST STRIP (Premium)
    - rounded corners
    - smooth fading ends
@@ -116,7 +230,6 @@
 .trust-strip{
   border: 1px solid var(--labs-border);
   background: rgba(255,255,255,.04);
- 
   overflow: hidden;
 
   box-shadow: var(--labs-soft);
@@ -162,7 +275,6 @@
   );
 
   opacity: .95;
-  
 }
 
 /* ✅ Marquee track (movement guaranteed) */
@@ -198,7 +310,7 @@
   content: "";
   width: 7px;
   height: 7px;
-  
+
   background: rgba(124,92,255,.7);
   box-shadow: 0 0 0 5px rgba(124,92,255,.12);
 }
@@ -340,31 +452,58 @@
 }
 
 @media (max-width: 520px){
-  .hero{ padding: 44px 0 56px; }
 
-  .hero__title{
-    font-size: 32px;
-    line-height: 1.08;
+  /* 2 cards per row on mobile */
+  #services .hero__cards{
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px;
   }
 
-  .card,
-  .panel,
-  .step{
-    padding: 16px;
-    border-radius: 18px;
+  /* ❌ Completely remove description on mobile */
+  #services .serviceCard .muted{
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  .btn{
+  /* Compact card */
+  #services .serviceCard{
+    min-height: auto;
+    padding: 14px;
+    gap: 10px;
+  }
+
+  /* Icon + title in separate columns */
+  #services .serviceCard__head{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 12px;
+  }
+
+  /* Badge (icon column) */
+  #services .serviceCard__badge{
+    padding: 6px 10px;
+    font-size: 10px;
+    letter-spacing: .14em;
+    white-space: nowrap;
+  }
+
+  /* Title (text column) */
+  #services .card__title{
+    font-size: 14px;
+    line-height: 1.15;
+    font-weight: 950;
+    margin: 0;
+  }
+
+  /* Button stays clean */
+  #services .serviceCard .btn{
     width: 100%;
-  }
-
-  .serviceCard__head{
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .trust-strip__track{
-    padding: 12px 12px;
+    font-size: 13px;
+    min-height: 38px;
+    border-radius: 14px;
   }
 }

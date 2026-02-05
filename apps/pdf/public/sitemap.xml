@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://pdf.tryatlabs.com/</loc></url>
+  <url><loc>https://ilovepdf.tryatlabs.com/</loc></url>
 
-  <url><loc>https://pdf.tryatlabs.com/merge-pdf</loc></url>
-  <url><loc>https://pdf.tryatlabs.com/split-pdf</loc></url>
-  <url><loc>https://pdf.tryatlabs.com/reorder-pages</loc></url>
-  <url><loc>https://pdf.tryatlabs.com/extract-pages</loc></url>
+  <url><loc>https://ilovepdf.tryatlabs.com/merge-pdf</loc></url>
+  <url><loc>https://ilovepdf.tryatlabs.com/split-pdf</loc></url>
+  <url><loc>https://ilovepdf.tryatlabs.com/reorder-pages</loc></url>
+  <url><loc>https://ilovepdf.tryatlabs.com/extract-pages</loc></url>
 
-  <url><loc>https://pdf.tryatlabs.com/compress-pdf</loc></url>
+  <url><loc>https://ilovepdf.tryatlabs.com/compress-pdf</loc></url>
 
-  <url><loc>https://pdf.tryatlabs.com/rotate-pages</loc></url>
-  <url><loc>https://pdf.tryatlabs.com/add-page-numbers</loc></url>
-  <url><loc>https://pdf.tryatlabs.com/add-watermark</loc></url>
-  <url><loc>https://pdf.tryatlabs.com/crop-pdf</loc></url>
+  <url><loc>https://ilovepdf.tryatlabs.com/rotate-pages</loc></url>
+  <url><loc>https://ilovepdf.tryatlabs.com/add-page-numbers</loc></url>
+  <url><loc>https://ilovepdf.tryatlabs.com/add-watermark</loc></url>
+  <url><loc>https://ilovepdf.tryatlabs.com/crop-pdf</loc></url>
 
-  <url><loc>https://pdf.tryatlabs.com/word-to-pdf</loc></url>
+  <url><loc>https://ilovepdf.tryatlabs.com/word-to-pdf</loc></url>
 </urlset>
