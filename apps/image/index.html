@@ -2,270 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0c080a" />
 
-    <title>Launching Soon | TryAtLabs</title>
+    <!-- AdSense (global) -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1292393428202090"
+      crossorigin="anonymous"></script>
+
+    <!-- Basic defaults (page-level SEO set via SeoHead in React) -->
+    <title>TryAtLabs Image Tools</title>
     <meta
       name="description"
-      content="This TryAtLabs subdomain is launching soon. Go back to TryAtLabs.com for live tools."
+      content="Fast, privacy-first image tools to resize, crop, compress, convert, and batch process images directly in your browser."
     />
-    <meta name="robots" content="index,follow" />
-    <meta name="theme-color" content="#0b0e14" />
-    <link rel="canonical" href="https://tryatlabs.com/" />
 
-    <style>
-      :root{
-        --bg:#0b0e14;
-        --card: rgba(255,255,255,.06);
-        --border: rgba(255,255,255,.12);
-        --text: rgba(255,255,255,.92);
-        --muted: rgba(255,255,255,.66);
-        --shadow: 0 26px 70px rgba(0,0,0,.55);
-        --a:#7dd3fc;
-        --b:#a78bfa;
-      }
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/logo.png" />
+    <link rel="apple-touch-icon" href="/assets/logo.png" />
 
-      *{ box-sizing:border-box; }
-      html,body{ height:100%; }
-      body{
-        margin:0;
-        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-        color:var(--text);
-        background:
-          radial-gradient(1000px 600px at 15% 0%, rgba(125,211,252,.14), transparent 60%),
-          radial-gradient(1000px 600px at 90% 10%, rgba(167,139,250,.12), transparent 60%),
-          radial-gradient(900px 600px at 70% 110%, rgba(45,212,191,.08), transparent 60%),
-          var(--bg);
-        overflow:hidden;
-      }
-
-      /* subtle grid */
-      .grid{
-        position:fixed;
-        inset:-2px;
-        background-image:
-          linear-gradient(to right, rgba(255,255,255,.04) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(255,255,255,.04) 1px, transparent 1px);
-        background-size: 80px 80px;
-        mask-image: radial-gradient(ellipse 70% 55% at 50% 35%, #000 55%, transparent 100%);
-        opacity:.32;
-        pointer-events:none;
-      }
-
-      /* center layout */
-      .wrap{
-        min-height:100vh;
-        display:grid;
-        place-items:center;
-        padding:22px 16px;
-      }
-
-      /* card */
-      .card{
-        width:min(560px, 100%);
-        border-radius:22px;
-        border:1px solid var(--border);
-        background: var(--card);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(12px);
-        padding:22px;
-        position:relative;
-        overflow:hidden;
-
-        /* entrance animation */
-        transform: translateY(10px);
-        opacity:0;
-        animation: enter 700ms cubic-bezier(.2,.8,.2,1) forwards;
-      }
-
-      /* gentle gradient sweep */
-      .card::before{
-        content:"";
-        position:absolute;
-        inset:-2px;
-        background: linear-gradient(120deg,
-          rgba(125,211,252,.00) 20%,
-          rgba(125,211,252,.14) 35%,
-          rgba(167,139,250,.12) 55%,
-          rgba(125,211,252,.00) 75%
-        );
-        transform: translateX(-30%) rotate(2deg);
-        opacity:.8;
-        filter: blur(10px);
-        animation: sweep 6s ease-in-out infinite;
-        pointer-events:none;
-      }
-
-      .inner{
-        position:relative;
-        z-index:1;
-      }
-
-      .mark{
-        width:44px;
-        height:44px;
-        border-radius:16px;
-        display:grid;
-        place-items:center;
-        font-weight:1000;
-        letter-spacing:-.04em;
-        border:1px solid var(--border);
-        background: linear-gradient(135deg, rgba(125,211,252,.20), rgba(167,139,250,.18));
-        margin-bottom:14px;
-
-        /* subtle float */
-        animation: floaty 4.2s ease-in-out infinite;
-      }
-
-      .pill{
-        display:inline-flex;
-        align-items:center;
-        gap:10px;
-        padding:7px 12px;
-        border-radius:999px;
-        border:1px solid var(--border);
-        background: rgba(255,255,255,.04);
-        color:var(--muted);
-        font-weight:900;
-        font-size:12px;
-        letter-spacing:.02em;
-      }
-
-      .dot{
-        width:8px; height:8px;
-        border-radius:999px;
-        background: var(--a);
-        box-shadow: 0 0 0 4px rgba(125,211,252,.10);
-      }
-
-      h1{
-        margin:14px 0 8px;
-        font-size:34px;
-        line-height:1.12;
-        letter-spacing:-.04em;
-        font-weight:1000;
-      }
-
-      .glow{
-        background: linear-gradient(90deg, var(--a), var(--b));
-        -webkit-background-clip:text;
-        background-clip:text;
-        color:transparent;
-      }
-
-      p{
-        margin:0;
-        color:var(--muted);
-        font-weight:700;
-        line-height:1.65;
-        font-size:15px;
-      }
-
-      .actions{
-        margin-top:16px;
-        display:flex;
-        flex-wrap:wrap;
-        gap:10px;
-      }
-
-      .btn{
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        gap:10px;
-        padding:12px 14px;
-        border-radius:14px;
-        text-decoration:none;
-        font-weight:950;
-        border:1px solid var(--border);
-        transition: 160ms ease;
-        user-select:none;
-        width:100%;
-      }
-
-      .btn.primary{
-        background: linear-gradient(135deg, rgba(125,211,252,.20), rgba(167,139,250,.16));
-        color: var(--text);
-      }
-      .btn.primary:hover{ transform: translateY(-1px); }
-
-      .btn.ghost{
-        background: rgba(255,255,255,.03);
-        color: var(--text);
-      }
-      .btn.ghost:hover{
-        transform: translateY(-1px);
-        background: rgba(255,255,255,.06);
-      }
-
-      .tiny{
-        margin-top:12px;
-        font-size:12.5px;
-        color: rgba(255,255,255,.55);
-        font-weight:700;
-      }
-
-      @keyframes enter{
-        to{ opacity:1; transform: translateY(0); }
-      }
-
-      @keyframes sweep{
-        0%,100%{ transform: translateX(-35%) rotate(2deg); opacity:.65; }
-        50%{ transform: translateX(20%) rotate(2deg); opacity:.95; }
-      }
-
-      @keyframes floaty{
-        0%,100%{ transform: translateY(0); }
-        50%{ transform: translateY(-6px); }
-      }
-
-      @media (min-width: 520px){
-        .btn{ width:auto; }
-      }
-
-      @media (max-width: 420px){
-        h1{ font-size:30px; }
-        .card{ padding:18px; border-radius:20px; }
-      }
-
-      /* reduced motion support */
-      @media (prefers-reduced-motion: reduce){
-        .card, .card::before, .mark{ animation: none !important; }
-        .card{ opacity:1; transform:none; }
-      }
-    </style>
+    <!-- Performance -->
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+    <link rel="preconnect" href="https://googleads.g.doubleclick.net" />
   </head>
-
   <body>
-    <div class="grid" aria-hidden="true"></div>
-
-    <main class="wrap">
-      <section class="card" role="region" aria-label="Launching soon">
-        <div class="inner">
-         
-          <div class="pill"><span class="dot" aria-hidden="true"></span> Waiting for launch</div>
-
-          <h1>
-            This space is <span class="glow">almost ready</span>.
-          </h1>
-
-          <p>
-           This tool is under developement! please wait
-      
-          </p>
-
-          <div class="actions">
-            <a class="btn primary" href="https://tryatlabs.com/">← Back to TryAtLabs.com</a>
-           
-          </div>
-
-          <div class="tiny">© <span id="y"></span> TryAtLabs</div>
-        </div>
-      </section>
-    </main>
-
-    <script>
-      document.getElementById("y").textContent = new Date().getFullYear();
-    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/app/main.jsx"></script>
   </body>
 </html>

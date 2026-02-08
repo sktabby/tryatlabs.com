@@ -1,0 +1,39 @@
+:root{
+  /* Your palette */
+  --c1:#c7a5aa;
+  --c2:#b19297;
+  --c3:#9c8185;
+  --c4:#877074;
+  --c5:#735e62;
+  --c6:#5e4d50;
+  --c7:#4a3c3f;
+  --c8:#352b2d;
+  --c9:#21191c;
+  --c10:#0c080a;
+
+  /* Theme tokens */
+  --bg: var(--c10);
+  --bg2: var(--c9);
+  --text: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.70);
+
+  --glass: rgba(255,255,255,0.06);
+  --glass2: rgba(255,255,255,0.035);
+  --border: rgba(199,165,170,0.16);
+
+  --brand: var(--c1);
+  --accent: var(--c2);
+
+  --radius: 18px;
+  --radius2: 22px;
+
+  --shadow: 0 18px 60px rgba(0,0,0,0.55);
+  --glow: 0 0 0 1px rgba(199,165,170,0.22), 0 0 38px rgba(199,165,170,0.18);
+}
+
+html, body{
+  background: radial-gradient(1200px 800px at 25% 15%, rgba(199,165,170,0.10), transparent 55%),
+              radial-gradient(900px 700px at 80% 30%, rgba(156,129,133,0.10), transparent 60%),
+              linear-gradient(180deg, var(--bg), var(--bg2));
+  color: var(--text);
+}
