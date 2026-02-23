@@ -1,0 +1,254 @@
+/* =========================
+   PREMIUM TOOL GRID + CARDS
+   (Only .toolGo is clickable)
+   ========================= */
+
+/* Grid */
+.toolGrid{
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+/* Card */
+.toolCard{
+  grid-column: span 6;
+  border-radius: 18px;
+  padding: 16px 16px 14px;
+  background:
+    radial-gradient(900px 220px at 10% 0%, rgba(255,255,255,0.08), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow:
+    0 18px 55px rgba(0,0,0,0.18),
+    0 2px 0 rgba(255,255,255,0.05) inset;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  cursor: default;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 220ms ease;
+}
+
+.toolCard:hover{
+  border-color: rgba(255,255,255,0.16);
+  background:
+    radial-gradient(900px 220px at 10% 0%, rgba(255,255,255,0.10), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.035));
+  box-shadow:
+    0 22px 70px rgba(0,0,0,0.22),
+    0 2px 0 rgba(255,255,255,0.06) inset;
+  transform: translateY(-1px);
+}
+
+/* Top row */
+.toolCardTop{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.toolTitleRow{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.toolTitle{
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: 16px;
+  line-height: 1.1;
+  color: rgba(255,255,255,0.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Icon wrapper */
+.toolIconWrap{
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+
+  background:
+    radial-gradient(16px 16px at 30% 30%, rgba(255,255,255,0.10), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.18),
+    0 2px 0 rgba(255,255,255,0.05) inset;
+}
+
+.toolIcon{
+  width: 22px;
+  height: 22px;
+  color: rgba(255,255,255,0.92);
+  opacity: 0.95;
+}
+
+/* Description */
+.toolDesc{
+  color: rgba(255,255,255,0.70);
+  font-size: 13.5px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  margin: 0 0 12px 0;
+}
+
+/* Badge row */
+.toolBadgeRow{
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* ✅ Pill SCOPED (prevents global clash) */
+.toolCard .pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+
+  color: rgba(255,255,255,0.86);
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+/* CTA */
+.toolGo{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+
+  text-decoration: none;
+  color: rgba(255,255,255,0.92);
+
+  background:
+    radial-gradient(18px 18px at 25% 25%, rgba(255,255,255,0.18), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
+  border: 1px solid rgba(255,255,255,0.14);
+
+  box-shadow:
+    0 10px 22px rgba(0,0,0,0.18),
+    0 2px 0 rgba(255,255,255,0.06) inset;
+
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 220ms ease;
+}
+
+.toolGo:hover{
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,0.22);
+  background:
+    radial-gradient(18px 18px at 25% 25%, rgba(255,255,255,0.22), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.07));
+  box-shadow:
+    0 14px 30px rgba(0,0,0,0.22),
+    0 2px 0 rgba(255,255,255,0.07) inset;
+}
+
+.toolGo:active{ transform: translateY(0px); }
+
+.toolGo:focus-visible{
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(255,255,255,0.18),
+    0 14px 30px rgba(0,0,0,0.22),
+    0 2px 0 rgba(255,255,255,0.07) inset;
+}
+
+.chev{
+  display: inline-block;
+  transform: translateY(-0.5px);
+  opacity: 0.9;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.toolGo:hover .chev{
+  transform: translate(2px, -0.5px);
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 980px){
+  .toolCard{ grid-column: span 12; }
+}
+
+@media (max-width: 520px){
+  .toolCard{
+    padding: 14px 14px 12px;
+    border-radius: 16px;
+  }
+
+  .toolIconWrap{
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+  }
+
+  .toolTitle{ font-size: 15.5px; }
+  .toolDesc{ font-size: 13.25px; }
+
+  .toolGo{
+    padding: 9px 11px;
+    border-radius: 12px;
+    font-size: 12.75px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .toolCard, .toolGo, .chev{ transition: none !important; }
+}
+
+/* Tool page header row */
+.toolHeader{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.toolHeaderLeft{ min-width: 0; }
+
+.toolHeaderLeft .h2{ margin: 6px 0 0; }
+
+.toolHeaderRight{
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.toolHeaderRight .btnGhost{ white-space: nowrap; }
+
+@media (max-width: 640px){
+  .toolHeader{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .toolHeaderRight{
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

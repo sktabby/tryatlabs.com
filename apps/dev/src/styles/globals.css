@@ -1,0 +1,183 @@
+/* apps/dev/src/styles/globals.css */
+
+/* =============== Reset / base =============== */
+*{ box-sizing:border-box; }
+html,body{ min-height:100%; }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    "Apple Color Emoji","Segoe UI Emoji";
+  color: var(--text);
+  background: var(--bg);
+}
+a{ color: inherit; text-decoration: none; }
+img{ max-width:100%; display:block; }
+::selection{ background: rgba(121,78,230,0.35); }
+
+.mono{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+:root{
+  /* Theme (your palette) */
+  --p1:#6340bc;
+  --p2:#794ee6;
+  --p3:#4d3291;
+
+  --bg:#090612;
+  --bg2:#20153c;
+  --card:#140e24;
+  --card2:#1b1230;
+
+  --text: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.68);
+  --faint: rgba(255,255,255,0.46);
+
+  --max: 1180px;
+  --r: 22px;
+
+  --border: rgba(255,255,255,0.12);
+  --border2: rgba(255,255,255,0.18);
+
+  --shadow: 0 26px 90px rgba(0,0,0,0.62);
+  --shadow2: 0 14px 44px rgba(0,0,0,0.44);
+  --shadow3: 0 8px 22px rgba(0,0,0,0.36);
+
+  --glow: 0 0 0 4px rgba(121,78,230,0.12), 0 18px 80px rgba(121,78,230,0.14);
+}
+
+/* Techy background: subtle grid + glow */
+body:before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    radial-gradient(1000px 420px at 20% -10%, rgba(121,78,230,0.25), transparent 60%),
+    radial-gradient(900px 360px at 90% 10%, rgba(99,64,188,0.18), transparent 60%),
+    linear-gradient(to bottom, rgba(255,255,255,0.04), transparent 34%),
+    linear-gradient(transparent 0, transparent 98%, rgba(255,255,255,0.05) 100%),
+    linear-gradient(90deg, transparent 0, transparent 98%, rgba(255,255,255,0.05) 100%);
+  background-size: auto, auto, auto, 44px 44px, 44px 44px;
+  opacity: 0.85;
+}
+
+/* =============== App shell =============== */
+.appShell{ min-height:100vh; display:flex; flex-direction:column; }
+.shellMain{ flex:1; min-width:0; }
+.pageWrap{ max-width: var(--max); margin: 0 auto; padding: 18px 16px 44px; }
+
+/* =============== Typography / shared UI =============== */
+.section{ padding: 18px 0; }
+.sectionHead{ margin-bottom: 14px; }
+
+.h1{ font-size: clamp(32px, 4.3vw, 62px); line-height: 1.02; margin: 10px 0; letter-spacing: -0.8px; }
+.h2{ font-size: clamp(22px, 2.4vw, 34px); margin: 0 0 10px; letter-spacing: -0.3px; }
+.h3{ font-size: 18px; margin: 0 0 8px; }
+
+.muted{ color: var(--muted); }
+.mutedTiny{ color: var(--faint); font-size: 12px; margin-top: 8px; }
+
+.row{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap: 14px;
+}
+
+.kicker{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  font-weight: 950;
+  font-size: 12px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border:1px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow2);
+  letter-spacing: 0.12em;
+}
+
+/* Pills */
+.pill{
+  font-size: 11px;
+  font-weight: 900;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(121,78,230,0.35);
+  background: rgba(121,78,230,0.14);
+  color: rgba(255,255,255,0.88);
+}
+
+/* Buttons */
+.btnPrimary,.btnGhost,.btnSoft{
+  border-radius: 16px;
+  padding: 12px 14px;
+  font-weight: 950;
+  cursor:pointer;
+  border: 1px solid var(--border);
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+.btnPrimary{
+  background: linear-gradient(135deg, var(--p2), var(--p1));
+  border-color: rgba(121,78,230,0.55);
+  box-shadow: var(--glow);
+  color: #fff;
+}
+.btnPrimary:hover{ transform: translateY(-1px); }
+
+.btnGhost{
+  background: var(--card);
+  color: var(--text);
+}
+.btnGhost:hover{
+  border-color: rgba(121,78,230,0.45);
+  transform: translateY(-1px);
+}
+
+.btnSoft{
+  background: rgba(121,78,230,0.12);
+  color: rgba(255,255,255,0.90);
+}
+.btnSoft:hover{
+  transform: translateY(-1px);
+  border-color: rgba(121,78,230,0.4);
+}
+button:disabled{ opacity: .55; cursor:not-allowed; transform:none !important; }
+
+/* Inputs */
+.ta, .in{
+  width: 100%;
+  border:1px solid var(--border);
+  background: rgba(0,0,0,0.24);
+  color: var(--text);
+  border-radius: 16px;
+  padding: 12px;
+  outline:none;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+}
+.ta{ resize: vertical; min-height: 140px; }
+.ta:focus, .in:focus{
+  border-color: rgba(121,78,230,0.55);
+  box-shadow: 0 0 0 4px rgba(121,78,230,0.18);
+}
+
+/* Cards */
+.glassCard{
+  border:1px solid var(--border);
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.glassCardHead{
+  display:flex;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 14px 14px 0;
+}
+.glassTitle{ font-weight: 950; }
+.glassDesc{ color: var(--muted); font-size: 13px; margin-top: 4px; }
+.glassBody{ padding: 14px; }

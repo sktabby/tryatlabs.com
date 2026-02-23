@@ -1,0 +1,394 @@
+/* =========================
+   Hash Generator (Solid Premium / Classy)
+   Scope: hg-*
+   UI reference: your Base64 CSS
+   ========================= */
+
+:root{
+  --hg-stroke: color-mix(in srgb, var(--border) 86%, rgba(255,255,255,0.12));
+  --hg-stroke-2: color-mix(in srgb, var(--border) 74%, rgba(255,255,255,0.16));
+
+  --hg-surface: color-mix(in srgb, var(--card) 90%, rgba(0,0,0,0.14));
+  --hg-surface2: color-mix(in srgb, var(--card2) 86%, rgba(0,0,0,0.20));
+
+  --hg-shadow-lg: 0 22px 70px rgba(0,0,0,0.42);
+  --hg-shadow-md: 0 14px 38px rgba(0,0,0,0.30);
+  --hg-shadow-sm: 0 10px 22px rgba(0,0,0,0.22);
+
+  --hg-glow: 0 0 0 4px rgba(121,78,230,0.10), 0 18px 70px rgba(121,78,230,0.10);
+
+  --hg-radius-lg: 22px;
+  --hg-radius-md: 18px;
+  --hg-radius-sm: 14px;
+}
+
+/* ---------------------------
+   Card header right link polish (All Tools)
+---------------------------- */
+.glassRight .btnGhost{
+  border-radius: 999px !important;
+  padding: 10px 12px !important;
+  border-color: var(--hg-stroke) !important;
+  background: rgba(255,255,255,0.03) !important;
+  box-shadow: var(--hg-shadow-sm);
+  text-decoration: none;
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+}
+
+.glassRight .btnGhost:hover{
+  border-color: color-mix(in srgb, var(--p2) 45%, var(--border)) !important;
+  background: color-mix(in srgb, var(--p2) 10%, rgba(255,255,255,0.04)) !important;
+  transform: translateY(-1px);
+}
+
+/* ---------------------------
+   TOP BAR (Row)
+   Algo pills + Copy + Clear (Base64 style)
+---------------------------- */
+.hgTabs{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap: 12px;
+  margin-top: 6px;
+  margin-bottom: 18px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.hgTabsSpacer{ flex: 1; min-width: 10px; }
+
+/* Algo pill buttons (same feel as b64Tab) */
+.hgTab{
+  appearance:none;
+  position: relative;
+  border: 1px solid var(--hg-stroke);
+  background: rgba(255,255,255,0.035);
+  color: rgba(255,255,255,0.84);
+  font-weight: 960;
+  letter-spacing: -0.2px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor:pointer;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.20);
+  transition: transform .12s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+
+.hgTab::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: 999px;
+  pointer-events:none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.08), transparent 35%, rgba(255,255,255,0.04));
+  opacity: 0.55;
+}
+
+.hgTab:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--p2) 45%, var(--border));
+  background: color-mix(in srgb, var(--p2) 10%, rgba(255,255,255,0.045));
+  box-shadow: 0 14px 34px rgba(0,0,0,0.26);
+}
+
+.hgTab.isActive{
+  border-color: color-mix(in srgb, var(--p2) 62%, var(--border));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--p2) 22%, var(--card)),
+    color-mix(in srgb, var(--p2) 14%, var(--card2))
+  );
+  color: rgba(255,255,255,0.96);
+  box-shadow: 0 16px 36px rgba(121,78,230,0.18), 0 10px 26px rgba(0,0,0,0.18);
+}
+
+/* Copy + Clear styling */
+.hgTabs .btnSoft{
+  border-radius: 999px !important;
+  padding: 10px 14px !important;
+  box-shadow: var(--hg-shadow-sm);
+}
+
+/* Clear = classy danger tint (same pattern as Base64) */
+.hgTabs .btnSoft:last-child{
+  border-color: color-mix(in srgb, #ff6b6b 28%, var(--border)) !important;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #ff6b6b 14%, var(--card)),
+    color-mix(in srgb, #ff6b6b 9%, var(--card2))
+  ) !important;
+  color: rgba(255,255,255,0.92) !important;
+}
+.hgTabs .btnSoft:last-child:hover{
+  border-color: color-mix(in srgb, #ff6b6b 42%, var(--border)) !important;
+  transform: translateY(-1px);
+}
+
+/* ---------------------------
+   WORKSPACE
+   Equal height columns + margins
+---------------------------- */
+.hgWorkspace{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 12px;
+  margin-bottom: 22px;
+}
+
+.hgCol{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.hgBoxFill{
+  flex: 1;
+  display:flex;
+}
+
+/* Premium glass box */
+.hgBox{
+  position: relative;
+  border-radius: var(--hg-radius-md);
+  border: 1px solid var(--hg-stroke);
+  background:
+    radial-gradient(900px 240px at 15% 0%, rgba(255,255,255,0.06), transparent 60%),
+    linear-gradient(180deg, var(--hg-surface), var(--hg-surface2));
+  box-shadow: var(--hg-shadow-lg);
+  overflow:hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: border-color .18s ease, box-shadow .22s ease, transform .14s ease;
+}
+
+.hgBox::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.06), transparent 35%, rgba(255,255,255,0.03));
+  opacity: 0.75;
+}
+
+.hgBox:hover{
+  border-color: color-mix(in srgb, var(--p2) 38%, var(--border));
+  box-shadow: var(--hg-shadow-lg), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  transform: translateY(-1px);
+}
+
+.hgBox:focus-within{
+  border-color: color-mix(in srgb, var(--p2) 62%, var(--border));
+  box-shadow: var(--hg-glow), var(--hg-shadow-lg);
+  transform: translateY(0);
+}
+
+/* TextArea */
+.hgBox .ta{
+  position: relative;
+  z-index: 1;
+  flex:1;
+  width:100%;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+  padding: 16px;
+  min-height: 340px;
+  line-height: 1.68;
+  font-size: 14px;
+  color: rgba(255,255,255,0.92);
+}
+
+.hgBox .ta::placeholder{
+  color: rgba(255,255,255,0.38);
+}
+
+/* Error */
+.hgError{
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: var(--hg-radius-sm);
+  border: 1px solid color-mix(in srgb, #ff6b6b 35%, var(--border));
+  background: color-mix(in srgb, #ff6b6b 10%, transparent);
+  color: rgba(255,255,255,0.92);
+  font-weight: 900;
+}
+
+/* Action row */
+.hgActions{
+  margin-top: 12px;
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+.hgActions .btnPrimary{
+  border-radius: 999px !important;
+  padding: 10px 14px !important;
+  box-shadow: var(--hg-shadow-sm);
+}
+
+/* ---------------------------
+   Sections (How-to + content + FAQ)
+---------------------------- */
+.hgLong{
+  margin-top: 16px;
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+
+.hgSection{
+  border-radius: var(--hg-radius-lg);
+  border: 1px solid var(--hg-stroke-2);
+  background:
+    radial-gradient(900px 220px at 10% 0%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 92%, rgba(0,0,0,0.08)),
+      color-mix(in srgb, var(--card2) 90%, rgba(0,0,0,0.14))
+    );
+  box-shadow: var(--hg-shadow-md);
+  padding: 16px;
+}
+
+.hgH2{
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 980;
+  letter-spacing: -0.3px;
+  color: rgba(255,255,255,0.94);
+}
+
+.hgP{
+  margin: 0;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+.hgList,
+.hgSteps{
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+}
+
+.hgList li,
+.hgSteps li{ margin: 8px 0; }
+
+.hgList b,
+.hgSteps b{ color: rgba(255,255,255,0.92); }
+
+/* FAQ */
+.hgFaq{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.hgFaqItem{
+  border-radius: var(--hg-radius-md);
+  border: 1px solid var(--hg-stroke);
+  background: rgba(255,255,255,0.03);
+  overflow:hidden;
+  box-shadow: var(--hg-shadow-sm);
+}
+
+.hgFaqQ{
+  width:100%;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  color: rgba(255,255,255,0.92);
+  font-weight: 950;
+  cursor:pointer;
+}
+
+.hgFaqIcon{
+  width: 30px;
+  height: 30px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 999px;
+  border: 1px solid var(--hg-stroke);
+  background: rgba(255,255,255,0.04);
+  font-weight: 950;
+  color: rgba(255,255,255,0.88);
+}
+
+.hgFaqA{
+  padding: 0 14px 14px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+/* ---------------------------
+   Responsive (match Base64 behavior)
+---------------------------- */
+@media (max-width: 980px){
+  .hgWorkspace{
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 10px;
+    margin-bottom: 18px;
+  }
+  .hgBox .ta{ min-height: 240px; }
+}
+
+@media (max-width: 560px){
+  /* Force same row: Algo pills + Copy + Clear */
+  .hgTabs{
+    flex-wrap: nowrap;
+    align-items:center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .hgTabsSpacer{
+    display:none;
+  }
+
+  .hgTab,
+  .hgTabs .btnSoft{
+    flex: 1;
+    text-align:center;
+    padding: 8px 6px !important;
+    font-size: 12px;
+  }
+
+  /* keep algo pills from wrapping text badly */
+  .hgTab{ white-space: nowrap; }
+
+  .glassTitle{
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .glassRight .btnGhost{
+    padding: 6px 12px !important;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 520px){
+  .hgBox{ border-radius: 16px; }
+  .hgBox .ta{ padding: 12px; min-height: 220px; }
+  .hgSection{ border-radius: 18px; padding: 14px; }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .hgTab, .hgBox, .glassRight .btnGhost{ transition: none !important; }
+}

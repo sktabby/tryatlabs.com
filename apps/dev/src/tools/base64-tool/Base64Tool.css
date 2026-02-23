@@ -1,0 +1,461 @@
+/* =========================
+   Base64 Tool (Solid Premium / Classy)
+   Scope: b64-*
+   NOTE: No content changes needed. Pure styling.
+   ========================= */
+
+:root{
+  --b64-stroke: color-mix(in srgb, var(--border) 86%, rgba(255,255,255,0.12));
+  --b64-stroke-2: color-mix(in srgb, var(--border) 74%, rgba(255,255,255,0.16));
+
+  --b64-surface: color-mix(in srgb, var(--card) 90%, rgba(0,0,0,0.14));
+  --b64-surface2: color-mix(in srgb, var(--card2) 86%, rgba(0,0,0,0.20));
+
+  --b64-shadow-lg: 0 22px 70px rgba(0,0,0,0.42);
+  --b64-shadow-md: 0 14px 38px rgba(0,0,0,0.30);
+  --b64-shadow-sm: 0 10px 22px rgba(0,0,0,0.22);
+
+  --b64-glow: 0 0 0 4px rgba(121,78,230,0.10), 0 18px 70px rgba(121,78,230,0.10);
+
+  --b64-radius-lg: 22px;
+  --b64-radius-md: 18px;
+  --b64-radius-sm: 14px;
+}
+
+/* ---------------------------
+   Card header right link polish
+---------------------------- */
+.glassRight .btnGhost{
+  border-radius: 999px !important;
+  padding: 10px 12px !important;
+  border-color: var(--b64-stroke) !important;
+  background: rgba(255,255,255,0.03) !important;
+  box-shadow: var(--b64-shadow-sm);
+  text-decoration: none;
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+}
+.glassRight .btnGhost:hover{
+  border-color: color-mix(in srgb, var(--p2) 45%, var(--border)) !important;
+  background: color-mix(in srgb, var(--p2) 10%, rgba(255,255,255,0.04)) !important;
+  transform: translateY(-1px);
+}
+
+/* ---------------------------
+   TOP BAR (Row)
+   - more gaps between buttons
+   - encode/decode premium segmented look
+---------------------------- */
+.b64Tabs{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap: 12px;                 /* bigger gaps */
+  margin-top: 6px;
+  margin-bottom: 18px;
+}
+
+.b64TabsSpacer{ flex: 1; min-width: 10px; }
+
+/* Encode/Decode = segmented premium pills */
+.b64Tab{
+  appearance:none;
+  position: relative;
+  border: 1px solid var(--b64-stroke);
+  background: rgba(255,255,255,0.035);
+  color: rgba(255,255,255,0.84);
+  font-weight: 960;
+  letter-spacing: -0.2px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor:pointer;
+
+  box-shadow: 0 10px 24px rgba(0,0,0,0.20);
+  transition: transform .12s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+
+.b64Tab::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: 999px;
+  pointer-events:none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.08), transparent 35%, rgba(255,255,255,0.04));
+  opacity: 0.55;
+}
+
+.b64Tab:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--p2) 45%, var(--border));
+  background: color-mix(in srgb, var(--p2) 10%, rgba(255,255,255,0.045));
+  box-shadow: 0 14px 34px rgba(0,0,0,0.26);
+}
+
+.b64Tab.isActive{
+  border-color: color-mix(in srgb, var(--p2) 62%, var(--border));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--p2) 22%, var(--card)),
+    color-mix(in srgb, var(--p2) 14%, var(--card2))
+  );
+  color: rgba(255,255,255,0.96);
+  box-shadow: 0 16px 36px rgba(121,78,230,0.18), 0 10px 26px rgba(0,0,0,0.18);
+}
+
+/* Copy + Clear buttons in top bar */
+.b64Tabs .btnSoft{
+  border-radius: 999px !important;
+  padding: 10px 14px !important;
+  box-shadow: var(--b64-shadow-sm);
+}
+
+/* Make Clear slightly distinct but classy (not loud) */
+.b64Tabs .btnSoft:last-child{
+  border-color: color-mix(in srgb, #ff6b6b 28%, var(--border)) !important;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #ff6b6b 14%, var(--card)),
+    color-mix(in srgb, #ff6b6b 9%, var(--card2))
+  ) !important;
+  color: rgba(255,255,255,0.92) !important;
+}
+.b64Tabs .btnSoft:last-child:hover{
+  border-color: color-mix(in srgb, #ff6b6b 42%, var(--border)) !important;
+  transform: translateY(-1px);
+}
+
+/* ---------------------------
+   WORKSPACE
+   - add top & bottom margin as requested
+   - equal height columns
+---------------------------- */
+.b64Workspace{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: stretch;
+
+  margin-top: 12px;          /* TOP margin requested */
+  margin-bottom: 22px;       /* BOTTOM margin requested */
+}
+
+.b64Col{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.b64BoxFill{
+  flex: 1;
+  display:flex;
+}
+
+/* Premium glass box */
+.b64Box{
+  position: relative;
+  border-radius: var(--b64-radius-md);
+  border: 1px solid var(--b64-stroke);
+  background:
+    radial-gradient(900px 240px at 15% 0%, rgba(255,255,255,0.06), transparent 60%),
+    linear-gradient(180deg, var(--b64-surface), var(--b64-surface2));
+  box-shadow: var(--b64-shadow-lg);
+  overflow:hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: border-color .18s ease, box-shadow .22s ease, transform .14s ease;
+}
+
+.b64Box::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.06), transparent 35%, rgba(255,255,255,0.03));
+  opacity: 0.75;
+}
+
+.b64Box:hover{
+  border-color: color-mix(in srgb, var(--p2) 38%, var(--border));
+  box-shadow: var(--b64-shadow-lg), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  transform: translateY(-1px);
+}
+
+.b64Box:focus-within{
+  border-color: color-mix(in srgb, var(--p2) 62%, var(--border));
+  box-shadow: var(--b64-glow), var(--b64-shadow-lg);
+  transform: translateY(0);
+}
+
+/* TextArea */
+.b64Box .ta{
+  position: relative;
+  z-index: 1;
+  flex:1;
+  width:100%;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+
+  padding: 16px;
+  min-height: 340px;         /* slightly taller = more premium */
+  line-height: 1.68;
+  font-size: 14px;
+  color: rgba(255,255,255,0.92);
+}
+
+.b64Box .ta::placeholder{
+  color: rgba(255,255,255,0.38);
+}
+
+/* Error + helper spacing */
+.b64Error{
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: var(--b64-radius-sm);
+  border: 1px solid color-mix(in srgb, #ff6b6b 35%, var(--border));
+  background: color-mix(in srgb, #ff6b6b 10%, transparent);
+  color: rgba(255,255,255,0.92);
+  font-weight: 900;
+}
+
+.b64Hint{
+  margin-top: 12px;
+  padding-left: 2px;
+  color: color-mix(in srgb, var(--muted) 86%, rgba(255,255,255,0.10));
+}
+
+/* ---------------------------
+   Sections (How-to + content + FAQ)
+---------------------------- */
+.b64Long{
+  margin-top: 16px;
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+
+.b64Section{
+  border-radius: var(--b64-radius-lg);
+  border: 1px solid var(--b64-stroke-2);
+  background:
+    radial-gradient(900px 220px at 10% 0%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 92%, rgba(0,0,0,0.08)),
+      color-mix(in srgb, var(--card2) 90%, rgba(0,0,0,0.14))
+    );
+  box-shadow: var(--b64-shadow-md);
+  padding: 16px;
+}
+
+.b64H2{
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 980;
+  letter-spacing: -0.3px;
+  color: rgba(255,255,255,0.94);
+}
+
+.b64P{
+  margin: 0;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+/* Lists / Steps */
+.b64List,
+.b64Steps{
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+}
+.b64List li,
+.b64Steps li{ margin: 8px 0; }
+.b64List b,
+.b64Steps b{ color: rgba(255,255,255,0.92); }
+
+/* FAQ */
+.b64Faq{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.b64FaqItem{
+  border-radius: var(--b64-radius-md);
+  border: 1px solid var(--b64-stroke);
+  background: rgba(255,255,255,0.03);
+  overflow:hidden;
+  box-shadow: var(--b64-shadow-sm);
+}
+
+.b64FaqQ{
+  width:100%;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  color: rgba(255,255,255,0.92);
+  font-weight: 950;
+  cursor:pointer;
+}
+
+.b64FaqIcon{
+  width: 30px;
+  height: 30px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 999px;
+  border: 1px solid var(--b64-stroke);
+  background: rgba(255,255,255,0.04);
+  font-weight: 950;
+  color: rgba(255,255,255,0.88);
+}
+
+.b64FaqA{
+  padding: 0 14px 14px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+/* ---------------------------
+   Responsive
+---------------------------- */
+@media (max-width: 980px){
+  .b64Workspace{
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 10px;
+    margin-bottom: 18px;
+  }
+  .b64Box .ta{ min-height: 240px; }
+}
+
+@media (max-width: 520px){
+  .b64Tabs{ gap: 10px; margin-bottom: 16px; }
+  .b64Tab{ padding: 10px 13px; }
+  .b64Tabs .btnSoft{ padding: 10px 12px !important; }
+
+  .b64Box{ border-radius: 16px; }
+  .b64Box .ta{ padding: 12px; min-height: 220px; }
+
+  .b64Section{ border-radius: 18px; padding: 14px; }
+}
+
+/* ---------------------------
+   Reduce motion
+---------------------------- */
+@media (prefers-reduced-motion: reduce){
+  .b64Tab, .b64Box, .glassRight .btnGhost{ transition: none !important; }
+}
+
+/* =========================
+   BUTTON SPACING FIX
+   ========================= */
+
+/* Add vertical breathing space to all top buttons */
+.b64Tabs{
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+/* Reduce horizontal gap so all fit in one row */
+.b64Tabs{
+  gap: 8px;   /* was bigger */
+}
+
+/* Slightly tighter button padding */
+.b64Tab,
+.b64Tabs .btnSoft{
+  padding: 8px 12px !important;
+  font-size: 13px;
+}
+
+/* =========================
+   MOBILE: FORCE SAME ROW
+   Encode / Decode / Copy / Clear
+   ========================= */
+
+@media (max-width: 560px){
+
+  .b64Tabs{
+    display:flex;              /* override grid */
+    flex-wrap: nowrap;         /* force single row */
+    align-items:center;
+    justify-content: space-between;
+    gap: 6px;                  /* tighter gap */
+  }
+
+  .b64TabsSpacer{
+    display:none;              /* remove spacer on mobile */
+  }
+
+  .b64Tab,
+  .b64Tabs .btnSoft{
+    flex: 1;                   /* equal width */
+    text-align:center;
+    padding: 8px 6px !important;
+    font-size: 12px;
+  }
+}
+
+
+/* =========================
+   FIX CARD HEADER (Mobile Friendly)
+   ========================= */
+
+.glassCardHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+}
+
+/* Prevent title from pushing button down */
+.glassCardHead > div:first-child{
+  flex: 1;
+  min-width: 0;
+}
+
+/* Keep right section tight */
+.glassRight{
+  flex-shrink: 0;
+  display:flex;
+  align-items:center;
+}
+
+/* Make All Tools button cleaner */
+.glassRight .btnGhost{
+  border-radius: 999px !important;
+  padding: 8px 14px !important;
+  white-space: nowrap; /* prevents line break */
+}
+
+/* Mobile optimization */
+@media (max-width: 560px){
+
+  .glassCardHead{
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .glassTitle{
+    font-size: 16px;  /* slightly smaller on mobile */
+    line-height: 1.3;
+  }
+
+  .glassRight .btnGhost{
+    padding: 6px 12px !important;
+    font-size: 12px;
+  }
+}

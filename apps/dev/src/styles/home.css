@@ -1,0 +1,565 @@
+/* apps/dev/src/styles/home.css */
+
+/* HERO */
+.hero{ padding: 28px 0 12px; }
+
+.heroGrid{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 14px 16px;
+  display:grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 24px;
+
+  /* ✅ Make both columns equal height */
+  align-items: stretch;
+}
+.heroLeft{ padding: 6px 2px; }
+
+.gradText{
+  background: linear-gradient(90deg, var(--p2), var(--p1), var(--p3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.heroSub{
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-weight: 700;
+  max-width: 60ch;
+  line-height: 1.55;
+}
+
+/* CTA spacing */
+.heroCtas{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 10px;
+  margin-top: 33px;
+  margin-bottom: 16px;
+}
+
+/* Right box */
+.heroRight{ display:flex; justify-content:flex-end; }
+/* =========================================================
+   TECHY QUICK PANEL (solid / readable / cyber-grid)
+   Drop-in override for:
+   .quickPanel, .quickTile, .quickIconWrap, etc.
+   ========================================================= */
+
+.quickPanel{
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 24px;
+
+  /* ✅ SOLID tech surface (no blending glass) */
+  background: #0b0c14;
+
+  /* ✅ crisp border + inner stroke */
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 28px 85px rgba(0,0,0,0.62);
+  padding: 16px;
+  overflow: hidden;
+
+  /* ✅ remove blur to avoid background merge */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Tech grid + subtle scan glow */
+.quickPanel:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+
+  /* grid + vignette + glow */
+  background:
+    radial-gradient(700px 260px at 18% 0%, rgba(121,78,230,0.22), transparent 60%),
+    radial-gradient(600px 220px at 92% 20%, rgba(99,64,188,0.18), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,0.06), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 12px);
+
+  opacity: 0.55;
+}
+
+/* Top row stays same layout */
+.quickPanelTop{
+  position: relative;
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.quickTitle{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 950;
+  letter-spacing: -0.2px;
+  color: rgba(255,255,255,0.92);
+}
+
+/* =========================================================
+   Tiles grid (same columns as you have)
+   ========================================================= */
+.quickGrid{
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* =========================================================
+   Tile: tech card, sharp, neon edge, no blur blend
+   ========================================================= */
+.quickTile{
+  position: relative;
+  border-radius: 18px;
+  padding: 12px;
+
+  /* ✅ solid surface */
+  background: rgba(13, 14, 26, 0.92);
+
+  /* ✅ border with neon hint */
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 18px 55px rgba(0,0,0,0.45);
+
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  text-decoration: none;
+
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  overflow: hidden;
+}
+
+/* grid texture inside each tile (very subtle) */
+.quickTile:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(240px 120px at 25% 10%, rgba(121,78,230,0.18), transparent 60%),
+    radial-gradient(220px 110px at 85% 0%, rgba(99,64,188,0.14), transparent 65%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 12px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 14px);
+  opacity: 0.35;
+}
+
+/* neon edge line */
+.quickTile:after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  pointer-events:none;
+  border-radius: 20px;
+  border: 1px solid rgba(124,92,255,0.0);
+  box-shadow: 0 0 0 0 rgba(124,92,255,0.0);
+  transition: border-color .16s ease, box-shadow .16s ease;
+}
+
+.quickTile:hover{
+  transform: translateY(-3px);
+  border-color: rgba(124,92,255,0.35);
+  box-shadow: 0 26px 70px rgba(0,0,0,0.62);
+}
+
+.quickTile:hover:after{
+  border-color: rgba(124,92,255,0.35);
+  box-shadow: 0 0 0 4px rgba(124,92,255,0.12);
+}
+
+/* =========================================================
+   Icon wrap: chip-like, tech ring
+   ========================================================= */
+.quickIconWrap{
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+
+  display: grid;
+  place-items: center;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.35),
+    0 10px 30px rgba(0,0,0,0.35);
+}
+
+.quickIcon{
+  width: 22px;
+  height: 22px;
+  color: rgba(255,255,255,0.92);
+  opacity: 0.95;
+}
+
+/* Icon glow on hover (tech feel) */
+.quickTile:hover .quickIconWrap{
+  border-color: rgba(124,92,255,0.35);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.35),
+    0 18px 55px rgba(0,0,0,0.50),
+    0 0 0 4px rgba(124,92,255,0.10);
+}
+
+/* =========================================================
+   Name: tighter, more "UI system" feel
+   ========================================================= */
+.quickName{
+  margin: 0;
+  text-align: center;
+  font-weight: 850;
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: 0.1px;
+  color: rgba(255,255,255,0.86);
+}
+
+/* =========================================================
+   Mobile: keep your placement, just spacing
+   ========================================================= */
+@media (max-width: 980px){
+  .quickPanel{ max-width: 100%; }
+  .quickGrid{ grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 420px){
+  .quickGrid{ grid-template-columns: 1fr; }
+}
+.quickFoot{
+  position: relative;
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.miniTag{
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.70);
+  font-weight: 900;
+}
+
+/* RESPONSIVE */
+@media (max-width: 980px){
+  .heroGrid{ grid-template-columns: 1fr; }
+  .heroRight{ justify-content: stretch; }
+  .quickPanel{ max-width: 100%; }
+  .quickGrid{ grid-template-columns: 1fr 1fr; }
+}
+
+/* DIVIDERS */
+.divider{
+  max-width: var(--max);
+  margin: 43px auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  
+}
+
+.dividerSoft{
+  max-width: var(--max);
+  margin: 53px auto 53px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
+}
+
+/* SECTION */
+.section{ padding: 26px 0 30px; }
+
+.sectionHead{
+  max-width: var(--max);
+  margin: 0 auto 10px;
+  padding: 0 16px;
+}
+
+.searchRow{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* SEARCH */
+.searchWrap{ margin-top: 12px; width:100%; }
+.searchBox{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  padding: 14px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  box-shadow: var(--shadow2);
+}
+.searchIcon{ opacity: 0.75; }
+.searchBox input{
+  flex:1;
+  border:none;
+  outline:none;
+  background: transparent;
+  color: var(--text);
+  font-weight: 850;
+  font-size: 14px;
+}
+.searchBox input::placeholder{ color: rgba(255,255,255,0.55); }
+.searchClear{
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent;
+  color: var(--text);
+  cursor:pointer;
+}
+.searchClear:hover{ border-color: color-mix(in srgb, var(--p2) 45%, rgba(255,255,255,0.14)); }
+
+/* WHO IS THIS FOR */
+.who{ padding: 4px 0; }
+
+.whoInner{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 16px;
+  display:grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.whoGrid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.whoCard{
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+    rgba(0,0,0,0.26);
+  box-shadow: var(--shadow2);
+  padding: 14px;
+}
+
+.whoK{
+  display:inline-flex;
+  font-weight: 950;
+  letter-spacing: .18em;
+  color: rgba(255,255,255,0.72);
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.whoT{
+  margin-top: 10px;
+  font-weight: 950;
+  color: rgba(255,255,255,0.92);
+}
+
+.whoD{
+  margin-top: 6px;
+  color: rgba(255,255,255,0.70);
+  font-weight: 700;
+  line-height: 1.45;
+  font-size: 13px;
+}
+
+/* ABOUT */
+.about{ padding: 4px 0; }
+
+.aboutInner{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 16px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.aboutBox{
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+    rgba(0,0,0,0.26);
+  box-shadow: var(--shadow2);
+  padding: 14px;
+}
+
+.aboutLine{
+  display:flex;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.aboutLine:last-child{ border-bottom: none; }
+
+.aboutKey{
+  font-weight: 950;
+  color: rgba(255,255,255,0.72);
+  letter-spacing: .06em;
+}
+
+.aboutVal{
+  color: rgba(255,255,255,0.78);
+  font-weight: 750;
+  text-align:right;
+}
+
+/* RESPONSIVE WHO/ABOUT */
+@media (max-width: 980px){
+  .whoInner{ grid-template-columns: 1fr; }
+  .whoGrid{ grid-template-columns: 1fr; }
+  .aboutInner{ grid-template-columns: 1fr; }
+}
+
+/* TOOLS GRID */
+.toolGrid{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 16px;
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 14px;
+}
+
+@media (max-width: 980px){ .toolGrid{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 620px){ .toolGrid{ grid-template-columns: 1fr; } }
+
+/* TOOL CARD */
+.toolCard{
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background:
+    radial-gradient(900px 280px at 20% -10%, rgba(121,78,230,0.16), transparent 60%),
+    radial-gradient(700px 240px at 90% 10%, rgba(99,64,188,0.10), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)),
+    rgba(0,0,0,0.30);
+  box-shadow: 0 22px 70px rgba(0,0,0,0.55);
+  backdrop-filter: blur(14px);
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+.toolCard:before{
+  content:"";
+  position:absolute;
+  inset: 0;
+  pointer-events:none;
+  background: linear-gradient(135deg, rgba(255,255,255,0.10), transparent 55%);
+  opacity:.6;
+}
+
+.toolCard:hover{
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--p2) 55%, rgba(255,255,255,0.14));
+  box-shadow: 0 30px 90px rgba(0,0,0,0.65),
+              0 0 0 4px rgba(121,78,230,0.12);
+}
+
+.toolCardTop{
+  position: relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+}
+
+.toolTitleRow{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  min-width:0;
+}
+
+.toolIconWrap{
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  display:grid;
+  place-items:center;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.25);
+}
+
+.toolIcon{
+  width: 22px;
+  height: 22px;
+  stroke: rgba(255,255,255,0.8);
+  fill: none;
+  stroke-width: 2.2;
+}
+
+.toolTitle{
+  font-size: 18px;
+  font-weight: 950;
+  letter-spacing: -0.25px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: rgba(255,255,255,0.92);
+}
+
+.toolGo{
+  position: relative;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(0,0,0,0.28);
+  font-size: 13px;
+  font-weight: 950;
+  color: rgba(255,255,255,0.9);
+  transition: background .15s ease, border-color .15s ease;
+  white-space: nowrap;
+}
+
+.toolCard:hover .toolGo{
+  background: color-mix(in srgb, var(--p2) 12%, rgba(0,0,0,0.28));
+  border-color: color-mix(in srgb, var(--p2) 45%, rgba(255,255,255,0.18));
+}
+
+.toolGo .chev{ transition: transform .15s ease; }
+.toolCard:hover .toolGo .chev{ transform: translateX(3px); }
+
+.toolDesc{
+  position: relative;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255,255,255,0.70);
+  font-weight: 700;
+}
+
+.toolBadgeRow{
+  position: relative;
+  margin-top: 12px;
+}
+
+/* Fix anchor scroll under sticky navbar */
+#all-tools {
+  scroll-margin-top: 88px; /* adjust to navbar height */
+}
+

@@ -1,0 +1,294 @@
+/* =========================
+   URL Parser (Solid Premium / Classy)
+   Scope: up-*
+   Match: Base64 / JSON / Timestamp tools
+   NOTE: Styling only
+   ========================= */
+
+:root{
+  --up-stroke: color-mix(in srgb, var(--border) 86%, rgba(255,255,255,0.12));
+  --up-stroke-2: color-mix(in srgb, var(--border) 74%, rgba(255,255,255,0.16));
+
+  --up-surface: color-mix(in srgb, var(--card) 90%, rgba(0,0,0,0.14));
+  --up-surface2: color-mix(in srgb, var(--card2) 86%, rgba(0,0,0,0.20));
+
+  --up-shadow-lg: 0 22px 70px rgba(0,0,0,0.42);
+  --up-shadow-md: 0 14px 38px rgba(0,0,0,0.30);
+  --up-shadow-sm: 0 10px 22px rgba(0,0,0,0.22);
+
+  --up-glow: 0 0 0 4px rgba(121,78,230,0.10), 0 18px 70px rgba(121,78,230,0.10);
+
+  --up-radius-lg: 22px;
+  --up-radius-md: 18px;
+  --up-radius-sm: 14px;
+}
+
+/* ---------------------------
+   Card header right link polish (same pattern)
+---------------------------- */
+.glassRight .btnGhost{
+  border-radius: 999px !important;
+  padding: 10px 12px !important;
+  border-color: var(--up-stroke) !important;
+  background: rgba(255,255,255,0.03) !important;
+  box-shadow: var(--up-shadow-sm);
+  text-decoration: none;
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.glassRight .btnGhost:hover{
+  border-color: color-mix(in srgb, var(--p2) 45%, var(--border)) !important;
+  background: color-mix(in srgb, var(--p2) 10%, rgba(255,255,255,0.04)) !important;
+  transform: translateY(-1px);
+}
+
+/* ---------------------------
+   TOP BAR
+---------------------------- */
+.upTabs{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap: 10px;
+  margin-top: 6px;
+  margin-bottom: 18px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.upTabsSpacer{ flex: 1; min-width: 10px; }
+
+/* Make top buttons consistent */
+.upTabs .btnPrimary,
+.upTabs .btnGhost,
+.upTabs .btnSoft{
+  border-radius: 999px !important;
+  padding: 8px 12px !important;
+  font-size: 13px;
+  box-shadow: var(--up-shadow-sm);
+}
+
+/* ---------------------------
+   WORKSPACE
+---------------------------- */
+.upWorkspace{
+  margin-top: 12px;
+  margin-bottom: 22px;
+}
+
+.upCol{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.upGap{ height: 12px; }
+
+/* Premium glass box */
+.upBox{
+  position: relative;
+  border-radius: var(--up-radius-md);
+  border: 1px solid var(--up-stroke);
+  background:
+    radial-gradient(900px 240px at 15% 0%, rgba(255,255,255,0.06), transparent 60%),
+    linear-gradient(180deg, var(--up-surface), var(--up-surface2));
+  box-shadow: var(--up-shadow-lg);
+  overflow:hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: border-color .18s ease, box-shadow .22s ease, transform .14s ease;
+}
+
+.upBox::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.06), transparent 35%, rgba(255,255,255,0.03));
+  opacity: 0.75;
+}
+
+.upBox:hover{
+  border-color: color-mix(in srgb, var(--p2) 38%, var(--border));
+  box-shadow: var(--up-shadow-lg), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  transform: translateY(-1px);
+}
+
+.upBox:focus-within{
+  border-color: color-mix(in srgb, var(--p2) 62%, var(--border));
+  box-shadow: var(--up-glow), var(--up-shadow-lg);
+  transform: translateY(0);
+}
+
+.upPad{ padding: 14px; }
+
+/* Textarea in fill box */
+.upBoxFill{ display:flex; }
+.upBoxFill .ta{
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: 100%;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+
+  padding: 16px;
+  min-height: 300px;
+  line-height: 1.68;
+  font-size: 14px;
+  color: rgba(255,255,255,0.92);
+}
+
+.upBoxFill .ta::placeholder{
+  color: rgba(255,255,255,0.38);
+}
+
+/* If you have any key/value rows or inline items inside .upPad */
+.upPad *{
+  color: inherit;
+}
+
+/* ---------------------------
+   Sections (Overview / How-to / FAQ container)
+---------------------------- */
+.upLong{
+  margin-top: 16px;
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+
+.upSection{
+  border-radius: var(--up-radius-lg);
+  border: 1px solid var(--up-stroke-2);
+  background:
+    radial-gradient(900px 220px at 10% 0%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 92%, rgba(0,0,0,0.08)),
+      color-mix(in srgb, var(--card2) 90%, rgba(0,0,0,0.14))
+    );
+  box-shadow: var(--up-shadow-md);
+  padding: 16px;
+}
+
+.upH2{
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 980;
+  letter-spacing: -0.3px;
+  color: rgba(255,255,255,0.94);
+}
+
+.upP{
+  margin: 0;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+.upList,
+.upSteps{
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+}
+.upList li,
+.upSteps li{ margin: 8px 0; }
+.upList b,
+.upSteps b{ color: rgba(255,255,255,0.92); }
+
+/* ---------------------------
+   FAQ (match other tools)
+---------------------------- */
+.upFaq{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.upFaqItem{
+  border-radius: var(--up-radius-md);
+  border: 1px solid var(--up-stroke);
+  background: rgba(255,255,255,0.03);
+  overflow:hidden;
+  box-shadow: var(--up-shadow-sm);
+}
+
+.upFaqQ{
+  width:100%;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  color: rgba(255,255,255,0.92);
+  font-weight: 950;
+  cursor:pointer;
+}
+
+.upFaqQ:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(121,78,230,0.18);
+}
+
+.upFaqA{
+  padding: 0 14px 14px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+/* ---------------------------
+   Responsive
+---------------------------- */
+@media (max-width: 980px){
+  .upBoxFill .ta{ min-height: 240px; }
+}
+
+@media (max-width: 560px){
+  /* Keep top actions in one row, consistent with other tools */
+  .upTabs{
+    flex-wrap: nowrap;
+    gap: 6px;
+    justify-content: space-between;
+  }
+  .upTabsSpacer{ display:none; }
+
+  .upTabs .btnPrimary,
+  .upTabs .btnGhost,
+  .upTabs .btnSoft{
+    flex: 1;
+    text-align:center;
+    padding: 8px 6px !important;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .upBox{
+    border-radius: 16px;
+  }
+  .upBoxFill .ta{
+    padding: 12px;
+    min-height: 220px;
+  }
+
+  .upSection{
+    border-radius: 18px;
+    padding: 14px;
+  }
+}
+
+/* ---------------------------
+   Reduce motion
+---------------------------- */
+@media (prefers-reduced-motion: reduce){
+  .upBox, .glassRight .btnGhost{ transition: none !important; }
+}

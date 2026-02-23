@@ -1,0 +1,330 @@
+/* =========================
+   JSON Formatter (Solid Premium / Classy)
+   Scope: json-*
+   ========================= */
+
+:root{
+  --json-stroke: color-mix(in srgb, var(--border) 86%, rgba(255,255,255,0.12));
+  --json-stroke-2: color-mix(in srgb, var(--border) 74%, rgba(255,255,255,0.16));
+
+  --json-surface: color-mix(in srgb, var(--card) 90%, rgba(0,0,0,0.14));
+  --json-surface2: color-mix(in srgb, var(--card2) 86%, rgba(0,0,0,0.20));
+
+  --json-shadow-lg: 0 22px 70px rgba(0,0,0,0.42);
+  --json-shadow-md: 0 14px 38px rgba(0,0,0,0.30);
+  --json-shadow-sm: 0 10px 22px rgba(0,0,0,0.22);
+
+  --json-glow: 0 0 0 4px rgba(121,78,230,0.10), 0 18px 70px rgba(121,78,230,0.10);
+
+  --json-radius-lg: 22px;
+  --json-radius-md: 18px;
+  --json-radius-sm: 14px;
+}
+
+/* Card header right link polish */
+.glassRight .btnGhost{
+  border-radius: 999px !important;
+  padding: 10px 12px !important;
+  border-color: var(--json-stroke) !important;
+  background: rgba(255,255,255,0.03) !important;
+  box-shadow: var(--json-shadow-sm);
+  text-decoration: none;
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+}
+.glassRight .btnGhost:hover{
+  border-color: color-mix(in srgb, var(--p2) 45%, var(--border)) !important;
+  background: color-mix(in srgb, var(--p2) 10%, rgba(255,255,255,0.04)) !important;
+  transform: translateY(-1px);
+}
+
+/* TOP BAR */
+.jsonTabs{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 18px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.jsonTabsSpacer{ flex: 1; min-width: 10px; }
+
+.jsonTabs .btnPrimary,
+.jsonTabs .btnGhost,
+.jsonTabs .btnSoft{
+  border-radius: 999px !important;
+  padding: 8px 12px !important;
+  font-size: 13px;
+  box-shadow: var(--json-shadow-sm);
+}
+
+/* WORKSPACE */
+.jsonWorkspace{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 12px;
+  margin-bottom: 22px;
+}
+
+.jsonCol{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.jsonBoxFill{ flex: 1; display:flex; }
+
+/* Premium glass box */
+.jsonBox{
+  position: relative;
+  border-radius: var(--json-radius-md);
+  border: 1px solid var(--json-stroke);
+  background:
+    radial-gradient(900px 240px at 15% 0%, rgba(255,255,255,0.06), transparent 60%),
+    linear-gradient(180deg, var(--json-surface), var(--json-surface2));
+  box-shadow: var(--json-shadow-lg);
+  overflow:hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: border-color .18s ease, box-shadow .22s ease, transform .14s ease;
+}
+
+.jsonBox::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.06), transparent 35%, rgba(255,255,255,0.03));
+  opacity: 0.75;
+}
+
+.jsonBox:hover{
+  border-color: color-mix(in srgb, var(--p2) 38%, var(--border));
+  box-shadow: var(--json-shadow-lg), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  transform: translateY(-1px);
+}
+
+.jsonBox:focus-within{
+  border-color: color-mix(in srgb, var(--p2) 62%, var(--border));
+  box-shadow: var(--json-glow), var(--json-shadow-lg);
+  transform: translateY(0);
+}
+
+.jsonBox .ta{
+  position: relative;
+  z-index: 1;
+  flex:1;
+  width:100%;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+
+  padding: 16px;
+  min-height: 340px;
+  line-height: 1.68;
+  font-size: 14px;
+  color: rgba(255,255,255,0.92);
+}
+
+.jsonBox .ta::placeholder{ color: rgba(255,255,255,0.38); }
+
+/* Error */
+.jsonError{
+  margin-top: 12px;
+  padding: 12px 12px;
+  border-radius: var(--json-radius-sm);
+  border: 1px solid color-mix(in srgb, #ff6b6b 35%, var(--border));
+  background: color-mix(in srgb, #ff6b6b 10%, transparent);
+  color: rgba(255,255,255,0.92);
+  font-weight: 900;
+}
+.jsonErrorTitle{
+  font-weight: 980;
+  margin-bottom: 6px;
+}
+.jsonErrorMsg{
+  font-weight: 850;
+  opacity: 0.95;
+}
+.jsonErrorHint{
+  margin-top: 8px;
+  font-weight: 850;
+  color: rgba(255,255,255,0.82);
+}
+
+/* Small helper card under output */
+.jsonMiniHelp{
+  margin-top: 12px;
+  border-radius: var(--json-radius-md);
+  border: 1px solid var(--json-stroke-2);
+  background: rgba(255,255,255,0.03);
+  box-shadow: var(--json-shadow-sm);
+  padding: 12px;
+}
+.jsonMiniHelpTitle{
+  font-weight: 980;
+  color: rgba(255,255,255,0.92);
+  margin-bottom: 8px;
+}
+.jsonMiniHelpList{
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.7;
+  font-size: 13px;
+}
+.jsonMiniHelpList li{ margin: 6px 0; }
+.jsonMiniHelpList b{ color: rgba(255,255,255,0.92); }
+
+/* Sections */
+.jsonLong{
+  margin-top: 16px;
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+
+.jsonSection{
+  border-radius: var(--json-radius-lg);
+  border: 1px solid var(--json-stroke-2);
+  background:
+    radial-gradient(900px 220px at 10% 0%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 92%, rgba(0,0,0,0.08)),
+      color-mix(in srgb, var(--card2) 90%, rgba(0,0,0,0.14))
+    );
+  box-shadow: var(--json-shadow-md);
+  padding: 16px;
+}
+
+.jsonH2{
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 980;
+  letter-spacing: -0.3px;
+  color: rgba(255,255,255,0.94);
+}
+
+.jsonP{
+  margin: 0;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+/* Lists / Steps */
+.jsonList,
+.jsonSteps{
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+}
+.jsonList li,
+.jsonSteps li{ margin: 8px 0; }
+.jsonList b,
+.jsonSteps b{ color: rgba(255,255,255,0.92); }
+
+/* FAQ */
+.jsonFaq{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.jsonFaqItem{
+  border-radius: var(--json-radius-md);
+  border: 1px solid var(--json-stroke);
+  background: rgba(255,255,255,0.03);
+  overflow:hidden;
+  box-shadow: var(--json-shadow-sm);
+}
+
+.jsonFaqQ{
+  width:100%;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  color: rgba(255,255,255,0.92);
+  font-weight: 950;
+  cursor:pointer;
+}
+
+.jsonFaqIcon{
+  width: 30px;
+  height: 30px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 999px;
+  border: 1px solid var(--json-stroke);
+  background: rgba(255,255,255,0.04);
+  font-weight: 950;
+  color: rgba(255,255,255,0.88);
+}
+
+.jsonFaqA{
+  padding: 0 14px 14px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 980px){
+  .jsonWorkspace{
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 10px;
+    margin-bottom: 18px;
+  }
+  .jsonBox .ta{ min-height: 240px; }
+}
+
+/* Mobile: keep actions in one row */
+@media (max-width: 560px){
+  .jsonTabs{
+    flex-wrap: nowrap;
+    gap: 6px;
+    justify-content: space-between;
+  }
+  .jsonTabsSpacer{ display:none; }
+
+  .jsonTabs .btnPrimary,
+  .jsonTabs .btnGhost,
+  .jsonTabs .btnSoft{
+    flex: 1;
+    text-align:center;
+    padding: 8px 6px !important;
+    font-size: 12px;
+  }
+
+  .glassTitle{
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .glassRight .btnGhost{
+    padding: 6px 12px !important;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .jsonBox, .glassRight .btnGhost{ transition: none !important; }
+}

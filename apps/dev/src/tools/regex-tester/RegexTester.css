@@ -1,0 +1,298 @@
+/* =========================
+   Regex Tester (Solid Premium / Classy)
+   Scope: rx-*
+   ========================= */
+
+:root{
+  --rx-stroke: color-mix(in srgb, var(--border) 86%, rgba(255,255,255,0.12));
+  --rx-stroke-2: color-mix(in srgb, var(--border) 74%, rgba(255,255,255,0.16));
+
+  --rx-surface: color-mix(in srgb, var(--card) 90%, rgba(0,0,0,0.14));
+  --rx-surface2: color-mix(in srgb, var(--card2) 86%, rgba(0,0,0,0.20));
+
+  --rx-shadow-lg: 0 22px 70px rgba(0,0,0,0.42);
+  --rx-shadow-md: 0 14px 38px rgba(0,0,0,0.30);
+  --rx-shadow-sm: 0 10px 22px rgba(0,0,0,0.22);
+
+  --rx-glow: 0 0 0 4px rgba(121,78,230,0.10), 0 18px 70px rgba(121,78,230,0.10);
+
+  --rx-radius-lg: 22px;
+  --rx-radius-md: 18px;
+  --rx-radius-sm: 14px;
+}
+
+/* All Tools button polish (same as Base64) */
+.glassRight .btnGhost{
+  border-radius: 999px !important;
+  padding: 10px 12px !important;
+  border-color: var(--rx-stroke) !important;
+  background: rgba(255,255,255,0.03) !important;
+  box-shadow: var(--rx-shadow-sm);
+  text-decoration: none;
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+}
+.glassRight .btnGhost:hover{
+  border-color: color-mix(in srgb, var(--p2) 45%, var(--border)) !important;
+  background: color-mix(in srgb, var(--p2) 10%, rgba(255,255,255,0.04)) !important;
+  transform: translateY(-1px);
+}
+
+/* TOP BAR */
+.rxTabs{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 18px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.rxTabsSpacer{ flex: 1; min-width: 10px; }
+
+.rxTabs .btnPrimary,
+.rxTabs .btnGhost,
+.rxTabs .btnSoft{
+  border-radius: 999px !important;
+  padding: 8px 12px !important;
+  font-size: 13px;
+  box-shadow: var(--rx-shadow-sm);
+}
+
+/* WORKSPACE */
+.rxWorkspace{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 12px;
+  margin-bottom: 22px;
+}
+
+.rxCol{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.rxGap{ height: 12px; }
+
+.rxBoxFill{ flex: 1; display:flex; }
+
+/* Box */
+.rxBox{
+  position: relative;
+  border-radius: var(--rx-radius-md);
+  border: 1px solid var(--rx-stroke);
+  background:
+    radial-gradient(900px 240px at 15% 0%, rgba(255,255,255,0.06), transparent 60%),
+    linear-gradient(180deg, var(--rx-surface), var(--rx-surface2));
+  box-shadow: var(--rx-shadow-lg);
+  overflow:hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: border-color .18s ease, box-shadow .22s ease, transform .14s ease;
+}
+
+.rxBox::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.06), transparent 35%, rgba(255,255,255,0.03));
+  opacity: 0.75;
+}
+
+.rxBox:hover{
+  border-color: color-mix(in srgb, var(--p2) 38%, var(--border));
+  box-shadow: var(--rx-shadow-lg), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  transform: translateY(-1px);
+}
+
+.rxBox:focus-within{
+  border-color: color-mix(in srgb, var(--p2) 62%, var(--border));
+  box-shadow: var(--rx-glow), var(--rx-shadow-lg);
+  transform: translateY(0);
+}
+
+.rxBox .ta{
+  position: relative;
+  z-index: 1;
+  flex:1;
+  width:100%;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+
+  padding: 16px;
+  min-height: 340px;
+  line-height: 1.68;
+  font-size: 14px;
+  color: rgba(255,255,255,0.92);
+}
+
+.rxBoxTight .ta{
+  min-height: 120px;
+}
+
+.rxBox .ta::placeholder{ color: rgba(255,255,255,0.38); }
+
+/* Error */
+.rxError{
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: var(--rx-radius-sm);
+  border: 1px solid color-mix(in srgb, #ff6b6b 35%, var(--border));
+  background: color-mix(in srgb, #ff6b6b 10%, transparent);
+  color: rgba(255,255,255,0.92);
+  font-weight: 900;
+}
+
+/* Sections */
+.rxLong{
+  margin-top: 16px;
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+
+.rxSection{
+  border-radius: var(--rx-radius-lg);
+  border: 1px solid var(--rx-stroke-2);
+  background:
+    radial-gradient(900px 220px at 10% 0%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 92%, rgba(0,0,0,0.08)),
+      color-mix(in srgb, var(--card2) 90%, rgba(0,0,0,0.14))
+    );
+  box-shadow: var(--rx-shadow-md);
+  padding: 16px;
+}
+
+.rxH2{
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 980;
+  letter-spacing: -0.3px;
+  color: rgba(255,255,255,0.94);
+}
+
+.rxP{
+  margin: 0;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+.rxList,
+.rxSteps{
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+}
+.rxList li,
+.rxSteps li{ margin: 8px 0; }
+.rxList b,
+.rxSteps b{ color: rgba(255,255,255,0.92); }
+
+/* FAQ */
+.rxFaq{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.rxFaqItem{
+  border-radius: var(--rx-radius-md);
+  border: 1px solid var(--rx-stroke);
+  background: rgba(255,255,255,0.03);
+  overflow:hidden;
+  box-shadow: var(--rx-shadow-sm);
+}
+
+.rxFaqQ{
+  width:100%;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  color: rgba(255,255,255,0.92);
+  font-weight: 950;
+  cursor:pointer;
+}
+
+.rxFaqIcon{
+  width: 30px;
+  height: 30px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 999px;
+  border: 1px solid var(--rx-stroke);
+  background: rgba(255,255,255,0.04);
+  font-weight: 950;
+  color: rgba(255,255,255,0.88);
+}
+
+.rxFaqA{
+  padding: 0 14px 14px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 980px){
+  .rxWorkspace{
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 10px;
+    margin-bottom: 18px;
+  }
+  .rxBox .ta{ min-height: 240px; }
+  .rxBoxTight .ta{ min-height: 110px; }
+}
+
+/* Mobile: force top buttons in one row */
+@media (max-width: 560px){
+  .rxTabs{
+    flex-wrap: nowrap;
+    gap: 6px;
+    justify-content: space-between;
+  }
+  .rxTabsSpacer{ display:none; }
+
+  .rxTabs .btnPrimary,
+  .rxTabs .btnGhost,
+  .rxTabs .btnSoft{
+    flex: 1;
+    text-align:center;
+    padding: 8px 6px !important;
+    font-size: 12px;
+  }
+
+  .glassTitle{
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .glassRight .btnGhost{
+    padding: 6px 12px !important;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .rxBox, .glassRight .btnGhost{ transition: none !important; }
+}

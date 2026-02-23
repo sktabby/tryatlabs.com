@@ -1,0 +1,337 @@
+/* =========================
+   UUID Generator (Premium Style)
+   Scope: uuid-*
+   ========================= */
+
+:root{
+  --uuid-stroke: color-mix(in srgb, var(--border) 86%, rgba(255,255,255,0.12));
+  --uuid-stroke-2: color-mix(in srgb, var(--border) 74%, rgba(255,255,255,0.16));
+  --uuid-surface: color-mix(in srgb, var(--card) 90%, rgba(0,0,0,0.14));
+  --uuid-surface2: color-mix(in srgb, var(--card2) 86%, rgba(0,0,0,0.20));
+  --uuid-shadow-lg: 0 22px 70px rgba(0,0,0,0.42);
+  --uuid-shadow-md: 0 14px 38px rgba(0,0,0,0.30);
+  --uuid-shadow-sm: 0 10px 22px rgba(0,0,0,0.22);
+  --uuid-glow: 0 0 0 4px rgba(121,78,230,0.10), 0 18px 70px rgba(121,78,230,0.10);
+  --uuid-radius-md: 18px;
+}
+
+/* All Tools button */
+.glassRight .btnGhost{
+  border-radius:999px !important;
+  padding:10px 12px !important;
+  border-color:var(--uuid-stroke)!important;
+  background:rgba(255,255,255,0.03)!important;
+  box-shadow:var(--uuid-shadow-sm);
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.glassRight .btnGhost:hover{
+  border-color: color-mix(in srgb, var(--p2) 45%, var(--border)) !important;
+  background: color-mix(in srgb, var(--p2) 10%, rgba(255,255,255,0.04)) !important;
+  transform: translateY(-1px);
+}
+
+/* Top bar */
+.uuidTabs{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  margin-top:6px;
+  margin-bottom:18px;
+  padding-top:8px;
+  padding-bottom:8px;
+}
+
+.uuidTabsSpacer{ flex:1; min-width:10px; }
+
+.uuidSeg{
+  display:flex;
+  gap:6px;
+}
+
+.uuidSegBtn{
+  border:1px solid var(--uuid-stroke);
+  background:rgba(255,255,255,0.04);
+  padding:8px 12px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:900;
+  color: rgba(255,255,255,0.92);
+  box-shadow: var(--uuid-shadow-sm);
+  transition: transform .14s ease, border-color .18s ease, background .18s ease;
+}
+.uuidSegBtn:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--p2) 38%, var(--border));
+}
+
+.uuidSegBtn.isActive{
+  background:linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--p2) 22%, var(--card)),
+    color-mix(in srgb, var(--p2) 14%, var(--card2))
+  );
+  border-color: color-mix(in srgb, var(--p2) 42%, var(--border));
+}
+
+/* Make top buttons match premium pills */
+.uuidTabs .btnPrimary,
+.uuidTabs .btnSoft{
+  border-radius: 999px !important;
+  padding: 8px 12px !important;
+  font-size: 13px;
+  box-shadow: var(--uuid-shadow-sm);
+}
+
+/* Output box (premium glass like lorem/json) */
+.uuidBox{
+  position: relative;
+  border-radius:var(--uuid-radius-md);
+  border:1px solid var(--uuid-stroke);
+  background:
+    radial-gradient(900px 240px at 15% 0%, rgba(255,255,255,0.06), transparent 60%),
+    linear-gradient(180deg, var(--uuid-surface), var(--uuid-surface2));
+  box-shadow:var(--uuid-shadow-lg);
+  margin-top: 10px;
+  margin-bottom:18px;
+  overflow:hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: border-color .18s ease, box-shadow .22s ease, transform .14s ease;
+}
+.uuidBox::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.06), transparent 35%, rgba(255,255,255,0.03));
+  opacity: 0.75;
+}
+.uuidBox:hover{
+  border-color: color-mix(in srgb, var(--p2) 38%, var(--border));
+  box-shadow: var(--uuid-shadow-lg), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  transform: translateY(-1px);
+}
+.uuidBox:focus-within{
+  border-color: color-mix(in srgb, var(--p2) 62%, var(--border));
+  box-shadow: var(--uuid-glow), var(--uuid-shadow-lg);
+  transform: translateY(0);
+}
+
+.uuidBox .ta{
+  position: relative;
+  z-index: 1;
+  border:0 !important;
+  background:transparent !important;
+  padding:16px;
+  min-height:260px; /* a bit tighter + premium */
+  line-height: 1.68;
+  font-size: 14px;
+  color: rgba(255,255,255,0.92);
+}
+
+/* Sections */
+.uuidLong{ display:flex; flex-direction:column; gap:14px; }
+
+.uuidSection{
+  border-radius:22px;
+  border:1px solid var(--uuid-stroke-2);
+  background:
+    radial-gradient(900px 220px at 10% 0%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 92%, rgba(0,0,0,0.08)),
+      color-mix(in srgb, var(--card2) 90%, rgba(0,0,0,0.14))
+    );
+  box-shadow:var(--uuid-shadow-md);
+  padding:16px;
+}
+
+.uuidH2{
+  font-weight:980;
+  margin:0 0 10px;
+  color: rgba(255,255,255,0.94);
+  letter-spacing: -0.3px;
+  font-size: 16px;
+}
+
+.uuidP, .uuidList, .uuidSteps{
+  margin: 0;
+  color:rgba(255,255,255,0.72);
+  line-height:1.75;
+  font-size: 14px;
+}
+
+.uuidList, .uuidSteps{ padding-left: 18px; }
+.uuidList li, .uuidSteps li{ margin:8px 0; }
+.uuidList b, .uuidSteps b{ color: rgba(255,255,255,0.92); }
+
+/* FAQ */
+.uuidFaq{ display:flex; flex-direction:column; gap:10px; margin-top:10px; }
+
+.uuidFaqItem{
+  border-radius:18px;
+  border:1px solid var(--uuid-stroke);
+  background:rgba(255,255,255,0.03);
+  box-shadow:var(--uuid-shadow-sm);
+  overflow:hidden;
+}
+
+.uuidFaqQ{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  background:none;
+  border:0;
+  font-weight:950;
+  cursor:pointer;
+  color: rgba(255,255,255,0.92);
+}
+
+.uuidFaqIcon{
+  border:1px solid var(--uuid-stroke);
+  border-radius:999px;
+  width:28px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.88);
+  font-weight: 950;
+}
+
+.uuidFaqA{
+  padding:0 14px 14px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+/* Mobile */
+@media (max-width:560px){
+  .uuidTabs{
+    flex-wrap: nowrap;
+    gap: 6px;
+    justify-content: space-between;
+  }
+
+  .uuidTabsSpacer{ display:none; }
+
+  .uuidSegBtn{
+    padding: 8px 8px;
+    font-size: 12px;
+  }
+
+  .uuidTabs .btnPrimary,
+  .uuidTabs .btnSoft{
+    flex: 1;
+    text-align:center;
+    padding: 8px 6px !important;
+    font-size: 12px;
+  }
+
+  .uuidBox .ta{
+    min-height: 210px;
+    padding: 12px;
+  }
+}
+
+
+/* =========================
+   MOBILE: FORCE ACTIONS IN ONE ROW
+   ========================= */
+
+@media (max-width: 560px){
+
+  .uuidTabs{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .uuidTabsSpacer{
+    display: none;
+  }
+
+  /* Make Generate / Copy / Clear equal width */
+  .uuidTabs .btnPrimary,
+  .uuidTabs .btnSoft,
+  .uuidTabs .btnGhost{
+    flex: 1;
+    text-align: center;
+    padding: 8px 6px !important;
+    font-size: 12px;
+  }
+
+  /* Keep segment buttons compact */
+  .uuidSeg{
+    display: none; /* hide count selector on very small screens */
+  }
+}
+
+/* =========================
+   MOBILE COMPACT LAYOUT
+   Count + Generate + Copy + Clear
+   ========================= */
+
+@media (max-width: 560px){
+
+  .uuidTabs{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .uuidTabsSpacer{
+    display: none;
+  }
+
+  /* Compact count selector */
+  .uuidSeg{
+    display: flex;
+    gap: 4px;
+  }
+
+  .uuidSegBtn{
+    padding: 6px 8px;
+    font-size: 11px;
+    min-width: 28px;
+    border-radius: 999px;
+  }
+
+  /* Make main action buttons compact and aligned */
+  .uuidTabs .btnPrimary,
+  .uuidTabs .btnSoft,
+  .uuidTabs .btnGhost{
+    padding: 6px 8px !important;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* Slight flex control so everything fits */
+  .uuidSeg{
+    flex: 0 0 auto;
+  }
+
+  .uuidTabs .btnPrimary{
+    flex: 1;
+  }
+
+  .uuidTabs .btnSoft{
+    flex: 1;
+  }
+
+  .uuidTabs .btnGhost{
+    flex: 1;
+  }
+}

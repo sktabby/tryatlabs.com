@@ -1,0 +1,259 @@
+/* =========================
+   Global Shared UI (Premium)
+   Applies to: glassCard, buttons, inputs, textarea, labels, rows
+   ========================= */
+
+/* --- Tokens (safe defaults; uses your existing vars if present) --- */
+:root{
+  --ui-stroke: color-mix(in srgb, var(--border) 86%, rgba(255,255,255,0.12));
+  --ui-surface: color-mix(in srgb, var(--card) 90%, rgba(0,0,0,0.14));
+  --ui-surface2: color-mix(in srgb, var(--card2) 86%, rgba(0,0,0,0.20));
+  --ui-text: color-mix(in srgb, var(--text) 85%, rgba(255,255,255,0.88));
+  --ui-muted: color-mix(in srgb, var(--muted) 82%, rgba(255,255,255,0.10));
+
+  --ui-radius-lg: 22px;
+  --ui-radius-md: 16px;
+  --ui-radius-sm: 14px;
+
+  --ui-shadow-lg: 0 24px 70px rgba(0,0,0,0.46);
+  --ui-shadow-md: 0 14px 38px rgba(0,0,0,0.32);
+  --ui-shadow-sm: 0 10px 24px rgba(0,0,0,0.22);
+
+  --ui-glow: 0 0 0 4px rgba(121,78,230,0.10), 0 20px 70px rgba(121,78,230,0.10);
+}
+
+/* ---------- Card ---------- */
+.glassCard{
+  position: relative;
+  border-radius: var(--ui-radius-lg);
+  border: 1px solid var(--ui-stroke);
+  background:
+    radial-gradient(900px 260px at 10% 0%, rgba(255,255,255,0.08), transparent 60%),
+    linear-gradient(180deg, var(--ui-surface), var(--ui-surface2));
+  box-shadow: var(--ui-shadow-lg);
+  overflow:hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.glassCard::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.06), transparent 35%, rgba(255,255,255,0.03));
+  opacity: 0.8;
+}
+
+.glassCardHead{
+  position: relative;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 14px;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--ui-stroke) 70%, transparent);
+  
+}
+
+.glassTitle{
+  font-weight: 980;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  font-size: clamp(18px, 1.8vw, 22px);
+  color: rgba(255,255,255,0.94);
+}
+
+.glassDesc{
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.70);
+  max-width: 72ch;
+}
+
+.glassRight{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.glassBody{
+  position: relative;
+  padding: 14px 16px 16px;
+}
+
+/* ---------- Field Label ---------- */
+.fieldLabel{
+  margin: 0 0 10px;
+}
+
+.fieldLabelTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+}
+
+.fieldLabelTop > span{
+  font-weight: 950;
+  letter-spacing: -0.2px;
+  color: rgba(255,255,255,0.92);
+  font-size: 13px;
+}
+
+.fieldHint{
+  font-size: 12px;
+  font-weight: 850;
+  color: rgba(255,255,255,0.56);
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--p2) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--p2) 34%, var(--border));
+}
+
+/* ---------- Row ---------- */
+.row{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap: 10px;
+}
+
+/* ---------- Buttons ---------- */
+.btnPrimary,
+.btnGhost,
+.btnSoft{
+  appearance:none;
+  border-radius: var(--ui-radius-sm);
+  padding: 11px 14px;
+  font-weight: 950;
+  letter-spacing: -0.2px;
+  cursor:pointer;
+  transition: transform .12s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+  user-select:none;
+}
+
+.btnPrimary{
+  border: 1px solid color-mix(in srgb, var(--p2) 55%, var(--border));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--p2) 26%, var(--card)),
+    color-mix(in srgb, var(--p2) 16%, var(--card2))
+  );
+  box-shadow: 0 12px 26px rgba(121,78,230,0.18);
+  color: rgba(255,255,255,0.94);
+}
+
+.btnGhost{
+  border: 1px solid var(--ui-stroke);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.84);
+  box-shadow: var(--ui-shadow-sm);
+}
+
+.btnSoft{
+  border: 1px solid color-mix(in srgb, var(--ui-stroke) 90%, transparent);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.86);
+  box-shadow: var(--ui-shadow-sm);
+}
+
+.btnPrimary:hover,
+.btnGhost:hover,
+.btnSoft:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--p2) 50%, var(--border));
+}
+
+.btnPrimary:hover{
+  box-shadow: 0 16px 34px rgba(121,78,230,0.22);
+}
+
+.btnGhost:hover,
+.btnSoft:hover{
+  background: color-mix(in srgb, var(--p2) 10%, rgba(255,255,255,0.04));
+}
+
+.btnPrimary:active,
+.btnGhost:active,
+.btnSoft:active{
+  transform: translateY(0) scale(0.99);
+}
+
+.btnPrimary:disabled,
+.btnGhost:disabled,
+.btnSoft:disabled{
+  opacity: 0.55;
+  cursor:not-allowed;
+  transform:none !important;
+}
+
+/* ---------- Inputs + Textareas ---------- */
+.in,
+.ta{
+  width: 100%;
+  border-radius: var(--ui-radius-md);
+  border: 1px solid var(--ui-stroke);
+  background:
+    radial-gradient(900px 240px at 15% 0%, rgba(255,255,255,0.06), transparent 60%),
+    linear-gradient(180deg, var(--ui-surface), var(--ui-surface2));
+  box-shadow: var(--ui-shadow-md);
+  color: rgba(255,255,255,0.92);
+  padding: 12px 12px;
+  line-height: 1.65;
+  font-size: 14px;
+  outline: none;
+  transition: border-color .18s ease, box-shadow .22s ease;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.ta{
+  resize: vertical;
+  min-height: 120px;
+}
+
+.in::placeholder,
+.ta::placeholder{
+  color: rgba(255,255,255,0.38);
+}
+
+.in:hover,
+.ta:hover{
+  border-color: color-mix(in srgb, var(--p2) 38%, var(--border));
+}
+
+.in:focus,
+.ta:focus{
+  border-color: color-mix(in srgb, var(--p2) 60%, var(--border));
+  box-shadow: var(--ui-glow), var(--ui-shadow-md);
+}
+
+/* ---------- Utility text (if you already use these) ---------- */
+.mutedTiny{
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ui-muted);
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 520px){
+  .glassCardHead{ padding: 14px 12px 10px; }
+  .glassBody{ padding: 12px; }
+  .btnPrimary, .btnGhost, .btnSoft{ padding: 10px 12px; border-radius: 14px; }
+  .in, .ta{ border-radius: 16px; padding: 11px 11px; }
+}
+
+/* ---------- Reduce motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  .btnPrimary, .btnGhost, .btnSoft,
+  .in, .ta{
+    transition: none !important;
+  }
+}
+
+.glassCard{
+  margin-bottom: 32px;
+}

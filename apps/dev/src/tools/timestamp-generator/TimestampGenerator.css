@@ -1,0 +1,435 @@
+/* =========================
+   Timestamp Generator (Solid Premium / Classy)
+   Scope: ts-*
+   Minimal + clean + responsive
+   ========================= */
+
+:root{
+  --ts-stroke: color-mix(in srgb, var(--border) 86%, rgba(255,255,255,0.12));
+  --ts-stroke-2: color-mix(in srgb, var(--border) 74%, rgba(255,255,255,0.16));
+  --ts-surface: color-mix(in srgb, var(--card) 90%, rgba(0,0,0,0.14));
+  --ts-surface2: color-mix(in srgb, var(--card2) 86%, rgba(0,0,0,0.20));
+  --ts-shadow-lg: 0 22px 70px rgba(0,0,0,0.42);
+  --ts-shadow-md: 0 14px 38px rgba(0,0,0,0.30);
+  --ts-shadow-sm: 0 10px 22px rgba(0,0,0,0.22);
+  --ts-glow: 0 0 0 4px rgba(121,78,230,0.10), 0 18px 70px rgba(121,78,230,0.10);
+  --ts-radius-lg: 22px;
+  --ts-radius-md: 18px;
+  --ts-radius-sm: 14px;
+}
+
+/* All Tools button */
+.glassRight .btnGhost{
+  border-radius: 999px !important;
+  padding: 10px 12px !important;
+  border-color: var(--ts-stroke) !important;
+  background: rgba(255,255,255,0.03) !important;
+  box-shadow: var(--ts-shadow-sm);
+  text-decoration: none;
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.glassRight .btnGhost:hover{
+  border-color: color-mix(in srgb, var(--p2) 45%, var(--border)) !important;
+  background: color-mix(in srgb, var(--p2) 10%, rgba(255,255,255,0.04)) !important;
+  transform: translateY(-1px);
+}
+
+/* ---------------------------
+   TOP BAR
+---------------------------- */
+.tsTabs{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  margin-top: 6px;
+  margin-bottom: 14px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.tsTabsSpacer{ flex:1; min-width: 10px; }
+
+.tsPill{
+  border: 1px solid var(--ts-stroke);
+  background: rgba(255,255,255,0.035);
+  color: rgba(255,255,255,0.88);
+  font-weight: 960;
+  letter-spacing: -0.2px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.20);
+  position: relative;
+  overflow:hidden;
+  white-space: nowrap;
+}
+.tsPill::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.08), transparent 35%, rgba(255,255,255,0.04));
+  opacity: 0.55;
+}
+
+.tsTopActions{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+.tsTopActions > *{
+  margin: 2px 0;
+}
+
+/* ---------------------------
+   QUICK STRIP
+---------------------------- */
+.tsQuick{
+  border-radius: var(--ts-radius-lg);
+  border: 1px solid var(--ts-stroke-2);
+  background:
+    radial-gradient(900px 220px at 10% 0%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 92%, rgba(0,0,0,0.08)),
+      color-mix(in srgb, var(--card2) 90%, rgba(0,0,0,0.14))
+    );
+  box-shadow: var(--ts-shadow-md);
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.tsHint{
+  color: rgba(255,255,255,0.76);
+  line-height: 1.65;
+  font-size: 13px;
+}
+
+.tsQuickRow{
+  margin-top: 10px;
+  margin-bottom: 4px;
+  display:flex;
+  flex-wrap:wrap;
+  gap: 10px;
+}
+.tsQuickRow .btnSoft{
+  border-radius: 999px !important;
+  padding: 10px 12px !important;
+  box-shadow: var(--ts-shadow-sm);
+  white-space: nowrap;
+}
+
+/* ---------------------------
+   WORKSPACE
+---------------------------- */
+.tsWorkspace{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 12px;
+  margin-bottom: 22px;
+}
+.tsCol{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+/* Column headers (minimal) */
+.tsHeadRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.tsHeadTitle{
+  font-weight: 980;
+  color: rgba(255,255,255,0.92);
+  letter-spacing: -0.2px;
+}
+.tsHeadChip{
+  border: 1px solid var(--ts-stroke);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.86);
+  font-weight: 900;
+  font-size: 12px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Input shell */
+.tsBox{
+  border-radius: var(--ts-radius-md);
+  border: 1px solid var(--ts-stroke);
+  background:
+    radial-gradient(900px 240px at 15% 0%, rgba(255,255,255,0.06), transparent 60%),
+    linear-gradient(180deg, var(--ts-surface), var(--ts-surface2));
+  box-shadow: var(--ts-shadow-md);
+  padding: 10px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: border-color .18s ease, box-shadow .22s ease, transform .14s ease;
+}
+.tsBox:hover{
+  border-color: color-mix(in srgb, var(--p2) 38%, var(--border));
+  box-shadow: var(--ts-shadow-md), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  transform: translateY(-1px);
+}
+.tsBox:focus-within{
+  border-color: color-mix(in srgb, var(--p2) 62%, var(--border));
+  box-shadow: var(--ts-glow), var(--ts-shadow-md);
+  transform: translateY(0);
+}
+.tsBox .in{ width: 100%; }
+
+/* Mini stats */
+.tsMiniGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+.tsMiniStat{
+  border-radius: var(--ts-radius-md);
+  border: 1px solid var(--ts-stroke);
+  background: rgba(255,255,255,0.03);
+  box-shadow: var(--ts-shadow-sm);
+  padding: 12px;
+  overflow:hidden;
+}
+.tsMiniK{
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.70);
+  margin-bottom: 6px;
+  display:flex;
+  align-items:center;
+  gap: 8px;
+}
+.tsBadge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--ts-stroke);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.86);
+  font-size: 11px;
+  font-weight: 950;
+}
+.tsMiniV{
+  font-size: 14px;
+  font-weight: 950;
+  color: rgba(255,255,255,0.92);
+  word-break: break-word;
+  line-height: 1.35;
+}
+.tsMono{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.tsHuman{
+  margin-top: 12px;
+  color: rgba(255,255,255,0.62);
+}
+
+/* Action buttons row */
+.tsActions{
+  margin-top: 14px;
+  margin-bottom: 8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap: 10px;
+}
+.tsActions .btnSoft{
+  border-radius: 999px !important;
+  padding: 10px 12px !important;
+  box-shadow: var(--ts-shadow-sm);
+  white-space: nowrap;
+}
+
+/* ---------------------------
+   CONTENT SECTIONS
+---------------------------- */
+.tsLong{
+  margin-top: 16px;
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+
+.tsSection{
+  border-radius: var(--ts-radius-lg);
+  border: 1px solid var(--ts-stroke-2);
+  background:
+    radial-gradient(900px 220px at 10% 0%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 92%, rgba(0,0,0,0.08)),
+      color-mix(in srgb, var(--card2) 90%, rgba(0,0,0,0.14))
+    );
+  box-shadow: var(--ts-shadow-md);
+  padding: 16px;
+}
+
+.tsH2{
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 980;
+  letter-spacing: -0.3px;
+  color: rgba(255,255,255,0.94);
+}
+
+.tsP{
+  margin: 0;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+.tsList,
+.tsSteps{
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+}
+.tsList li,
+.tsSteps li{ margin: 8px 0; }
+.tsList b,
+.tsSteps b{ color: rgba(255,255,255,0.92); }
+
+/* FAQ */
+.tsFaq{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.tsFaqItem{
+  border-radius: var(--ts-radius-md);
+  border: 1px solid var(--ts-stroke);
+  background: rgba(255,255,255,0.03);
+  overflow:hidden;
+  box-shadow: var(--ts-shadow-sm);
+}
+.tsFaqQ{
+  width:100%;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  color: rgba(255,255,255,0.92);
+  font-weight: 950;
+  cursor:pointer;
+}
+.tsFaqIcon{
+  width: 30px;
+  height: 30px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 999px;
+  border: 1px solid var(--ts-stroke);
+  background: rgba(255,255,255,0.04);
+  font-weight: 950;
+  color: rgba(255,255,255,0.88);
+}
+.tsFaqA{
+  padding: 0 14px 14px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+/* ---------------------------
+   Responsive
+---------------------------- */
+@media (max-width: 980px){
+  .tsWorkspace{ grid-template-columns: 1fr; gap: 14px; }
+}
+
+/* Mobile: keep it clean */
+@media (max-width: 560px){
+
+  .tsTabs{
+    gap: 10px;
+  }
+  .tsPill{
+    padding: 8px 10px;
+    font-size: 12px;
+    max-width: 110px;
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tsTopActions{
+    gap: 8px;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .tsTopActions > :first-child{
+    flex: 1;
+    min-width: 0;
+  }
+  .tsTopActions > :last-child{
+    flex: 0 0 auto;
+  }
+
+  .tsQuick{ padding: 12px; }
+  .tsQuickRow{
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+  .tsQuickRow .btnSoft{
+    flex: 1;
+    text-align:center;
+    padding: 10px 8px !important;
+    font-size: 12px;
+  }
+
+  .tsHeadRow{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .tsHeadChip{
+    width: 100%;
+    text-align: center;
+  }
+
+  .tsMiniGrid{
+    grid-template-columns: 1fr;
+  }
+
+  .tsActions{
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+  .tsActions .btnSoft{
+    flex: 1;
+    text-align:center;
+    padding: 10px 8px !important;
+    font-size: 12px;
+  }
+}
+
+/* Extra-small: allow wrap */
+@media (max-width: 420px){
+  .tsQuickRow{ flex-wrap: wrap; }
+  .tsQuickRow .btnSoft{ flex: 1 1 48%; }
+  .tsActions{ flex-wrap: wrap; }
+  .tsActions .btnSoft{ flex: 1 1 48%; }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .tsBox, .glassRight .btnGhost{ transition: none !important; }
+}

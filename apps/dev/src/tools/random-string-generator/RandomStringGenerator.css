@@ -1,0 +1,247 @@
+/* =========================
+   Random String Generator (Solid Premium / Classy)
+   Scope: rsg-*
+   ========================= */
+
+:root{
+  --rsg-stroke: color-mix(in srgb, var(--border) 86%, rgba(255,255,255,0.12));
+  --rsg-stroke-2: color-mix(in srgb, var(--border) 74%, rgba(255,255,255,0.16));
+
+  --rsg-surface: color-mix(in srgb, var(--card) 90%, rgba(0,0,0,0.14));
+  --rsg-surface2: color-mix(in srgb, var(--card2) 86%, rgba(0,0,0,0.20));
+
+  --rsg-shadow-lg: 0 22px 70px rgba(0,0,0,0.42);
+  --rsg-shadow-md: 0 14px 38px rgba(0,0,0,0.30);
+  --rsg-shadow-sm: 0 10px 22px rgba(0,0,0,0.22);
+
+  --rsg-glow: 0 0 0 4px rgba(121,78,230,0.10), 0 18px 70px rgba(121,78,230,0.10);
+
+  --rsg-radius-lg: 22px;
+  --rsg-radius-md: 18px;
+  --rsg-radius-sm: 14px;
+}
+
+/* All Tools button polish */
+.glassRight .btnGhost{
+  border-radius: 999px !important;
+  padding: 10px 12px !important;
+  border-color: var(--rsg-stroke) !important;
+  background: rgba(255,255,255,0.03) !important;
+  box-shadow: var(--rsg-shadow-sm);
+  text-decoration: none;
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+}
+.glassRight .btnGhost:hover{
+  border-color: color-mix(in srgb, var(--p2) 45%, var(--border)) !important;
+  background: color-mix(in srgb, var(--p2) 10%, rgba(255,255,255,0.04)) !important;
+  transform: translateY(-1px);
+}
+
+/* TOP BAR */
+.rsgTabs{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 18px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.rsgTabsSpacer{ flex: 1; min-width: 10px; }
+
+.rsgTabs .btnSoft{
+  border-radius: 999px !important;
+  padding: 8px 12px !important;
+  font-size: 13px;
+  box-shadow: var(--rsg-shadow-sm);
+}
+
+/* WORKSPACE */
+.rsgWorkspace{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 12px;
+  margin-bottom: 22px;
+}
+
+.rsgCol{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+.rsgBoxFill{ flex: 1; display:flex; }
+
+.rsgBox{
+  position: relative;
+  border-radius: var(--rsg-radius-md);
+  border: 1px solid var(--rsg-stroke);
+  background:
+    radial-gradient(900px 240px at 15% 0%, rgba(255,255,255,0.06), transparent 60%),
+    linear-gradient(180deg, var(--rsg-surface), var(--rsg-surface2));
+  box-shadow: var(--rsg-shadow-lg);
+  overflow:hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: border-color .18s ease, box-shadow .22s ease, transform .14s ease;
+}
+
+.rsgBox::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.06), transparent 35%, rgba(255,255,255,0.03));
+  opacity: 0.75;
+}
+
+.rsgBox:hover{
+  border-color: color-mix(in srgb, var(--p2) 38%, var(--border));
+  box-shadow: var(--rsg-shadow-lg), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  transform: translateY(-1px);
+}
+
+.rsgBox:focus-within{
+  border-color: color-mix(in srgb, var(--p2) 62%, var(--border));
+  box-shadow: var(--rsg-glow), var(--rsg-shadow-lg);
+  transform: translateY(0);
+}
+
+.rsgPad{
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 14px;
+}
+
+/* Sections */
+.rsgLong{
+  margin-top: 16px;
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+
+.rsgSection{
+  border-radius: var(--rsg-radius-lg);
+  border: 1px solid var(--rsg-stroke-2);
+  background:
+    radial-gradient(900px 220px at 10% 0%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 92%, rgba(0,0,0,0.08)),
+      color-mix(in srgb, var(--card2) 90%, rgba(0,0,0,0.14))
+    );
+  box-shadow: var(--rsg-shadow-md);
+  padding: 16px;
+}
+
+.rsgH2{
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 980;
+  letter-spacing: -0.3px;
+  color: rgba(255,255,255,0.94);
+}
+
+.rsgP{
+  margin: 0;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+.rsgList,
+.rsgSteps{
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+}
+.rsgList li,
+.rsgSteps li{ margin: 8px 0; }
+.rsgList b,
+.rsgSteps b{ color: rgba(255,255,255,0.92); }
+
+/* FAQ */
+.rsgFaq{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.rsgFaqItem{
+  border-radius: var(--rsg-radius-md);
+  border: 1px solid var(--rsg-stroke);
+  background: rgba(255,255,255,0.03);
+  overflow:hidden;
+  box-shadow: var(--rsg-shadow-sm);
+}
+
+.rsgFaqQ{
+  width:100%;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  color: rgba(255,255,255,0.92);
+  font-weight: 950;
+  cursor:pointer;
+}
+
+.rsgFaqIcon{
+  width: 30px;
+  height: 30px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 999px;
+  border: 1px solid var(--rsg-stroke);
+  background: rgba(255,255,255,0.04);
+  font-weight: 950;
+  color: rgba(255,255,255,0.88);
+}
+
+.rsgFaqA{
+  padding: 0 14px 14px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+/* Mobile: keep top bar in one row */
+@media (max-width: 560px){
+  .rsgTabs{
+    flex-wrap: nowrap;
+    gap: 6px;
+    justify-content: space-between;
+  }
+  .rsgTabsSpacer{ display:none; }
+
+  .rsgTabs > *{
+    flex: 1;
+  }
+
+  .glassTitle{
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .glassRight .btnGhost{
+    padding: 6px 12px !important;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .rsgBox, .glassRight .btnGhost{ transition: none !important; }
+}

@@ -1,0 +1,60 @@
+:root{
+  /* your palette */
+  --bg0:#090612;
+  --bg1:#20153c;
+  --bg2:#362367;
+  --p1:#6340bc;
+  --p2:#794ee6;
+  --p3:#4d3291;
+
+  --text: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.68);
+  --faint: rgba(255,255,255,0.52);
+
+  --border: rgba(255,255,255,0.10);
+  --card: rgba(255,255,255,0.06);
+
+  --r16: 16px;
+  --r20: 20px;
+  --max: 1180px;
+
+  --shadow: 0 22px 70px rgba(0,0,0,0.55);
+  --shadow2: 0 14px 40px rgba(0,0,0,0.40);
+
+  --glow: 0 0 0 1px rgba(121,78,230,0.22), 0 0 40px rgba(121,78,230,0.12);
+}
+
+html, body { background: radial-gradient(1200px 600px at 15% -10%, rgba(121,78,230,0.30), transparent 60%),
+                         radial-gradient(900px 500px at 110% 10%, rgba(99,64,188,0.25), transparent 50%),
+                         linear-gradient(180deg, var(--bg0), var(--bg1) 40%, var(--bg0));
+           color: var(--text); }
+
+a { color: inherit; text-decoration: none; }
+
+
+
+/* ==========================================
+   GLOBAL TECH REFINEMENT
+   ========================================== */
+
+/* Subtle digital noise overlay */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 16px);
+  opacity:.15;
+}
+
+/* Make main content stack above overlay */
+.hero,
+.section,
+.divider,
+.dividerSoft{
+  position:relative;
+  z-index:1;
+}
