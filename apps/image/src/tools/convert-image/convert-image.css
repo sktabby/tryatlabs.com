@@ -1,0 +1,104 @@
+/* convert-image.css */
+
+.tool {
+  display: grid;
+  gap: 14px;
+}
+
+.row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: end;
+}
+
+@media (max-width: 720px) {
+  .grid2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.label,
+.labelSm {
+  display: grid;
+  gap: 8px;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.labelSm {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.inputFile {
+  margin-top: 6px;
+}
+
+.select,
+.range {
+  width: 100%;
+}
+
+.metaLine {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  line-height: 1;
+  border: 1px solid var(--stroke, rgba(0, 0, 0, 0.12));
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.preview {
+  width: 100%;
+  border-radius: var(--r, 16px);
+  border: 1px solid var(--stroke, rgba(0, 0, 0, 0.12));
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.preview img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.divider {
+  height: 1px;
+  width: 100%;
+  background: var(--stroke, rgba(0, 0, 0, 0.12));
+}
+
+.rangeVal {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+.error {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 0, 0, 0.18);
+  background: rgba(255, 0, 0, 0.06);
+}

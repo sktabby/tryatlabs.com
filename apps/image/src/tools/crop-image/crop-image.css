@@ -1,0 +1,27 @@
+/* Crop Image – page-local styles */
+
+.preview--crop .cropFrame {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.preview--crop img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cropBox {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: 1px solid rgba(199, 165, 170, 0.9);
+  box-shadow:
+    0 0 0 9999px rgba(12, 8, 10, 0.35),
+    0 0 30px rgba(199, 165, 170, 0.35);
+  border-radius: 14px;
+  pointer-events: none;
+}
